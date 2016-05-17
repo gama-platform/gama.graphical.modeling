@@ -18,6 +18,8 @@
  */
 package idees.gama.ui.commands;
 
+import idees.gama.FileService;
+import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.diagram.GamaFeatureProvider;
 import java.io.File;
 import msi.gama.kernel.model.IModel;
@@ -79,11 +81,12 @@ public class GenerateDiagramHandler extends AbstractHandler {
 	private void createDiagramEditor(final IFile file, final String diagramName, final IModel gamaModel) {
 		// Create the diagram
 		final Diagram diagram = Graphiti.getPeCreateService().createDiagram("gamaDiagram", diagramName, true);
+		
 		URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
-		TransactionalEditingDomain domain = createEmfFileForDiagram(uri, diagram);
-
-		final DiagramEditorInput editorInput =
-			new DiagramEditorInput(EcoreUtil.getURI(diagram), "idees.gama.diagram.MyGamaDiagramTypeProvider");
+		
+		
+		FileService.createEmfFileForDiagram(uri, diagram);
+		DiagramEditorInput editorInput = new DiagramEditorInput(EcoreUtil.getURI(diagram), "idees.gama.diagram.MyGamaDiagramTypeProvider");
 		Display.getCurrent().asyncExec(new Runnable() {
 
 			@Override
@@ -91,8 +94,8 @@ public class GenerateDiagramHandler extends AbstractHandler {
 				IWorkbenchPage pag = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				try {
 					IEditorPart ep =
-						pag.openEditor(editorInput, "idees.gama.graphicalmodeling.diagram.gamadiagrameditor");
-					IDiagramTypeProvider dtp = GraphitiInternal.getEmfService().getDTPForDiagram(diagram);
+							pag.openEditor(editorInput, "idees.gama.graphicalmodeling.diagram.gamadiagrameditor");
+					IDiagramTypeProvider dtp = ((GamaDiagramEditor) ep).getDiagramTypeProvider();
 					GamaFeatureProvider gfp = (GamaFeatureProvider) dtp.getFeatureProvider();
 					gfp.setTypeOfModel("custom");
 					gfp.setGamaModel(gamaModel);

@@ -137,6 +137,7 @@ public class ModelGenerator {
 		URI uri = URI.createPlatformResourceURI("toto/" + diagramEditor.getTitle() + ".gaml", true);
 		GamlResource resource = (GamlResource) rs.createResource(uri);
 		String gamlModel = ModelGenerator.generateModel(fp, diagram);
+		if (gamlModel.equals("")) return null;
 		InputStream is = new ByteArrayInputStream(gamlModel.getBytes());
 		diagramEditor.setResource(resource);
 		try {
@@ -641,6 +642,7 @@ public class ModelGenerator {
 
 				}
 			}
+			if (worldAgent == null) return "";
 			String modelName = diagram.getName();
 			if ( !Character.isLetter(modelName.charAt(0)) ) {
 				modelName = "_" + modelName;

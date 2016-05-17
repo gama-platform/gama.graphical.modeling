@@ -306,8 +306,10 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 	@Override
 	public void initializeGraphicalViewer() {
 		super.initializeGraphicalViewer();
-		ModelGenerator.modelValidation(getDiagramTypeProvider().getFeatureProvider(), getDiagram());
-		doSave(null);
+		if (getDiagram() != null) {
+			ModelGenerator.modelValidation(getDiagramTypeProvider().getFeatureProvider(), getDiagram());
+			doSave(null);
+		}
 	}
 
 	@Override
