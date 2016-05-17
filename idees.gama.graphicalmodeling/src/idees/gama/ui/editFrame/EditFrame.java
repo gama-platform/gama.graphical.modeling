@@ -1,24 +1,39 @@
 package idees.gama.ui.editFrame;
 
-import gama.*;
-import idees.gama.diagram.GamaDiagramEditor;
-import idees.gama.features.ExampleUtil;
-import idees.gama.features.edit.EditFeature;
 import java.util.ArrayList;
-import msi.gama.lang.gaml.gaml.Model;
-import msi.gama.lang.gaml.gaml.impl.*;
-import msi.gaml.compilation.GamlCompilationError;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
-import org.eclipse.graphiti.ui.editor.DiagramEditor;
-import org.eclipse.jface.action.*;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.StatusLineManager;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.*;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Shell;
+
+import gama.EGamaObject;
+import gama.EWorldAgent;
+import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
+import idees.gama.features.edit.EditFeature;
+import msi.gama.lang.gaml.gaml.Model;
+import msi.gama.lang.gaml.gaml.impl.S_ActionImpl;
+import msi.gama.lang.gaml.gaml.impl.S_DefinitionImpl;
+import msi.gama.lang.gaml.gaml.impl.S_DisplayImpl;
+import msi.gama.lang.gaml.gaml.impl.S_ExperimentImpl;
+import msi.gama.lang.gaml.gaml.impl.S_ReflexImpl;
+import msi.gama.lang.gaml.gaml.impl.S_SpeciesImpl;
+import msi.gama.lang.gaml.gaml.impl.VariableRefImpl;
+import msi.gaml.compilation.GamlCompilationError;
 
 public abstract class EditFrame extends ApplicationWindow {
 

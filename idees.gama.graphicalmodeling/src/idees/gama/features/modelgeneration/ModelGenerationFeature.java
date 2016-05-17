@@ -27,9 +27,9 @@ import org.eclipse.ui.ide.IDE;
 
 public class ModelGenerationFeature extends AbstractCustomFeature {
  
-    private boolean hasDoneChanges = false;
+    //private boolean hasDoneChanges = false;
     private Display display;
-    private static String EL = System.getProperty("line.separator" ); 
+ //   private static String EL = System.getProperty("line.separator" ); 
      
     public ModelGenerationFeature(IFeatureProvider fp) {
         super(fp);

@@ -1,33 +1,71 @@
 package idees.gama.diagram;
 
-import gama.*;
-import idees.gama.features.modelgeneration.ModelGenerator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.graphiti.mm.pictograms.Shape;
+import org.eclipse.graphiti.ui.editor.DiagramBehavior;
+import org.eclipse.graphiti.ui.editor.DiagramEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+
+import gama.EAction;
+import gama.EAspect;
+import gama.EDisplay;
+import gama.EExperiment;
+import gama.EGamaObject;
+import gama.ELayer;
+import gama.ELayerAspect;
+import gama.EMonitor;
+import gama.EParameter;
+import gama.EReflex;
+import gama.ESpecies;
+import gama.EVariable;
+import idees.gama.features.modelgeneration.ModelGenerator;
 import msi.gama.gui.swt.IGamaColors;
-import msi.gama.kernel.experiment.ExperimentPlan;
 import msi.gama.kernel.model.IModel;
-import msi.gama.lang.gaml.gaml.*;
-import msi.gama.lang.gaml.gaml.impl.*;
+import msi.gama.lang.gaml.gaml.Model;
+import msi.gama.lang.gaml.gaml.Statement;
+import msi.gama.lang.gaml.gaml.impl.ArgumentDefinitionImpl;
+import msi.gama.lang.gaml.gaml.impl.BlockImpl;
+import msi.gama.lang.gaml.gaml.impl.FacetImpl;
+import msi.gama.lang.gaml.gaml.impl.S_ActionImpl;
+import msi.gama.lang.gaml.gaml.impl.S_DefinitionImpl;
+import msi.gama.lang.gaml.gaml.impl.S_DisplayImpl;
+import msi.gama.lang.gaml.gaml.impl.S_ExperimentImpl;
+import msi.gama.lang.gaml.gaml.impl.S_ReflexImpl;
+import msi.gama.lang.gaml.gaml.impl.S_SpeciesImpl;
+import msi.gama.lang.gaml.gaml.impl.StatementImpl;
+import msi.gama.lang.gaml.gaml.impl.VariableRefImpl;
+import msi.gama.lang.gaml.gaml.impl.speciesOrGridDisplayStatementImpl;
 import msi.gama.lang.gaml.resource.GamlResource;
 import msi.gama.lang.gaml.validation.IGamlBuilderListener;
 import msi.gama.runtime.GAMA;
 import msi.gama.util.TOrderedHashMap;
 import msi.gaml.compilation.GamlCompilationError;
 import msi.gaml.descriptions.ErrorCollector;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.transaction.*;
-import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.graphiti.mm.pictograms.*;
-import org.eclipse.graphiti.ui.editor.DiagramBehavior;
-import org.eclipse.graphiti.ui.editor.DiagramEditor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
 
 public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderListener {
 
@@ -36,8 +74,8 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 	private static Font labelFont;
 
 	GamlResource resource;
-	List<String> abbreviations = new ArrayList();
-	List<String> completeNamesOfExperiments = new ArrayList();
+	List<String> abbreviations = new ArrayList<String>();
+	List<String> completeNamesOfExperiments = new ArrayList<String>();
 	boolean wasOK = true, inited = false;
 	Composite toolbar, parent, indicator;
 	Button[] buttons = new Button[INITIAL_BUTTONS];
@@ -82,11 +120,11 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 
 	private void updateExperiments(final Set<String> newExperiments, final boolean withErrors) {
 		if ( withErrors == true && wasOK == false ) { return; }
-		Set<String> oldNames = new LinkedHashSet(completeNamesOfExperiments);
+		Set<String> oldNames = new LinkedHashSet<String>(completeNamesOfExperiments);
 		if ( inited && wasOK && !withErrors && oldNames.equals(newExperiments) ) { return; }
 		inited = true;
 		wasOK = !withErrors;
-		completeNamesOfExperiments = new ArrayList(newExperiments);
+		completeNamesOfExperiments = new ArrayList<String>(newExperiments);
 		buildAbbreviations();
 		updateToolbar(wasOK);
 	}
@@ -253,18 +291,6 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 	}
 
 	
-	public void refresh() {
-	/*	if ( toRefresh ) {
-			diagram = getDiagram();
-			featureProvider = this.getDiagramTypeProvider().getFeatureProvider();
-			if ( diagram != null && !diagram.getChildren().isEmpty() ) {
-				ModelGenerator.modelValidation(this.getDiagramTypeProvider().getFeatureProvider(), diagram);
-			}
-		}
-		getDiagramBehavior().refreshPalette();
-		getDiagramBehavior().refresh();
-*/
-	}
 
 	public Diagram getDiagram() {
 		Diagram diag = diagram;
@@ -302,7 +328,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		for ( GamlCompilationError error : errors ) {
 			EObject toto = error.getStatement();
 			// System.out.println("syntaxErrorsLoc : " + syntaxErrorsLoc);*/
-			List<String> ids = new ArrayList();
+			List<String> ids = new ArrayList<String>();
 			String fist_obj = buildLocation(toto, ids);
 			// System.out.println("location of error: " + ids);
 			while (!ids.isEmpty()) {
@@ -512,7 +538,6 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		EObject toto = obj;
 		List<String> ids = new ArrayList<String>();
 		do {
-			// System.out.println("toto : " + toto);
 			if ( toto != null ) {
 				if ( toto instanceof EGamaObject ) {
 					if ( toto instanceof ELayer ) {
@@ -594,9 +619,6 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 				public void doExecute() {
 
 					initIdsEObjects();
-					// System.out.println("idsEObjects : " + idsEObjects.keySet());
-					// System.out.println("errorsLoc : " + errorsLoc);
-					// System.out.println("syntaxErrorsLoc : " + syntaxErrorsLoc);
 					List<List<String>> vals = new ArrayList<List<String>>(idsEObjects.keySet());
 					Map<List<String>, EObject> valM = new TOrderedHashMap<List<String>, EObject>(idsEObjects);
 					for ( final EObject bo : valM.values() ) {
@@ -693,11 +715,9 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 			syntaxErrorsLoc.put(newId, eMap2);
 		}
 
-		// System.out.println("idsEObjects: " + idsEObjects);
 		EObject obj = idsEObjects.remove(oldId);
 		if ( obj != null ) {
 			idsEObjects.put(newId, obj);
-			// System.out.println("idsEObjects apres: " + idsEObjects);
 		}
 	}
 

@@ -1,32 +1,113 @@
 package idees.gama.diagram;
 
-import gama.*;
-import idees.gama.features.add.*;
-import idees.gama.features.create.*;
-import idees.gama.features.layout.*;
-import idees.gama.features.modelgeneration.*;
-import idees.gama.features.others.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
+import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.graphiti.dt.IDiagramTypeProvider;
+import org.eclipse.graphiti.features.IAddFeature;
+import org.eclipse.graphiti.features.ICreateConnectionFeature;
+import org.eclipse.graphiti.features.ICreateFeature;
+import org.eclipse.graphiti.features.IDeleteFeature;
+import org.eclipse.graphiti.features.IFeature;
+import org.eclipse.graphiti.features.ILayoutFeature;
+import org.eclipse.graphiti.features.IRemoveFeature;
+import org.eclipse.graphiti.features.IUpdateFeature;
+import org.eclipse.graphiti.features.context.IAddContext;
+import org.eclipse.graphiti.features.context.ICustomContext;
+import org.eclipse.graphiti.features.context.IDeleteContext;
+import org.eclipse.graphiti.features.context.ILayoutContext;
+import org.eclipse.graphiti.features.context.IPictogramElementContext;
+import org.eclipse.graphiti.features.context.IRemoveContext;
+import org.eclipse.graphiti.features.context.IUpdateContext;
+import org.eclipse.graphiti.features.context.impl.AddConnectionContext;
+import org.eclipse.graphiti.features.context.impl.AddContext;
+import org.eclipse.graphiti.features.context.impl.CreateConnectionContext;
+import org.eclipse.graphiti.features.context.impl.CreateContext;
+import org.eclipse.graphiti.features.context.impl.UpdateContext;
+import org.eclipse.graphiti.features.custom.ICustomFeature;
+import org.eclipse.graphiti.internal.datatypes.impl.LocationImpl;
+import org.eclipse.graphiti.mm.pictograms.Anchor;
+import org.eclipse.graphiti.mm.pictograms.AnchorContainer;
+import org.eclipse.graphiti.mm.pictograms.Connection;
+import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.mm.pictograms.Shape;
+import org.eclipse.graphiti.services.Graphiti;
+import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
+
+import gama.EAction;
+import gama.EActionLink;
+import gama.EAspect;
+import gama.EAspectLink;
+import gama.EBatchExperiment;
+import gama.EContinuousTopology;
+import gama.EDisplay;
+import gama.EDisplayLink;
+import gama.EExperiment;
+import gama.EExperimentLink;
+import gama.EGUIExperiment;
+import gama.EGamaObject;
+import gama.EGraphLink;
+import gama.EInheritLink;
+import gama.EReflex;
+import gama.EReflexLink;
+import gama.ESpecies;
+import gama.ESubSpeciesLink;
+import gama.ETopology;
+import gama.EVariable;
+import gama.EWorldAgent;
+import idees.gama.features.add.AddActionFeature;
+import idees.gama.features.add.AddActionLinkFeature;
+import idees.gama.features.add.AddAspectFeature;
+import idees.gama.features.add.AddAspectLinkFeature;
+import idees.gama.features.add.AddBatchExperimentFeature;
+import idees.gama.features.add.AddDisplayFeature;
+import idees.gama.features.add.AddDisplayLinkFeature;
+import idees.gama.features.add.AddEExperimentLinkFeature;
+import idees.gama.features.add.AddGraphLinkFeature;
+import idees.gama.features.add.AddGuiExperimentFeature;
+import idees.gama.features.add.AddInheritingLinkFeature;
+import idees.gama.features.add.AddReflexFeature;
+import idees.gama.features.add.AddReflexLinkFeature;
+import idees.gama.features.add.AddSpeciesFeature;
+import idees.gama.features.add.AddSubSpecieLinkFeature;
+import idees.gama.features.add.AddWorldFeature;
+import idees.gama.features.create.CreateActionLinkFeature;
+import idees.gama.features.create.CreateAspectLinkFeature;
+import idees.gama.features.create.CreateBatchExperimentLinkFeature;
+import idees.gama.features.create.CreateDisplayLinkFeature;
+import idees.gama.features.create.CreateGuiExperimentLinkFeature;
+import idees.gama.features.create.CreateInheritingLinkFeature;
+import idees.gama.features.create.CreateReflexLinkFeature;
+import idees.gama.features.create.CreateSubGridLinkFeature;
+import idees.gama.features.create.CreateSubSpeciesLinkFeature;
+import idees.gama.features.layout.LayoutCommonFeature;
+import idees.gama.features.layout.LayoutDiagramFeature;
+import idees.gama.features.layout.LayoutEExperimentFeature;
+import idees.gama.features.layout.LayoutESpeciesFeature;
+import idees.gama.features.modelgeneration.ModelGenerationFeature;
+import idees.gama.features.modelgeneration.ModelGenerator;
+import idees.gama.features.others.ChangeColorEGamaObjectFeature;
+import idees.gama.features.others.CustomDeleteFeature;
+import idees.gama.features.others.EmptyRemoveFeature;
+import idees.gama.features.others.UpdateEGamaObjectFeature;
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.kernel.experiment.IExperimentPlan;
 import msi.gama.kernel.model.IModel;
-import msi.gama.outputs.*;
+import msi.gama.outputs.IOutput;
 import msi.gaml.architecture.reflex.ReflexStatement;
 import msi.gaml.species.ISpecies;
-import msi.gaml.statements.*;
-import msi.gaml.variables.*;
-import org.eclipse.emf.transaction.*;
-import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.graphiti.dt.IDiagramTypeProvider;
-import org.eclipse.graphiti.features.*;
-import org.eclipse.graphiti.features.context.*;
-import org.eclipse.graphiti.features.context.impl.*;
-import org.eclipse.graphiti.features.custom.ICustomFeature;
-import org.eclipse.graphiti.internal.datatypes.impl.LocationImpl;
-import org.eclipse.graphiti.mm.pictograms.*;
-import org.eclipse.graphiti.services.Graphiti;
-import org.eclipse.graphiti.ui.features.DefaultFeatureProvider;
-import org.eclipse.graphiti.ui.internal.services.GraphitiUiInternal;
+import msi.gaml.statements.ActionStatement;
+import msi.gaml.statements.AspectStatement;
+import msi.gaml.statements.IExecutable;
+import msi.gaml.statements.IStatement;
+import msi.gaml.variables.IVariable;
 
 public class GamaFeatureProvider extends DefaultFeatureProvider {
 
@@ -99,8 +180,6 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		final Diagram diagram = getDiagramTypeProvider().getDiagram();
 			if ( diagram.getChildren().isEmpty() ) {
 			TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(diagram);
-				
-		//	TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(diagram);
 			domain.getCommandStack().execute(new RecordingCommand(domain) {
 
 				@Override
@@ -118,15 +197,11 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 					
 					ac.setSize(0, 0);
 					ac.setTargetContainer(diagram);
-					System.out.println("getDiagramTypeProvider().getDiagramBehavior(): "  + getDiagramTypeProvider().getDiagramBehavior());
 					GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 					diagramEditor.addEOject(newClass);
 					
 					PictogramElement worldPE = addIfPossible(new AddContext(ac, newClass));
-					System.out.println("worldPE: " + worldPE);
 					if ( "skeleton".equals(typeOfModel) ) {
-						initSkeleton(newClass, diagram);
-					} else if ( "example".equals(typeOfModel) ) {
 						initSkeleton(newClass, diagram);
 					} else if ( "custom".equals(typeOfModel) ) {
 						initCustom(newClass, worldPE, diagram);

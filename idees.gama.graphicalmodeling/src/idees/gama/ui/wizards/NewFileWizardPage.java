@@ -8,7 +8,7 @@
  * - Alexis Drogoul, UMI 209 UMMISCO, IRD/UPMC (Kernel, Metamodel, GAML), 2007-2012
  * - Vo Duc An, UMI 209 UMMISCO, IRD/UPMC (SWT, multi-level architecture), 2008-2012
  * - Patrick Taillandier, UMR 6228 IDEES, CNRS/Univ. Rouen  (Batch, GeoTools & JTS), 2009-2012
- * - Beno”t Gaudou, UMR 5505 IRIT, CNRS/Univ. Toulouse 1 (Documentation, Tests), 2010-2012
+ * - Benoï¿½t Gaudou, UMR 5505 IRIT, CNRS/Univ. Toulouse 1 (Documentation, Tests), 2010-2012
  * - Phan Huy Cuong, DREAM team, Univ. Can Tho (XText-based GAML), 2012
  * - Pierrick Koch, UMI 209 UMMISCO, IRD/UPMC (XText-based GAML), 2010-2011
  * - Romain Lavaud, UMI 209 UMMISCO, IRD/UPMC (RCP environment), 2010
@@ -43,7 +43,6 @@ public class NewFileWizardPage extends WizardPage {
 	private Text authorText;
 	private Text descriptionText;
 	private Text titleText;
-	private Button exampleModelButton;
 	private Button emptyModelButton;
 	private Button skeletonModelButton;
 	private String typeOfModel = "empty";
@@ -99,8 +98,6 @@ public class NewFileWizardPage extends WizardPage {
 		emptyModelButton.setSelection(true);
 		skeletonModelButton = new Button(middleComposite, SWT.RADIO);
 		skeletonModelButton.setText("Skeleton");
-		exampleModelButton = new Button(middleComposite, SWT.RADIO);
-		exampleModelButton.setText("Example");
 		emptyModelButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -109,14 +106,6 @@ public class NewFileWizardPage extends WizardPage {
 				radioChanged();
 			}
 
-		});
-		exampleModelButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(final SelectionEvent se) {
-				typeOfModel = "example";
-				radioChanged();
-			}
 		});
 		skeletonModelButton.addSelectionListener(new SelectionAdapter() {
 
@@ -243,12 +232,6 @@ public class NewFileWizardPage extends WizardPage {
 	}
 
 	private void radioChanged() {
-		if ( exampleModelButton.getSelection() ) {
-			descriptionText.setText("This model displays an awesome simulation of something ...");
-			titleText.setText("example");
-			fileText.setText("example.gadl");
-			updateStatus(null);
-		}
 		if ( emptyModelButton.getSelection() || skeletonModelButton.getSelection() ) {
 			descriptionText.setText("");
 			titleText.setText("new");
