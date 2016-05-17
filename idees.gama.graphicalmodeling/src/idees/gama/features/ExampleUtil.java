@@ -75,12 +75,7 @@ public class ExampleUtil {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 	}
 	
-	public static DiagramEditor getDiagramEditor(IFeatureProvider fp) {
-		System.out.println("fp: "+ fp);
-		System.out.println("fp.getDiagramTypeProvider(): "+ fp.getDiagramTypeProvider());
-
-		System.out.println("fp.getDiagramTypeProvider().getDiagramBehavior(): "+ fp.getDiagramTypeProvider().getDiagramBehavior());
-		
+	public static DiagramEditor getDiagramEditor(IFeatureProvider fp) {	
 		return (DiagramEditor) fp.getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 	}
 }
