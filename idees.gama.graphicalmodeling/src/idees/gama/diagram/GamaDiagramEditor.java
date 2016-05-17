@@ -19,8 +19,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.*;
 import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.gef.palette.PaletteRoot;
-import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.*;
 import org.eclipse.graphiti.ui.editor.DiagramBehavior;
 import org.eclipse.graphiti.ui.editor.DiagramEditor;
@@ -66,6 +64,8 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 
 	public GamaDiagramEditor() {
 		super();
+
+		
 	}
 
 	@Override
@@ -240,9 +240,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 			if ( diagram != null && !diagram.getChildren().isEmpty() ) {
 				IModel model = ModelGenerator.modelGeneration(getDiagramTypeProvider().getFeatureProvider(), diagram);
 				if ( model != null ) {
-					ExperimentPlan exp = (ExperimentPlan) model.getExperiment(xp);
-					GAMA.openExperiment(exp);
-				
+					GAMA.runGuiExperiment(xp, model);
 				}
 			}
 
@@ -291,6 +289,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		if ( resource != null ) {
 			resource.setListener(GamaDiagramEditor.this);
 		}
+		
 	}
 
 	public List<GamlCompilationError> getErrors() {

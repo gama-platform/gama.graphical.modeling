@@ -137,7 +137,6 @@ public class ModelGenerator {
 		URI uri = URI.createPlatformResourceURI("toto/" + diagramEditor.getTitle() + ".gaml", true);
 		GamlResource resource = (GamlResource) rs.createResource(uri);
 		String gamlModel = ModelGenerator.generateModel(fp, diagram);
-		 System.out.println("model to test: " + gamlModel);
 		InputStream is = new ByteArrayInputStream(gamlModel.getBytes());
 		diagramEditor.setResource(resource);
 		try {

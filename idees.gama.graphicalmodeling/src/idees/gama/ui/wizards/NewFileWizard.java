@@ -136,20 +136,14 @@ public class NewFileWizard extends Wizard implements INewWizard {
 
 	private void createDiagramEditor(final IFile file, final String diagramName, final IProgressMonitor monitor) {
 		// Create the diagram
-		final Diagram diagram = Graphiti.getPeCreateService().createDiagram("idees.gama.diagram.MyGamaDiagramType", diagramName, true);
+		final Diagram diagram = Graphiti.getPeCreateService().createDiagram("gamaDiagram", diagramName, true);
 		
 		URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
 		
 		
 		FileService.createEmfFileForDiagram(uri, diagram);
-		//TransactionalEditingDomain domain = createEmfFileForDiagram(uri, diagram);
 		DiagramEditorInput editorInput = new DiagramEditorInput(EcoreUtil.getURI(diagram), "idees.gama.diagram.MyGamaDiagramTypeProvider");
 		
-		/*try {
-			IEditorPart ep = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editorInput, "idees.gama.graphicalmodeling.diagram.gamadiagrameditor");
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}*/
 		getShell().getDisplay().asyncExec(new Runnable() {
 
 			@Override
@@ -158,22 +152,8 @@ public class NewFileWizard extends Wizard implements INewWizard {
 				try {
 					IEditorPart ep =
 						pag.openEditor(editorInput, "idees.gama.graphicalmodeling.diagram.gamadiagrameditor");
-					//	((GamaDiagramEditor) ep).init((IEditorSite) ((GamaDiagramEditor) ep).getSite(), editorInput);
-					//DefaultEditDomain ed = new DefaultEditDomain(ep);
-					System.out.println("provider: " + ((GamaDiagramEditor) ep).getDiagramTypeProvider());
-				
 					IDiagramTypeProvider dtp = ((GamaDiagramEditor) ep).getDiagramTypeProvider();
-					//IDiagramTypeProvider dtp = new MyGamaDiagramTypeProvider();
-					//dtp.init(diagram,((GamaDiagramEditor) ep).getDiagramBehavior());
-					
-					//IDiagramTypeProvider dtp =  GraphitiUi.getExtensionManager().createDiagramTypeProvider(diagram, "idees.gama.diagram.MyGamaDiagramTypeProvider");
-					//dtp.init(diagram, new DiagramBehavior((IDiagramContainerUI) ep));
-					
-				//	IDiagramTypeProvider dtp = GraphitiInternal.getEmfService().getDTPForDiagram(diagram);
 					GamaFeatureProvider gfp = (GamaFeatureProvider) dtp.getFeatureProvider();
-					//GamaDiagramBehavior gb =  new GamaDiagramBehavior((IDiagramContainerUI) ep);
-					//dtp.init(diagram,gb);
-					//gb.init(dtp);
 					gfp.setTypeOfModel(page.getTypeOfModel());
 					gfp.init();
 
@@ -184,57 +164,10 @@ public class NewFileWizard extends Wizard implements INewWizard {
 			}
 		});
 		
-		/*
-		final DiagramEditorInput editorInput =
-			new DiagramEditorInput(EcoreUtil.getURI(diagram), "idees.gama.diagram.MyGamaDiagramTypeProvider");
-		monitor.worked(1);
-		monitor.setTaskName("Opening file for editing...");
-		getShell().getDisplay().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				IWorkbenchPage pag = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				try {
-					IEditorPart ep =
-						pag.openEditor(editorInput, "idees.gama.graphicalmodeling.diagram.gamadiagrameditor");
-					IDiagramTypeProvider dtp = GraphitiInternal.getEmfService().getDTPForDiagram(diagram);
-					GamaFeatureProvider gfp = (GamaFeatureProvider) dtp.getFeatureProvider();
-					gfp.setTypeOfModel(page.getTypeOfModel());
-					gfp.init();
-
-					ep.doSave(monitor);
-				} catch (PartInitException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		monitor.worked(1);*/
+		
 	}
 	
 	
-	
-
-	/*public static TransactionalEditingDomain createEmfFileForDiagram(final URI uri, final Diagram diagram) {
-		// Create a resource set and EditingDomain
-		final TransactionalEditingDomain editingDomain =
-			GraphitiUiInternal.getEmfService().createResourceSetAndEditingDomain();
-		// TransactionalEditingDomain editingDomain = DiagramEditorFactory.createResourceSetAndEditingDomain();
-		ResourceSet resourceSet = editingDomain.getResourceSet();
-
-		// Create a resource for this file.
-		final Resource resource = resourceSet.createResource(uri);
-
-		editingDomain.getCommandStack().execute(new RecordingCommand(editingDomain) {
-
-			@Override
-			protected void doExecute() {
-				resource.setTrackingModification(true);
-				resource.getContents().add(diagram);
-			}
-		});
-
-		return editingDomain;
-	}*/
 
 	/** We will accept the selection in the workbench to see if we can initialize from it. */
 	@Override
