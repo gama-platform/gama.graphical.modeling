@@ -78,7 +78,7 @@ public class CreateAspectLinkFeature extends AbstractCreateSpeciesComponentLinkF
 			source.getAspectLinks().add(eReference);
 			target.getAspectLinks().add(eReference);
 		}
-		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)getFeatureProvider().getDiagramTypeProvider().getDiagramEditor());
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(getFeatureProvider()));
 		diagramEditor.addEOject(target);
 		
 		return newConnection;

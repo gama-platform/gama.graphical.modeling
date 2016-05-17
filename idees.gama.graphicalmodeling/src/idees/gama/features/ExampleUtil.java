@@ -1,8 +1,10 @@
 package idees.gama.features;
 
+import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.algorithms.styles.Color;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.services.Graphiti;
+import org.eclipse.graphiti.ui.editor.DiagramEditor;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.RGB;
@@ -71,5 +73,14 @@ public class ExampleUtil {
 	 */
 	private static Shell getShell() {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+	}
+	
+	public static DiagramEditor getDiagramEditor(IFeatureProvider fp) {
+		System.out.println("fp: "+ fp);
+		System.out.println("fp.getDiagramTypeProvider(): "+ fp.getDiagramTypeProvider());
+
+		System.out.println("fp.getDiagramTypeProvider().getDiagramBehavior(): "+ fp.getDiagramTypeProvider().getDiagramBehavior());
+		
+		return (DiagramEditor) fp.getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 	}
 }

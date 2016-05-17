@@ -2,6 +2,7 @@ package idees.gama.ui.editFrame;
 
 import gama.*;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditSpeciesFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
 import java.util.*;
@@ -217,7 +218,7 @@ public class EditSpeciesFrame extends EditFrame {
 		CLabel lblSchedules = new CLabel(canvasSchedules, SWT.NONE);
 		lblSchedules.setBounds(10, 5, 60, 20);
 		lblSchedules.setText("Schedules");
-		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		textSchedules =
 			new ValidateText(canvasSchedules, SWT.BORDER, diagram, fp, frame, diagramEditor, "schedules:", null, null);
 		textSchedules.setBounds(70, 5, 300, 20);
@@ -309,7 +310,7 @@ public class EditSpeciesFrame extends EditFrame {
 		vars.addAll(species.getVariables());
 		species.getVariables().clear();
 		for ( EVariable var : vars ) {
-			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+			GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 			diagramEditor.removeEOject(var);
 			EcoreUtil.delete(var, true);
 
@@ -324,7 +325,7 @@ public class EditSpeciesFrame extends EditFrame {
 			var.setMin(item.getText(5));
 			var.setMax(item.getText(6));
 			species.getVariables().add(var);
-			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+			GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 			diagramEditor.addEOject(var);
 
 		}
@@ -577,7 +578,7 @@ public class EditSpeciesFrame extends EditFrame {
 					} else if ( column != 1 ) {
 						// Create the Text object for our editor
 						final GamaDiagramEditor diagramEditor =
-							(GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+							((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 						String name = "name";
 						switch (column) {
 							case 2:
@@ -740,7 +741,7 @@ public class EditSpeciesFrame extends EditFrame {
 	}
 
 	public Composite shapeInitValue(final Composite container) {
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		// Shape
 		final Composite shapeComp = new Composite(container, SWT.BORDER);
@@ -916,7 +917,7 @@ public class EditSpeciesFrame extends EditFrame {
 	public Canvas canvasShape(final Composite container) {
 		// ****** CANVAS SHAPE *********
 		ESpecies species = (ESpecies) eobject;
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		Canvas canvasShape = new Canvas(container, SWT.BORDER);
 		canvasShape.setBounds(10, 50, 720, 220);
@@ -1065,7 +1066,7 @@ public class EditSpeciesFrame extends EditFrame {
 	public Canvas canvasTorus(final Composite container) {
 		// ****** CANVAS TORUS *********
 		ESpecies species = (ESpecies) eobject;
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		Canvas canvasTorus = new Canvas(container, SWT.BORDER);
 		canvasTorus.setBounds(10, 160, 720, 30);
@@ -1170,7 +1171,7 @@ public class EditSpeciesFrame extends EditFrame {
 		} else {
 			btnRndLoc.setSelection(true);
 		}
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		btnRndLoc.addSelectionListener(new SelectionAdapter() {
 
@@ -1213,7 +1214,7 @@ public class EditSpeciesFrame extends EditFrame {
 	public Canvas canvasGrid(final Composite container) {
 		// ****** CANVAS GRID *********
 		ESpecies species = (ESpecies) eobject;
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		EGridTopology gridTopo = (EGridTopology) species.getTopology();
 		Canvas canvasGrid = new Canvas(container, SWT.BORDER);
@@ -1309,7 +1310,7 @@ public class EditSpeciesFrame extends EditFrame {
 	public Canvas canvasBounds(final Composite container) {
 		// ****** CANVAS BOUNDS *********
 		EWorldAgent world = (EWorldAgent) eobject;
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		Canvas canvasBounds = new Canvas(container, SWT.BORDER);
 		canvasBounds.setBounds(10, 130, 720, 80);
@@ -1478,7 +1479,7 @@ public class EditSpeciesFrame extends EditFrame {
 		lblUpdate.setBounds(5, 100, 60, 20);
 		lblUpdate.setText("Update");
 
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		// textLocUpdate = new Text(canvasLocation, SWT.BORDER);
 		textLocUpdate =
@@ -1577,7 +1578,7 @@ public class EditSpeciesFrame extends EditFrame {
 
 	public Canvas canvasSkills(final Composite container) {
 		// ****** CANVAS SKILLS *********
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		Canvas canvasSkills = new Canvas(container, SWT.BORDER);
 		canvasSkills.setBounds(10, 460, 720, 100);
@@ -1665,7 +1666,7 @@ public class EditSpeciesFrame extends EditFrame {
 		// ****** CANVAS INIT *********
 		Canvas canvasInit = new Canvas(container, SWT.BORDER);
 		canvasInit.setBounds(10, 515, 720, 150);
-		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		textInit = new ValidateStyledText(canvasInit, SWT.BORDER, diagram, fp, this, diagramEditor, "init", null);
 		textName.getLinkedVsts().add((ValidateStyledText) textInit);

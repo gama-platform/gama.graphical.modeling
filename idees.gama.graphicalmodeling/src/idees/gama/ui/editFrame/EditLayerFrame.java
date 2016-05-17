@@ -2,6 +2,7 @@ package idees.gama.ui.editFrame;
 
 import gama.*;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
 import java.util.*;
@@ -241,7 +242,7 @@ public class EditLayerFrame extends EditFrame {
 		final Label colorLabel, final Button button, final Button btnCstCol, final Button btnExpressionCol,
 		final String text) {
 		// COLOR
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		compositeColor.setSize(700, 20);
 
 		// COLOR
@@ -475,7 +476,7 @@ public class EditLayerFrame extends EditFrame {
 	}
 
 	public Canvas canvasProperties(final Composite container) {
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		Canvas canvasProp = new Canvas(container, SWT.BORDER);
 		canvasProp.setSize(720, 130);
 		CLabel lblPosition = new CLabel(canvasProp, SWT.NONE);
@@ -654,7 +655,7 @@ public class EditLayerFrame extends EditFrame {
 
 	public void buildCanvasTopo(final Composite container) {
 		// ****** CANVAS TYPE *********
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		Canvas canvasTopo = new Canvas(container, SWT.BORDER);
 		canvasTopo.setBounds(10, 50, 720, 250);
@@ -938,7 +939,7 @@ public class EditLayerFrame extends EditFrame {
 		// ****** CANVAS CHART LAYER *********
 		Canvas canvasChartLayer = new Canvas(container, SWT.NONE);
 		canvasChartLayer.setSize(720, 120);
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		table_chart_layers = createTableEditor(canvasChartLayer);
 		table_chart_layers.setBounds(10, 0, 660, 80);
@@ -1073,7 +1074,7 @@ public class EditLayerFrame extends EditFrame {
 					} else if ( column != 1 ) {
 						// Create the Text object for our editor
 						final GamaDiagramEditor diagramEditor =
-							(GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+							((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 						String name = "legend:";
 						switch (column) {
 							case 2:

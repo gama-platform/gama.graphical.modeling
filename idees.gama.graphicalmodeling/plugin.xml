@@ -77,7 +77,7 @@
             extensions="gadl"
             icon="icons/wizards/diagram_small.png"
             id="idees.gama.graphicalmodeling.diagram.gamadiagrameditor"
-            matchingStrategy="org.eclipse.graphiti.ui.editor.DiagramEditorFactory$DiagramEditorMatchingStrategy"
+            matchingStrategy="org.eclipse.graphiti.ui.editor.DiagramEditorMatchingStrategy"
             name="Gama Diagram Editor">
       </editor>
    </extension>

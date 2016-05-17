@@ -115,7 +115,7 @@ public class CreateSubGraphSpeciesFeature extends AbstractCreateSpeciesComponent
 			eReference.setMicro(targetNode);
 			source.getMicroSpeciesLinks().add(eReference);
 			targetNode.getMacroSpeciesLinks().add(eReference);
-			GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)getFeatureProvider().getDiagramTypeProvider().getDiagramEditor());
+			GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(getFeatureProvider()));
 			
 			if (source != null && targetEdge != null) {
 				// create new business object

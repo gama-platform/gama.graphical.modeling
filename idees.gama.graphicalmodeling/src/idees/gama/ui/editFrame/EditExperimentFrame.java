@@ -2,6 +2,7 @@ package idees.gama.ui.editFrame;
 
 import gama.*;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
 import java.util.*;
@@ -68,7 +69,7 @@ public class EditExperimentFrame extends EditFrame {
 	}
 
 	protected Canvas canvasParameter(final Composite container) {
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		// ****** CANVAS PARAMETER *********
 		Canvas canvasParameter = new Canvas(container, SWT.BORDER);
@@ -140,7 +141,7 @@ public class EditExperimentFrame extends EditFrame {
 	}
 
 	protected Canvas canvasMonitor(final Composite container) {
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		// ****** CANVAS Monitor *********
 		Canvas canvasMonitor = new Canvas(container, SWT.BORDER);
@@ -225,7 +226,7 @@ public class EditExperimentFrame extends EditFrame {
 	 */
 	private Table createTableEditor(final Composite container) {
 		// Create the table
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		final Table tableVars = new Table(container, SWT.SINGLE | SWT.FULL_SELECTION | SWT.HIDE_SELECTION);
 		tableVars.setHeaderVisible(true);
@@ -351,7 +352,7 @@ public class EditExperimentFrame extends EditFrame {
 					} else {
 						// Create the Text object for our editor
 						final GamaDiagramEditor diagramEditor =
-							(GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+							((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 						String name = "";
 						switch (column) {
 							case 1:
@@ -521,7 +522,7 @@ public class EditExperimentFrame extends EditFrame {
 						}
 					}
 					final GamaDiagramEditor diagramEditor =
-						(GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+						((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 					final ValidateText text =
 						new ValidateText(tableVars, SWT.BORDER, diagram, fp, frame, diagramEditor, "", null, item

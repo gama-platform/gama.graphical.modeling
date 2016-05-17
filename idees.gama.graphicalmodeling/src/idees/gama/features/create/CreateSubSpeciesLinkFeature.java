@@ -40,6 +40,8 @@ public class CreateSubSpeciesLinkFeature extends AbstractCreateSpeciesComponentL
 	    newSpecies.setHasError(false);
 		
 	  	this.getDiagram().eResource().getContents().add(newSpecies);
+	  	this.updatePictogramElement(getDiagram());
+	  	System.out.println("this.getDiagram().eResource().getContents(): " + this.getDiagram().eResource().getContents());
 		newSpecies.setName(newSpeciesName);
 		CreateContext ac = new CreateContext();
 		EContinuousTopology newTopo = gama.GamaFactory.eINSTANCE.createEContinuousTopology();
@@ -48,6 +50,7 @@ public class CreateSubSpeciesLinkFeature extends AbstractCreateSpeciesComponentL
 		ac.setLocation(context.getTargetLocation().getX(), context.getTargetLocation().getY());
 		ac.setSize(0, 0);
 		ac.setTargetContainer(getDiagram());
+		System.out.println("newSpecies: " + newSpecies);
 		return newSpecies;
 	}
 	
@@ -56,6 +59,7 @@ public class CreateSubSpeciesLinkFeature extends AbstractCreateSpeciesComponentL
 		cc.setLocation(context.getTargetLocation().getX() - (int)(AddSpeciesFeature.INIT_WIDTH/2.0), context.getTargetLocation().getY() - (int)(AddSpeciesFeature.INIT_HEIGHT/2.0));
 		cc.setSize(0, 0);
 		cc.setTargetContainer(getDiagram());
+		System.out.println("getFeatureProvider(): " + getFeatureProvider());
 		return getFeatureProvider().addIfPossible(new AddContext(cc, species));
 	}
 	
@@ -80,8 +84,9 @@ public class CreateSubSpeciesLinkFeature extends AbstractCreateSpeciesComponentL
 			source.getMicroSpeciesLinks().add(eReference);
 			target.getMacroSpeciesLinks().add(eReference);
 		}
-		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)getFeatureProvider().getDiagramTypeProvider().getDiagramEditor());
-		diagramEditor.addEOject(target);
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(getFeatureProvider()));
+		
+		//diagramEditor.addEOject(target);
 		
 		return newConnection;
 	}
@@ -102,7 +107,7 @@ public class CreateSubSpeciesLinkFeature extends AbstractCreateSpeciesComponentL
 	
 	public void execute(IContext context) {
 		super.execute(context);
-		ModelGenerator.modelValidation(getFeatureProvider(), getDiagram());
+		//ModelGenerator.modelValidation(getFeatureProvider(), getDiagram());
 	}
 	
 	

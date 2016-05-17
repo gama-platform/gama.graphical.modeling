@@ -2,6 +2,7 @@ package idees.gama.ui.editFrame;
 
 import gama.*;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
 import java.util.*;
@@ -68,7 +69,7 @@ public class EditReflexFrame extends EditActionFrame {
 		gridData2.horizontalAlignment = SWT.FILL;
 		gridData2.grabExcessHorizontalSpace = true;
 
-		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		List<String> uselessName = new ArrayList<String>();
 		uselessName.add("name");
 		conditionCode = new ValidateText(group, SWT.BORDER, diagram, fp, this, diagramEditor, "", uselessName, null);
@@ -106,7 +107,7 @@ public class EditReflexFrame extends EditActionFrame {
 		gridData2.grabExcessHorizontalSpace = true;
 		gridData2.grabExcessVerticalSpace = true;
 
-		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		List<String> uselessName = new ArrayList<String>();
 		uselessName.add("name");
 		gamlCode = new ValidateStyledText(group, SWT.BORDER, diagram, fp, this, diagramEditor, "", uselessName);

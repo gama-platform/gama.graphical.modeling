@@ -2,6 +2,7 @@ package idees.gama.features.others;
 
 import gama.EWorldAgent;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
 import idees.gama.features.modelgeneration.ModelGenerator;
 
 import org.eclipse.emf.ecore.EObject;
@@ -39,7 +40,7 @@ public class CustomDeleteFeature extends DefaultDeleteFeature{
 		super.postDelete(context);
 		 Object bo = getBusinessObjectForPictogramElement(context.getPictogramElement());
 			
-		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)fp.getDiagramTypeProvider().getDiagramEditor());
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		if (bo instanceof EObject)
 			diagramEditor.removeEOject((EObject) bo);
 		

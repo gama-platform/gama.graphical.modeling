@@ -2,6 +2,7 @@ package idees.gama.ui.editFrame;
 
 import gama.*;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
 import java.util.*;
@@ -156,7 +157,7 @@ public class EditDisplayFrame extends EditFrame {
 		// ****** CANVAS LAYERS *********
 		// ****** CANVAS LAYERS *********
 		Group group = new Group(container, SWT.NONE);
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		group.setLayout(new FillLayout(SWT.VERTICAL));
 		group.setText("Display layers");
@@ -326,7 +327,7 @@ public class EditDisplayFrame extends EditFrame {
 	}
 
 	public void updateLayerId() {
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		List<String> loc = new ArrayList<String>();
 		diagramEditor.buildLocation(eobject, loc);
 		int size = loc.size();
@@ -349,7 +350,7 @@ public class EditDisplayFrame extends EditFrame {
 	public void buildCanvasParam(final Composite container) {
 		// ****** CANVAS PARAMETERS *********
 		Group group = new Group(container, SWT.NONE);
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		group.setLayout(new GridLayout(1, false));
 		group.setText("Display properties");
@@ -594,7 +595,7 @@ public class EditDisplayFrame extends EditFrame {
 	}
 
 	public boolean hasError(final ELayer elayer) {
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		List<String> speciesStr = new ArrayList<String>();
 		for ( ESpecies sp : species ) {
 			speciesStr.add(sp.getName());

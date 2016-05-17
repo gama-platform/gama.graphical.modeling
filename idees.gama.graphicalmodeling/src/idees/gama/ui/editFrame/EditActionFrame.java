@@ -2,6 +2,7 @@ package idees.gama.ui.editFrame;
 
 import gama.*;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
 import java.util.*;
@@ -74,7 +75,7 @@ public class EditActionFrame extends EditFrame {
 	}
 
 	protected void groupReturnType(final Composite container) {
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 
 		// ****** CANVAS RETURN TYPE *********
 		Group group = new Group(container, SWT.NONE);
@@ -149,7 +150,7 @@ public class EditActionFrame extends EditFrame {
 		 * gridData2.grabExcessVerticalSpace= true;
 		 */
 
-		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		List<String> uselessName = new ArrayList<String>();
 		uselessName.add("name");
 		gamlCode = new ValidateStyledText(group, SWT.BORDER, diagram, fp, this, diagramEditor, "", uselessName);
@@ -204,7 +205,7 @@ public class EditActionFrame extends EditFrame {
 		vars.addAll(action.getVariables());
 		action.getVariables().clear();
 		for ( EVariable var : vars ) {
-			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+			GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp)); 
 			diagramEditor.removeEOject(var);
 			EcoreUtil.delete(var, true);
 
@@ -215,7 +216,7 @@ public class EditActionFrame extends EditFrame {
 			var.setType(item.getText(1));
 			var.setInit(item.getText(2));
 			action.getVariables().add(var);
-			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+			GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 			diagramEditor.addEOject(var);
 
 		}
@@ -321,7 +322,7 @@ public class EditActionFrame extends EditFrame {
 					} else if ( column != 1 ) {
 						// Create the Text object for our editor
 						final GamaDiagramEditor diagramEditor =
-							(GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+							((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 						List<String> uselessName = new ArrayList<String>();
 
 						String name = "name";

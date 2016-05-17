@@ -19,18 +19,21 @@ public abstract class AbstractCreateSpeciesComponentLinkFeature extends Abstract
 	}
 
 	public boolean canCreate(ICreateConnectionContext context) {
-		ESpecies source = getESpecies(context.getSourceAnchor());
+		
+		return true;
+		/*ESpecies source = getESpecies(context.getSourceAnchor());
 		if (source != null) {
 			return true;
 		}
-		return false;
+		return false;*/
 	}
 
 	public boolean canStartConnection(ICreateConnectionContext context) {
-		if (getESpecies(context.getSourceAnchor()) != null) {
+		return true;
+/*		if (getESpecies(context.getSourceAnchor()) != null) {
 			return true;
 		}
-		return false;
+		return false;*/
 	}
 	
 	

@@ -77,7 +77,7 @@ public class CreateReflexLinkFeature extends AbstractCreateSpeciesComponentLinkF
 			source.getReflexLinks().add(eReference);
 			target.getReflexLinks().add(eReference);
 		}
-		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)getFeatureProvider().getDiagramTypeProvider().getDiagramEditor());
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(getFeatureProvider()));
 		diagramEditor.addEOject(target);
 		
 		return newConnection;

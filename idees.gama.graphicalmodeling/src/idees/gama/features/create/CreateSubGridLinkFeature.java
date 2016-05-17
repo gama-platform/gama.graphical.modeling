@@ -81,7 +81,7 @@ public class CreateSubGridLinkFeature extends AbstractCreateSpeciesComponentLink
 			source.getMicroSpeciesLinks().add(eReference);
 			target.getMacroSpeciesLinks().add(eReference);
 		}
-		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)getFeatureProvider().getDiagramTypeProvider().getDiagramEditor());
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(getFeatureProvider()));
 		diagramEditor.addEOject(target);
 		
 		return newConnection;

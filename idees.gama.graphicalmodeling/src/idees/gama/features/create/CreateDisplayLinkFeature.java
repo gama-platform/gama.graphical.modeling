@@ -102,7 +102,7 @@ public class CreateDisplayLinkFeature extends AbstractCreateConnectionFeature {
 			source.getDisplayLinks().add(eReference);
 			target.setDisplayLink(eReference);
 		}
-		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)getFeatureProvider().getDiagramTypeProvider().getDiagramEditor());
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(getFeatureProvider()));
 		diagramEditor.addEOject(target);
 		
 		return newConnection;

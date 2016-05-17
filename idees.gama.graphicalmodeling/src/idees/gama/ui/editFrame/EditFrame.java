@@ -2,6 +2,7 @@ package idees.gama.ui.editFrame;
 
 import gama.*;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import java.util.ArrayList;
 import msi.gama.lang.gaml.gaml.Model;
@@ -10,6 +11,7 @@ import msi.gaml.compilation.GamlCompilationError;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.graphiti.ui.editor.DiagramEditor;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
@@ -149,6 +151,7 @@ public abstract class EditFrame extends ApplicationWindow {
 		groupName(container, true);
 	}
 
+	
 	protected void groupName(final Composite container, final boolean hasNameFaeture) {
 		Group group = new Group(container, SWT.NONE);
 		GridData gridData = new GridData();
@@ -161,7 +164,7 @@ public abstract class EditFrame extends ApplicationWindow {
 		CLabel lblName = new CLabel(group, SWT.NONE);
 		lblName.setText("Name:");
 
-		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		textName = new ValidateText(group, SWT.BORDER, diagram, fp, this, diagramEditor, "name", null, null);
 		textName.setNameFeature(hasNameFaeture);
 		GridData gridData2 = new GridData();
@@ -182,7 +185,8 @@ public abstract class EditFrame extends ApplicationWindow {
 
 	protected Canvas canvasName(final Composite container, final boolean hasNameFaeture) {
 		Canvas canvasName = new Canvas(container, SWT.BORDER);
-		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		textName = new ValidateText(canvasName, SWT.BORDER, diagram, fp, this, diagramEditor, "name", null, null);
 		textName.setNameFeature(hasNameFaeture);
 		UtilEditFrame.buildCanvasName(container, canvasName, textName, eobject, ef);

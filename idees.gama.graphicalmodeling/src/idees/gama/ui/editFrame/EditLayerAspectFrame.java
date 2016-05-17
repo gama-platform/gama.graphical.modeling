@@ -3,6 +3,7 @@ package idees.gama.ui.editFrame;
 import gama.EGamaObject;
 import gama.ELayerAspect;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
 
@@ -328,7 +329,7 @@ public class EditLayerAspectFrame extends EditFrame {
 
 	public void buildCanvasTopo(Composite container) {
 		// ****** CANVAS TOPOLOGY *********
-		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)fp.getDiagramTypeProvider().getDiagramEditor());
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		   
 		Canvas canvasTopo = new Canvas(container, SWT.BORDER);
 		canvasTopo.setBounds(10, 50, 720, 370);

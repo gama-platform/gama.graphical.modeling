@@ -4,8 +4,8 @@ import gama.*;
 import idees.gama.features.modelgeneration.ModelGenerator;
 import java.util.*;
 import java.util.List;
-import msi.gama.common.util.GuiUtils;
 import msi.gama.gui.swt.IGamaColors;
+import msi.gama.kernel.experiment.ExperimentPlan;
 import msi.gama.kernel.model.IModel;
 import msi.gama.lang.gaml.gaml.*;
 import msi.gama.lang.gaml.gaml.impl.*;
@@ -19,8 +19,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.*;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.*;
+import org.eclipse.graphiti.ui.editor.DiagramBehavior;
 import org.eclipse.graphiti.ui.editor.DiagramEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -44,7 +46,6 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 	CLabel status;
 	Button menu;
 	Diagram diagram;
-	IFeatureProvider featureProvider;
 	List<GamlCompilationError> errors;
 
 	List<String> facets = Arrays.asList("torus:", "width:", "height:", "neighbours:", "refresh_every:", "background:",
@@ -237,10 +238,11 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 			diagram = getDiagram();
 			String xp = ((Button) evt.getSource()).getText();
 			if ( diagram != null && !diagram.getChildren().isEmpty() ) {
-				IModel model = ModelGenerator.modelGeneration(featureProvider, diagram);
+				IModel model = ModelGenerator.modelGeneration(getDiagramTypeProvider().getFeatureProvider(), diagram);
 				if ( model != null ) {
-					GuiUtils.openSimulationPerspective();
-					GAMA.controller.newExperiment(xp, model);
+					ExperimentPlan exp = (ExperimentPlan) model.getExperiment(xp);
+					GAMA.openExperiment(exp);
+				
 				}
 			}
 
@@ -252,18 +254,18 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		super.doSave(monitor);
 	}
 
-	@Override
+	
 	public void refresh() {
-		if ( toRefresh ) {
+	/*	if ( toRefresh ) {
 			diagram = getDiagram();
 			featureProvider = this.getDiagramTypeProvider().getFeatureProvider();
 			if ( diagram != null && !diagram.getChildren().isEmpty() ) {
 				ModelGenerator.modelValidation(this.getDiagramTypeProvider().getFeatureProvider(), diagram);
 			}
 		}
-		this.refreshPalette();
-		super.refresh();
-
+		getDiagramBehavior().refreshPalette();
+		getDiagramBehavior().refresh();
+*/
 	}
 
 	public Diagram getDiagram() {
@@ -639,7 +641,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		// System.out.println("initIdsEObjects");
 		if ( diagram != null && !diagram.getChildren().isEmpty() && idsEObjects.isEmpty() ) {
 			for ( Shape obj : getDiagram().getChildren() ) {
-				Object bo = featureProvider.getBusinessObjectForPictogramElement(obj);
+				Object bo = getDiagramTypeProvider().getFeatureProvider().getBusinessObjectForPictogramElement(obj);
 				// System.out.println("obj : " + bo);
 				if ( bo instanceof EObject ) {
 					addEOject((EObject) bo);
@@ -703,5 +705,14 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 	public boolean isWasOK() {
 		return wasOK;
 	}
+
+	@Override
+	protected DiagramBehavior createDiagramBehavior() {
+		return new GamaDiagramBehavior(this);
+	}
+
+	
+	
+	
 
 }

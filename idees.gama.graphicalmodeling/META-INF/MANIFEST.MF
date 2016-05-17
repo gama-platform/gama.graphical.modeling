@@ -3,10 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: GraphicalModeling
 Bundle-SymbolicName: idees.gama.graphicalmodeling;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.graphiti;bundle-version="0.8.2",
- org.eclipse.graphiti.ui;bundle-version="0.8.2",
- msi.gama.core,
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: msi.gama.core,
  idees.gama.emf.metamodel;bundle-version="1.0.0",
  org.eclipse.emf.transaction;bundle-version="1.4.0",
  org.eclipse.ui.ide;bundle-version="3.7.0",
@@ -21,7 +19,10 @@ Require-Bundle: org.eclipse.graphiti;bundle-version="0.8.2",
  org.eclipse.ui.editors,
  msi.gama.application;bundle-version="1.6.1",
  msi.gama.ext;bundle-version="1.0.0",
- org.apache.log4j;bundle-version="1.2.13"
+ org.apache.log4j;bundle-version="1.2.13",
+ org.eclipse.graphiti;bundle-version="0.13.0",
+ org.eclipse.graphiti.ui;bundle-version="0.13.0",
+ org.eclipse.emf;bundle-version="2.6.0"
 Export-Package: idees.gama.diagram,
  idees.gama.features,
  idees.gama.features.add,

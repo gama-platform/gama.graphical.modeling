@@ -89,7 +89,7 @@ public class CreateGuiExperimentLinkFeature  extends AbstractCreateConnectionFea
 			source.getExperimentLinks().add(eReference);
 			target.setExperimentLink(eReference);
 		}
-		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)getFeatureProvider().getDiagramTypeProvider().getDiagramEditor());
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(getFeatureProvider()));
 		diagramEditor.addEOject(target);
 		
 		return newConnection;

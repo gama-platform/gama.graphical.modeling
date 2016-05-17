@@ -2,6 +2,8 @@ package idees.gama.features.modelgeneration;
 
 import gama.*;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
+
 import java.io.*;
 import java.util.*;
 import msi.gama.kernel.model.IModel;
@@ -24,7 +26,7 @@ public class ModelGenerator {
 	private static String EL = System.getProperty("line.separator");
 
 	public static IModel modelGeneration(final IFeatureProvider fp, final Diagram diagram) {
-		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		diagramEditor.initIdsEObjects();
 		XtextResourceSet rs = EGaml.getInstance(XtextResourceSet.class);
 		rs.setClasspathURIContext(ModelGenerator.class);
@@ -127,7 +129,7 @@ public class ModelGenerator {
 
 	public static List<GamlCompilationError>
 		modelValidation(final IFeatureProvider fp, final Diagram diagram/* ,ValidateStyledText vst */) {
-		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		diagramEditor.initIdsEObjects();
 
 		XtextResourceSet rs = EGaml.getInstance(XtextResourceSet.class);
@@ -135,7 +137,7 @@ public class ModelGenerator {
 		URI uri = URI.createPlatformResourceURI("toto/" + diagramEditor.getTitle() + ".gaml", true);
 		GamlResource resource = (GamlResource) rs.createResource(uri);
 		String gamlModel = ModelGenerator.generateModel(fp, diagram);
-		// System.out.println("model to test: " + gamlModel);
+		 System.out.println("model to test: " + gamlModel);
 		InputStream is = new ByteArrayInputStream(gamlModel.getBytes());
 		diagramEditor.setResource(resource);
 		try {

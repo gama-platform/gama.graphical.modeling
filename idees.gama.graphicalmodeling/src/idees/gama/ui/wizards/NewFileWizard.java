@@ -8,7 +8,7 @@
  * - Alexis Drogoul, UMI 209 UMMISCO, IRD/UPMC (Kernel, Metamodel, GAML), 2007-2012
  * - Vo Duc An, UMI 209 UMMISCO, IRD/UPMC (SWT, multi-level architecture), 2008-2012
  * - Patrick Taillandier, UMR 6228 IDEES, CNRS/Univ. Rouen (Batch, GeoTools & JTS), 2009-2012
- * - Beno�t Gaudou, UMR 5505 IRIT, CNRS/Univ. Toulouse 1 (Documentation, Tests), 2010-2012
+ * - Beno?t Gaudou, UMR 5505 IRIT, CNRS/Univ. Toulouse 1 (Documentation, Tests), 2010-2012
  * - Phan Huy Cuong, DREAM team, Univ. Can Tho (XText-based GAML), 2012
  * - Pierrick Koch, UMI 209 UMMISCO, IRD/UPMC (XText-based GAML), 2010-2011
  * - Romain Lavaud, UMI 209 UMMISCO, IRD/UPMC (RCP environment), 2010
@@ -18,20 +18,34 @@
  */
 package idees.gama.ui.wizards;
 
+import idees.gama.FileService;
+import idees.gama.diagram.GamaDiagramBehavior;
+import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.diagram.GamaFeatureProvider;
+import idees.gama.diagram.MyGamaDiagramTypeProvider;
+
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.Map;
+
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.*;
+import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.internal.services.GraphitiInternal;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.services.Graphiti;
+import org.eclipse.graphiti.ui.editor.DiagramBehavior;
 import org.eclipse.graphiti.ui.editor.DiagramEditorInput;
+import org.eclipse.graphiti.ui.editor.IDiagramContainerUI;
 import org.eclipse.graphiti.ui.internal.services.GraphitiUiInternal;
+import org.eclipse.graphiti.ui.services.GraphitiUi;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.*;
@@ -122,10 +136,55 @@ public class NewFileWizard extends Wizard implements INewWizard {
 
 	private void createDiagramEditor(final IFile file, final String diagramName, final IProgressMonitor monitor) {
 		// Create the diagram
-		final Diagram diagram = Graphiti.getPeCreateService().createDiagram("gamaDiagram", diagramName, true);
+		final Diagram diagram = Graphiti.getPeCreateService().createDiagram("idees.gama.diagram.MyGamaDiagramType", diagramName, true);
+		
 		URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
-		TransactionalEditingDomain domain = createEmfFileForDiagram(uri, diagram);
+		
+		
+		FileService.createEmfFileForDiagram(uri, diagram);
+		//TransactionalEditingDomain domain = createEmfFileForDiagram(uri, diagram);
+		DiagramEditorInput editorInput = new DiagramEditorInput(EcoreUtil.getURI(diagram), "idees.gama.diagram.MyGamaDiagramTypeProvider");
+		
+		/*try {
+			IEditorPart ep = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editorInput, "idees.gama.graphicalmodeling.diagram.gamadiagrameditor");
+		} catch (PartInitException e) {
+			e.printStackTrace();
+		}*/
+		getShell().getDisplay().asyncExec(new Runnable() {
 
+			@Override
+			public void run() {
+				IWorkbenchPage pag = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				try {
+					IEditorPart ep =
+						pag.openEditor(editorInput, "idees.gama.graphicalmodeling.diagram.gamadiagrameditor");
+					//	((GamaDiagramEditor) ep).init((IEditorSite) ((GamaDiagramEditor) ep).getSite(), editorInput);
+					//DefaultEditDomain ed = new DefaultEditDomain(ep);
+					System.out.println("provider: " + ((GamaDiagramEditor) ep).getDiagramTypeProvider());
+				
+					IDiagramTypeProvider dtp = ((GamaDiagramEditor) ep).getDiagramTypeProvider();
+					//IDiagramTypeProvider dtp = new MyGamaDiagramTypeProvider();
+					//dtp.init(diagram,((GamaDiagramEditor) ep).getDiagramBehavior());
+					
+					//IDiagramTypeProvider dtp =  GraphitiUi.getExtensionManager().createDiagramTypeProvider(diagram, "idees.gama.diagram.MyGamaDiagramTypeProvider");
+					//dtp.init(diagram, new DiagramBehavior((IDiagramContainerUI) ep));
+					
+				//	IDiagramTypeProvider dtp = GraphitiInternal.getEmfService().getDTPForDiagram(diagram);
+					GamaFeatureProvider gfp = (GamaFeatureProvider) dtp.getFeatureProvider();
+					//GamaDiagramBehavior gb =  new GamaDiagramBehavior((IDiagramContainerUI) ep);
+					//dtp.init(diagram,gb);
+					//gb.init(dtp);
+					gfp.setTypeOfModel(page.getTypeOfModel());
+					gfp.init();
+
+					ep.doSave(monitor);
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		/*
 		final DiagramEditorInput editorInput =
 			new DiagramEditorInput(EcoreUtil.getURI(diagram), "idees.gama.diagram.MyGamaDiagramTypeProvider");
 		monitor.worked(1);
@@ -149,10 +208,13 @@ public class NewFileWizard extends Wizard implements INewWizard {
 				}
 			}
 		});
-		monitor.worked(1);
+		monitor.worked(1);*/
 	}
+	
+	
+	
 
-	public static TransactionalEditingDomain createEmfFileForDiagram(final URI uri, final Diagram diagram) {
+	/*public static TransactionalEditingDomain createEmfFileForDiagram(final URI uri, final Diagram diagram) {
 		// Create a resource set and EditingDomain
 		final TransactionalEditingDomain editingDomain =
 			GraphitiUiInternal.getEmfService().createResourceSetAndEditingDomain();
@@ -172,7 +234,7 @@ public class NewFileWizard extends Wizard implements INewWizard {
 		});
 
 		return editingDomain;
-	}
+	}*/
 
 	/** We will accept the selection in the workbench to see if we can initialize from it. */
 	@Override

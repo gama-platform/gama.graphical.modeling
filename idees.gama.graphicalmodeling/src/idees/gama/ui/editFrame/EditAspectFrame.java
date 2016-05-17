@@ -2,6 +2,7 @@ package idees.gama.ui.editFrame;
 
 import gama.*;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
 import java.util.*;
@@ -62,7 +63,7 @@ public class EditAspectFrame extends EditFrame {
 	}
 
 	protected void groupLayers(final Composite container) {
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		List<String> vals = new ArrayList<String>();
 		diagramEditor.buildLocation(eobject, vals);
 		vals.add("draw");
@@ -302,7 +303,7 @@ public class EditAspectFrame extends EditFrame {
 	}
 
 	public boolean hasError(final ELayerAspect elayer) {
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) fp.getDiagramTypeProvider().getDiagramEditor();
+		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		List<String> ids = new ArrayList<String>();
 		diagramEditor.buildLocation(elayer, ids);
 

@@ -9,6 +9,7 @@ public class MyGamaDiagramTypeProvider extends AbstractDiagramTypeProvider imple
 	private IToolBehaviorProvider[] toolBehaviorProviders;
 	 
 	public MyGamaDiagramTypeProvider() {
+		super();
 		setFeatureProvider(new GamaFeatureProvider(this));
 	}
 	
@@ -21,6 +22,7 @@ public class MyGamaDiagramTypeProvider extends AbstractDiagramTypeProvider imple
 	        }
 	        return toolBehaviorProviders;
 	    }
+	 
 	
 }
 	 

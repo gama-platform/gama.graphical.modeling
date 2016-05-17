@@ -81,7 +81,7 @@ public class CreateBatchExperimentLinkFeature  extends AbstractCreateConnectionF
 			source.getExperimentLinks().add(eReference);
 			target.setExperimentLink(eReference);
 		}
-		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)getFeatureProvider().getDiagramTypeProvider().getDiagramEditor());
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(getFeatureProvider()));
 		diagramEditor.addEOject(target);
 		
 		return newConnection;
