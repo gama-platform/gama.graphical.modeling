@@ -133,8 +133,6 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 
 	@Override
 	public IAddFeature getAddFeature(final IAddContext context) {
-		System.out.println("context: " + context);
-		System.out.println("context.getNewObject(): " + context.getNewObject());
 		if ( context.getNewObject() instanceof EWorldAgent ) {
 			return new AddWorldFeature(this);
 		} else if ( context.getNewObject() instanceof ESpecies ) {

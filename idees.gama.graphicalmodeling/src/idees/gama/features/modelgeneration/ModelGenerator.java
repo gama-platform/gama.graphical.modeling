@@ -1,25 +1,56 @@
 package idees.gama.features.modelgeneration;
 
-import gama.*;
-import idees.gama.diagram.GamaDiagramEditor;
-import idees.gama.features.ExampleUtil;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import java.io.*;
-import java.util.*;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.graphiti.mm.pictograms.Shape;
+import org.eclipse.xtext.resource.XtextResourceSet;
+
+import gama.EAction;
+import gama.EActionLink;
+import gama.EAspect;
+import gama.EAspectLink;
+import gama.EBatchExperiment;
+import gama.EChartLayer;
+import gama.EDisplay;
+import gama.EDisplayLink;
+import gama.EExperiment;
+import gama.EExperimentLink;
+import gama.EGridTopology;
+import gama.EInheritLink;
+import gama.ELayer;
+import gama.ELayerAspect;
+import gama.EMonitor;
+import gama.EParameter;
+import gama.EReflexLink;
+import gama.ESpecies;
+import gama.ESubSpeciesLink;
+import gama.EVariable;
+import gama.EWorldAgent;
+import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.diagram.ModelStructure;
+import idees.gama.features.ExampleUtil;
 import msi.gama.kernel.model.IModel;
 import msi.gama.lang.gaml.resource.GamlResource;
 import msi.gama.lang.utils.EGaml;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GAML;
 import msi.gaml.compilation.GamlCompilationError;
-import msi.gaml.descriptions.*;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.mm.pictograms.*;
-import org.eclipse.xtext.resource.XtextResourceSet;
+import msi.gaml.descriptions.ErrorCollector;
+import msi.gaml.descriptions.ModelDescription;
 
 public class ModelGenerator {
 
@@ -32,7 +63,7 @@ public class ModelGenerator {
 		rs.setClasspathURIContext(ModelGenerator.class);
 		URI uri = URI.createPlatformResourceURI("toto/" + diagramEditor.getTitle() + ".gaml", true);
 		GamlResource resource = (GamlResource) rs.createResource(uri);
-		String gamlModel = ModelGenerator.generateModel(fp, diagram);
+		String gamlModel = ModelGenerator.generateModel(fp, diagram, null);
 		InputStream is = new ByteArrayInputStream(gamlModel.getBytes());
 		diagramEditor.setResource(resource);
 		try {
@@ -136,7 +167,7 @@ public class ModelGenerator {
 		rs.setClasspathURIContext(ModelGenerator.class);
 		URI uri = URI.createPlatformResourceURI("toto/" + diagramEditor.getTitle() + ".gaml", true);
 		GamlResource resource = (GamlResource) rs.createResource(uri);
-		String gamlModel = ModelGenerator.generateModel(fp, diagram);
+		String gamlModel = ModelGenerator.generateModel(fp, diagram, null);
 		if (gamlModel.equals("")) return null;
 		InputStream is = new ByteArrayInputStream(gamlModel.getBytes());
 		diagramEditor.setResource(resource);
@@ -171,7 +202,7 @@ public class ModelGenerator {
 		}
 	}
 
-	static String defineSpecies(final ESpecies species, final int level) {
+	static String defineSpecies(final ESpecies species, final int level, final String id) {
 		if ( species == null ) { return ""; }
 		String model = EL;
 		String sp = "";
@@ -216,10 +247,20 @@ public class ModelGenerator {
 		for ( EVariable var : species.getVariables() ) {
 			model += defineVariable(var, level + 1);
 		}
-		model += defineInit(species, level + 1);
+		String idT = ModelStructure.getElementId(species); 
+		boolean isId = idT.equals(id);
+		if (isId) model+= EL + idT + EL;
+		model += defineInit(species, isId? -1:level + 1);
+		if (isId) model+= EL + idT + EL;
+		
 		Map<String, EReflexLink> reflexMap = new Hashtable<String, EReflexLink>();
+		
 		for ( EActionLink link : species.getActionLinks() ) {
-			model += defineAction(link, level + 1);
+			String idA = ModelStructure.getElementId(link.getAction()); 
+			isId = idA.equals(id);
+			if (isId) model+= EL + idA + EL;
+			model += defineAction(link,isId? -1:level + 1);
+			if (isId) model+= EL + idA + EL;
 		}
 		for ( EReflexLink link : species.getReflexLinks() ) {
 			if ( link.getTarget() == null ) {
@@ -235,24 +276,31 @@ public class ModelGenerator {
 		}
 		for ( String reflex : reflexes ) {
 			if ( reflexMap.containsKey(reflex) ) {
-				model += defineReflex(reflexMap.get(reflex), level + 1);
+				idT = ModelStructure.getElementId(reflexMap.get(reflex).getReflex()); 
+				isId = idT.equals(id);
+				if (isId) model+= EL + idT + EL;
+				model += defineReflex(reflexMap.get(reflex), isId? -1:level + 1);
+				if (isId) model+= EL + idT + EL;
+				
 			}
 		}
 		for ( EAspectLink link : species.getAspectLinks() ) {
 			model += defineAspect(link, level + 1);
 		}
 		for ( ESubSpeciesLink link : species.getMicroSpeciesLinks() ) {
-			model += defineSpecies(link.getMicro(), level + 1);
+			model += defineSpecies(link.getMicro(), level + 1, id);
 		}
 
 		model += sp + "}" + EL;
 
 		for ( EInheritLink link : species.getInheritingLinks() ) {
-			model += defineSpecies(link.getChild(), level);
+			model += defineSpecies(link.getChild(), level, id);
 		}
 
 		return model;
 	}
+	
+
 
 	static String defineVariable(final EVariable var, final int level) {
 		if ( var == null ) { return ""; }
@@ -287,12 +335,14 @@ public class ModelGenerator {
 
 	static String defineAction(final EActionLink link, final int level) {
 		if ( link == null || link.getAction() == null ) { return ""; }
+		
 		EAction action = link.getAction();
 		String result = "";
 		String sp = "";
 		for ( int i = 0; i < level; i++ ) {
 			sp += "\t";
 		}
+		
 		String returnType =
 			action.getReturnType() == null || action.getReturnType().isEmpty() ? "action" : action.getReturnType();
 		String arguments = "";
@@ -306,29 +356,30 @@ public class ModelGenerator {
 		String code = action.getGamlCode();
 		if ( code != null && !code.isEmpty() ) {
 			for ( String line : code.split(EL) ) {
-				result += sp + "\t" + line + EL;
+				result += sp + (level == -1 ? "":"\t") + line + EL;
 			}
 		}
 		result += sp + "}" + EL;
+		
 		return result;
 	}
+	
 
 	static String defineInit(final ESpecies species, final int level) {
 		if ( species == null ) { return ""; }
 		String result = "";
 		String code = species.getInit();
-		if ( code != null && !code.isEmpty() ) {
-
-			String sp = "";
-			for ( int i = 0; i < level; i++ ) {
-				sp += "\t";
-			}
-			result += sp + "init {" + EL;
-			for ( String line : code.split(EL) ) {
-				result += sp + "\t" + line + EL;
-			}
-			result += sp + "}" + EL;
+		String sp = "";
+		for ( int i = 0; i < level; i++ ) {
+			sp += "\t";
 		}
+		result += sp + "init {" + EL;
+		if ( code != null && !code.isEmpty() ) {
+			for ( String line : code.split(EL) ) {
+				result += sp + (level == -1 ? "":"\t") + line + EL;
+			}
+		}
+		result += sp + "}" + EL;
 		return result;
 	}
 
@@ -348,7 +399,7 @@ public class ModelGenerator {
 		String code = link.getReflex().getGamlCode();
 		if ( code != null && !code.isEmpty() ) {
 			for ( String line : code.split(EL) ) {
-				result += sp + "\t" + line + EL;
+				result += sp + (level == -1 ? "":"\t") + line + EL;
 			}
 		}
 		result += sp + "}" + EL;
@@ -629,7 +680,8 @@ public class ModelGenerator {
 		return model;
 	}
 
-	public static String generateModel(final IFeatureProvider fp, final Diagram diagram) {
+	
+	public static String generateModel(final IFeatureProvider fp, final Diagram diagram, String id) {
 		String model = "";
 		List<Shape> contents = diagram.getChildren();
 		if ( contents != null ) {
@@ -683,7 +735,11 @@ public class ModelGenerator {
 			}
 
 			for ( EActionLink link : worldAgent.getActionLinks() ) {
-				model += defineAction(link, level);
+				String idA = ModelStructure.getElementId(link.getAction()); 
+				boolean isId = idA.equals(id);
+				if (isId) model+= EL + idA + EL;
+				model += defineAction(link, isId? -1:level);
+				if (isId) model+= EL + idA + EL;
 			}
 			Map<String, EReflexLink> reflexMap = new Hashtable<String, EReflexLink>();
 			for ( EReflexLink link : worldAgent.getReflexLinks() ) {
@@ -700,17 +756,26 @@ public class ModelGenerator {
 			}
 			for ( String reflex : reflexes ) {
 				if ( reflexMap.containsKey(reflex) ) {
-					model += defineReflex(reflexMap.get(reflex), level);
+					String idT = ModelStructure.getElementId(reflexMap.get(reflex).getReflex()); 
+					boolean isId = idT.equals(id);
+					if (isId) model+= EL + idT + EL;
+					model += defineReflex(reflexMap.get(reflex), isId? -1:level);
+					if (isId) model+= EL + idT + EL;
 				}
 			}
 			for ( EAspectLink link : worldAgent.getAspectLinks() ) {
 				model += defineAspect(link, level);
 			}
-			model += defineInit(worldAgent, 1);
+			String idT = ModelStructure.getElementId(worldAgent); 
+			boolean isId = idT.equals(id);
+			if (isId) model+= EL + idT + EL;
+			model += defineInit(worldAgent, isId? -1:1);
+			if (isId) model+= EL + idT + EL;
+			
 			model += "}";
 			model += EL;
 			for ( ESubSpeciesLink link : worldAgent.getMicroSpeciesLinks() ) {
-				model += defineSpecies(link.getMicro(), 0);
+				model += defineSpecies(link.getMicro(), 0, id);
 			}
 
 			model += EL;

@@ -2,12 +2,14 @@ package idees.gama.diagram;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -30,6 +32,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.xtext.resource.XtextResourceSet;
 
 import gama.EAction;
 import gama.EAspect;
@@ -62,6 +65,7 @@ import msi.gama.lang.gaml.gaml.impl.VariableRefImpl;
 import msi.gama.lang.gaml.gaml.impl.speciesOrGridDisplayStatementImpl;
 import msi.gama.lang.gaml.resource.GamlResource;
 import msi.gama.lang.gaml.validation.IGamlBuilderListener;
+import msi.gama.lang.utils.EGaml;
 import msi.gama.runtime.GAMA;
 import msi.gama.util.TOrderedHashMap;
 import msi.gaml.compilation.GamlCompilationError;
@@ -83,7 +87,8 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 	Button menu;
 	Diagram diagram;
 	List<GamlCompilationError> errors;
-
+	
+	
 	List<String> facets = Arrays.asList("torus:", "width:", "height:", "neighbours:", "refresh_every:", "background:",
 		"among:", "->", "<-", "step:", "min:", "max:", "update:", "refresh:", "size:", "position:", "background:",
 		"transparency:", "color:", "empty:", "rotate:", "schedules:", "at:", "depth:", "texture:");
@@ -102,10 +107,11 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 
 	public GamaDiagramEditor() {
 		super();
-
-		
 	}
+	
+	
 
+	
 	@Override
 	public void validationEnded(final Set<String> experiments, final ErrorCollector status) {
 		updateExperiments(experiments, status.hasErrors());
@@ -289,6 +295,16 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 	public void doSave(final IProgressMonitor monitor) {
 		super.doSave(monitor);
 	}
+	
+	public void initGamlResource(){
+		XtextResourceSet rs = EGaml.getInstance(XtextResourceSet.class);
+		rs.setClasspathURIContext(ModelGenerator.class);
+		URI uri = URI.createPlatformResourceURI("toto/" + getTitle() + ".gaml", true);
+		resource = (GamlResource) rs.createResource(uri);
+	}
+	
+	
+
 
 	
 
@@ -306,6 +322,8 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 	@Override
 	public void initializeGraphicalViewer() {
 		super.initializeGraphicalViewer();
+
+		initGamlResource();
 		if (getDiagram() != null) {
 			ModelGenerator.modelValidation(getDiagramTypeProvider().getFeatureProvider(), getDiagram());
 			doSave(null);

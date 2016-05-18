@@ -49,7 +49,6 @@ public class CreateSubSpeciesLinkFeature extends AbstractCreateSpeciesComponentL
 		ac.setLocation(context.getTargetLocation().getX(), context.getTargetLocation().getY());
 		ac.setSize(0, 0);
 		ac.setTargetContainer(getDiagram());
-		System.out.println("newSpecies: " + newSpecies);
 		return newSpecies;
 	}
 	
@@ -58,7 +57,6 @@ public class CreateSubSpeciesLinkFeature extends AbstractCreateSpeciesComponentL
 		cc.setLocation(context.getTargetLocation().getX() - (int)(AddSpeciesFeature.INIT_WIDTH/2.0), context.getTargetLocation().getY() - (int)(AddSpeciesFeature.INIT_HEIGHT/2.0));
 		cc.setSize(0, 0);
 		cc.setTargetContainer(getDiagram());
-		System.out.println("getFeatureProvider(): " + getFeatureProvider());
 		return getFeatureProvider().addIfPossible(new AddContext(cc, species));
 	}
 	

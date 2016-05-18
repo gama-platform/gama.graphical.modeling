@@ -1,60 +1,45 @@
 package idees.gama.ui.editFrame;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import gama.*;
+import idees.gama.diagram.GAMARessourceProvider;
+import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.diagram.ModelStructure;
+import idees.gama.features.ExampleUtil;
+import idees.gama.features.edit.EditFeature;
+import idees.gama.features.modelgeneration.ModelGenerator;
+import java.util.*;
 import java.util.List;
 
+import msi.gama.lang.gaml.ui.internal.GamlActivator;
+import msi.gama.lang.utils.EGaml;
+import msi.gaml.compilation.AbstractGamlAdditions;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.transaction.RecordingCommand;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.*;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.TableEditor;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.custom.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
 
-import gama.EAction;
-import gama.EGamaObject;
-import gama.ESpecies;
-import gama.EVariable;
-import idees.gama.diagram.GamaDiagramEditor;
-import idees.gama.features.ExampleUtil;
-import idees.gama.features.edit.EditFeature;
-import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gaml.compilation.AbstractGamlAdditions;
+import com.google.inject.Injector;
 
 public class EditActionFrame extends EditFrame {
 
-	StyledText gamlCode;
 	private Table table_vars;
 	int cpt = 1;
 	private final List<String> types = new ArrayList<String>();
 	Font titleFont;
 	CCombo returnType;
+	public EmbeddedEditor editor;
+	public EmbeddedEditorModelAccess modelXText;
 
 	/**
 	 * Create the application window.
@@ -137,18 +122,7 @@ public class EditActionFrame extends EditFrame {
 		} else {
 			returnType.setText(action.getReturnType());
 		}
-		returnType.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(final SelectionEvent event) {
-				if ( textName.isSaveData() ) {
-					// save("");
-					// ModelGenerator.modelValidation(fp, diagram);
-					// diagramEditor.updateEObjectErrors();
-					((ValidateStyledText) gamlCode).applyModification();
-				}
-			}
-		});
+		
 
 	}
 
@@ -156,42 +130,44 @@ public class EditActionFrame extends EditFrame {
 
 		// ****** CANVAS GAMLCODE *********
 		Group group = new Group(container, SWT.NONE);
+	
+		group.setLayout(new FillLayout(SWT.HORIZONTAL));
+		group.setText("Gaml code");
+
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		group.setLayoutData(gridData);
+		group.setLayout(new GridLayout(1, false));
+
+		GridData gridData2 = new GridData();
+		gridData2.horizontalAlignment = SWT.FILL;
+		gridData2.verticalAlignment = SWT.FILL;
+		gridData2.grabExcessHorizontalSpace = true;
+		gridData2.grabExcessVerticalSpace = true;
+
 		group.setBounds(10, 50, 720, 240);
 
 		// group.setLayout( new FillLayout(SWT.HORIZONTAL));
 		group.setText("Gaml code");
 
-		/*
-		 * GridData gridData = new GridData();
-		 * gridData.horizontalAlignment = SWT.FILL;
-		 * gridData.verticalAlignment = SWT.FILL;
-		 * gridData.grabExcessHorizontalSpace = true;
-		 * gridData.grabExcessVerticalSpace= true;
-		 * group.setLayoutData(gridData);
-		 * group.setLayout(new GridLayout(1, false));
-		 * 
-		 * GridData gridData2 = new GridData();
-		 * gridData2.horizontalAlignment = SWT.FILL;
-		 * gridData2.verticalAlignment = SWT.FILL;
-		 * gridData2.grabExcessHorizontalSpace = true;
-		 * gridData2.grabExcessVerticalSpace= true;
-		 */
-
-		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
-		List<String> uselessName = new ArrayList<String>();
-		uselessName.add("name");
-		gamlCode = new ValidateStyledText(group, SWT.BORDER, diagram, fp, this, diagramEditor, "", uselessName);
-		textName.getLinkedVsts().add((ValidateStyledText) gamlCode);
-		// gamlCode.setLayoutData(gridData2);
-
-		gamlCode.setBounds(5, 30, 700, 265);
-		if ( ((EAction) eobject).getGamlCode() != null ) {
-			gamlCode.setText(((EAction) eobject).getGamlCode());
-		}
-		gamlCode.setEditable(true);
-
-		((ValidateStyledText) gamlCode).setSaveData(true);
-		textName.getLinkedVsts().add((ValidateStyledText) gamlCode);
+		
+		final Injector injector = GamlActivator.getInstance().getInjector("msi.gama.lang.gaml.Gaml");
+		
+		GAMARessourceProvider provider = injector.getInstance(GAMARessourceProvider.class);
+		provider.setName(((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp)).getTitle(), fp, diagram);
+		EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
+		
+		editor = factory.newEditor(provider).showErrorAndWarningAnnotations().withParent(group);
+		
+		XtextResourceSet rs = EGaml.getInstance(XtextResourceSet.class);
+		rs.setClasspathURIContext(ModelGenerator.class);
+		ModelStructure struct= new ModelStructure(diagram, fp);
+		struct.writeModelWithoutElement(this.eobject);
+			
+		modelXText = editor.createPartialEditor(struct.getPrefix(), struct.getText(), struct.getSuffix(),true);
 	}
 
 	/**
@@ -210,11 +186,22 @@ public class EditActionFrame extends EditFrame {
 
 				@Override
 				public void doExecute() {
-					if ( name.equals("name") ) {
+					if (name == null) {
+						eobject.setName(textName.getText());
+						EAction action = (EAction) eobject;
+						if ( modelXText != null ) {
+							((EAction) eobject).setGamlCode(modelXText.getEditablePart());
+						}
+						action.setReturnType(returnType.getText().equals("returns nothing") ? "" : returnType.getText());
+						modifyArguments();
+					}
+					else if ( name.equals("name") ) {
 						eobject.setName(textName.getText());
 					} else {
 						EAction action = (EAction) eobject;
-						action.setGamlCode(gamlCode == null ? "" : gamlCode.getText());
+						if ( modelXText != null ) {
+							((EAction) eobject).setGamlCode(modelXText.getEditablePart());
+						}
 						action.setReturnType(returnType.getText().equals("returns nothing") ? "" : returnType.getText());
 						modifyArguments();
 					}

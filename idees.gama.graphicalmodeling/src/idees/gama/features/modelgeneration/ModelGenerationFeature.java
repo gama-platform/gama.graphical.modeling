@@ -55,7 +55,7 @@ public class ModelGenerationFeature extends AbstractCustomFeature {
  
     @Override
     public void execute(ICustomContext context) {
-   		String gamlModel = ModelGenerator.generateModel(this.getFeatureProvider(), getDiagram());
+   		String gamlModel = ModelGenerator.generateModel(this.getFeatureProvider(), getDiagram(),null);
     		List<Shape> contents = getDiagram().getChildren();
     		URI uri = null;
     		if (contents != null) {
@@ -115,35 +115,6 @@ public class ModelGenerationFeature extends AbstractCustomFeature {
     	}
 
     
-    public static String loadModel(final String fileName) {
-		String result="";
-		/*IModel lastModel = null;
-		ResourceSet rs = new ResourceSetImpl();
-		GamlResource r = (GamlResource) rs.getResource(URI.createURI("file:///" + fileName), true);
-		try {
-			Map<URI, ISyntacticElement> elements =
-				GamlBuilder.INSTANCE.buildCompleteSyntacticTree(r, rs);
-			if ( r.getErrors().isEmpty() ) {
-				
-				ModelStructure ms =
-					new ModelStructure("", fileName, new ArrayList(elements.values()));
-				lastModel = DescriptionFactory.getModelFactory().compile(ms);
-				if (lastModel != null) {
-					result = "Validation ok";
-				} else {
-					result = "Exception during compilation";
-				}
-				
-			} else {
-				result = r.getErrors().toString();
-			}
-		} catch (GamaRuntimeException e1) {
-			result = "Exception during compilation:" + e1.getMessage();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-		}*/
-		return result;
-	}
+   
 }
  

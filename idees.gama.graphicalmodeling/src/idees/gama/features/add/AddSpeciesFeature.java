@@ -35,6 +35,7 @@ public class AddSpeciesFeature extends AbstractAddShapeFeature {
 		return false;
 	}
 
+	
 	@Override
 	public PictogramElement add(final IAddContext context) {
 		ESpecies addedClass = (ESpecies) context.getNewObject();

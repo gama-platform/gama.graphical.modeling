@@ -22,7 +22,8 @@ Require-Bundle: msi.gama.core,
  org.apache.log4j;bundle-version="1.2.13",
  org.eclipse.graphiti;bundle-version="0.13.0",
  org.eclipse.graphiti.ui;bundle-version="0.13.0",
- org.eclipse.emf;bundle-version="2.6.0"
+ org.eclipse.emf;bundle-version="2.6.0",
+ msi.gama.lang.gaml
 Export-Package: idees.gama.diagram,
  idees.gama.features,
  idees.gama.features.add,

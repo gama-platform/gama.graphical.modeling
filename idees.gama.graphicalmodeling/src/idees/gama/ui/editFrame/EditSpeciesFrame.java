@@ -15,7 +15,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -38,6 +37,12 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
+
+import com.google.inject.Injector;
 
 import gama.EContinuousTopology;
 import gama.EGraphTopologyEdge;
@@ -47,10 +52,14 @@ import gama.EReflexLink;
 import gama.ESpecies;
 import gama.EVariable;
 import gama.EWorldAgent;
+import idees.gama.diagram.GAMARessourceProvider;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.diagram.ModelStructure;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditSpeciesFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
+import msi.gama.lang.gaml.ui.internal.GamlActivator;
+import msi.gama.lang.utils.EGaml;
 import msi.gaml.compilation.AbstractGamlAdditions;
 
 public class EditSpeciesFrame extends EditFrame {
@@ -74,7 +83,6 @@ public class EditSpeciesFrame extends EditFrame {
 	private ValidateText textShape;
 	private ValidateText textShapeUpdate;
 	private ValidateText textShapeFunction;
-	private StyledText textInit;
 	private ValidateText textSchedules;
 	Composite sizeComp;
 	Composite radiusComp;
@@ -124,6 +132,10 @@ public class EditSpeciesFrame extends EditFrame {
 	private final int CONST_WIDTH = 763;
 
 	final EditFrame frame;
+	
+
+	public EmbeddedEditor editor;
+	public EmbeddedEditorModelAccess modelXText;
 
 	// topology
 	// private String[] type_topo = {"continuous", "grid", "graph_node", "graph_edge"};
@@ -1699,15 +1711,22 @@ public class EditSpeciesFrame extends EditFrame {
 		Canvas canvasInit = new Canvas(container, SWT.BORDER);
 		canvasInit.setBounds(10, 515, 720, 150);
 		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
-
-		textInit = new ValidateStyledText(canvasInit, SWT.BORDER, diagram, fp, this, diagramEditor, "init", null);
-		textName.getLinkedVsts().add((ValidateStyledText) textInit);
-		textInit.setBounds(5, 30, 700, 110);
-		if ( ((ESpecies) eobject).getInit() != null ) {
-			textInit.setText(((ESpecies) eobject).getInit());
-		}
-		textInit.setEditable(true);
-		((ValidateStyledText) textInit).setSaveData(true);
+		
+		final Injector injector = GamlActivator.getInstance().getInjector("msi.gama.lang.gaml.Gaml");
+		
+		GAMARessourceProvider provider = injector.getInstance(GAMARessourceProvider.class);
+		provider.setName(((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp)).getTitle(), fp, diagram);
+		EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
+		
+		editor = factory.newEditor(provider).showErrorAndWarningAnnotations().withParent(canvasInit);
+		editor.getViewer().getControl().setBounds(0, 25, 700, 115);
+		XtextResourceSet rs = EGaml.getInstance(XtextResourceSet.class);
+		rs.setClasspathURIContext(ModelGenerator.class);
+		ModelStructure struct= new ModelStructure(diagram, fp);
+		struct.writeModelWithoutElement(this.eobject);
+			
+		modelXText = editor.createPartialEditor(struct.getPrefix(), struct.getText(), struct.getSuffix(),true);
+		
 
 		CLabel lblCompilation = new CLabel(canvasInit, SWT.NONE);
 		lblCompilation.setText("Init block");
@@ -1791,11 +1810,19 @@ public class EditSpeciesFrame extends EditFrame {
 				@Override
 				public void doExecute() {
 					// System.out.println("totot name: " + name);
-
-					if ( name.equals("name") ) {
+					if (name == null) {
+						eobject.setName(textName.getText());
+						((ESpecies) eobject).setInit(modelXText.getEditablePart());
+						modifyReflexOrder();
+						modifyVariables();
+						species.getSkills().clear();
+						species.getSkills().addAll(Arrays.asList(skillsViewer.getItems()));
+						
+					}
+					else if ( name.equals("name") ) {
 						eobject.setName(textName.getText());
 					} else if ( name.equals("init") ) {
-						((ESpecies) eobject).setInit(textInit.getText());
+						((ESpecies) eobject).setInit(modelXText.getEditablePart());
 					} else if ( name.equals("reflex order") ) {
 						modifyReflexOrder();
 

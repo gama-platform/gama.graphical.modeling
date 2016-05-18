@@ -30,7 +30,6 @@ public class ValidateText extends StyledText {
 
 	final static int TOOLTIP_HIDE_DELAY = 200; // 0.2s
 	final static int TOOLTIP_SHOW_DELAY = 500; // 0.5s
-	final List<ValidateStyledText> linkedVsts = new ArrayList<ValidateStyledText>();
 	final List<ValidateText> linkedVts = new ArrayList<ValidateText>();
 	boolean allErrors;
 
@@ -142,12 +141,7 @@ public class ValidateText extends StyledText {
 					loc.add(addToLoc);
 				}
 
-				for ( ValidateStyledText vst : linkedVsts ) {
-					if ( vst != null ) {
-						vst.updateLoc(loc);
-					}
-				}
-				for ( ValidateText vst : linkedVts ) {
+			for ( ValidateText vst : linkedVts ) {
 					if ( vst != null ) {
 						vst.updateLoc(loc);
 					}
@@ -222,11 +216,6 @@ public class ValidateText extends StyledText {
 				}
 
 				// System.out.println("newLoc: " + loc);
-				for ( ValidateStyledText vst : linkedVsts ) {
-					if ( vst != null ) {
-						vst.updateLoc(loc);
-					}
-				}
 				for ( ValidateText vst : linkedVts ) {
 					if ( vst != null ) {
 						vst.updateLoc(loc);
@@ -252,8 +241,6 @@ public class ValidateText extends StyledText {
 			List<String> wStr = new ArrayList<String>();
 			wStr.add("world");
 			editor.getSyntaxErrorsLoc().remove(wStr);
-			System.out.println("editor.getSyntaxErrorsLoc() : " + editor.getSyntaxErrorsLoc());
-			System.out.println("loc : " + loc);
 			Map<String, String> locs = editor.getSyntaxErrorsLoc().get(loc);
 
 			if ( locs == null ) {
@@ -298,10 +285,7 @@ public class ValidateText extends StyledText {
 		loc.addAll(nwLoc);
 	}
 
-	public List<ValidateStyledText> getLinkedVsts() {
-		return linkedVsts;
-	}
-
+	
 	public List<ValidateText> getLinkedVts() {
 		return linkedVts;
 	}

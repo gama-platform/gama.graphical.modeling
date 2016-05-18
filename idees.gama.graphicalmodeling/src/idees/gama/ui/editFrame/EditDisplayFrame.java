@@ -563,7 +563,11 @@ public class EditDisplayFrame extends EditFrame {
 
 				@Override
 				public void doExecute() {
-					if ( name.equals("name") ) {
+					if (name == null) {
+						eobject.setName(textName.getText());
+						modifyOtherProperties();
+					}
+					else if ( name.equals("name") ) {
 						eobject.setName(textName.getText());
 					} else {
 						// modifyLayerOrder();

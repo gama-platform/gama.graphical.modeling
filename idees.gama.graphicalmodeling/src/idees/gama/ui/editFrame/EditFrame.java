@@ -343,7 +343,8 @@ public abstract class EditFrame extends ApplicationWindow {
 	protected void handleShellCloseEvent() {
 		// create dialog with ok and cancel button and info icon
 		frame.clean();
-		frame.close();
+		this.save(null);
+		this.close();
 	}
 
 	@Override
