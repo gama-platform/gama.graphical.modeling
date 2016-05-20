@@ -14,11 +14,11 @@ package gama;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EDisplayLink#getExperiment <em>Experiment</em>}</li>
  *   <li>{@link gama.EDisplayLink#getDisplay <em>Display</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEDisplayLink()
  * @model

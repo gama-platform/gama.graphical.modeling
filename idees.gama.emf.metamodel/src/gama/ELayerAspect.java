@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.ELayerAspect#getGamlCode <em>Gaml Code</em>}</li>
  *   <li>{@link gama.ELayerAspect#getShape <em>Shape</em>}</li>
@@ -40,7 +41,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link gama.ELayerAspect#getDepth <em>Depth</em>}</li>
  *   <li>{@link gama.ELayerAspect#getTexture <em>Texture</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getELayerAspect()
  * @model

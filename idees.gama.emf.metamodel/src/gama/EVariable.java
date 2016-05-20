@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EVariable#getInit <em>Init</em>}</li>
  *   <li>{@link gama.EVariable#getMin <em>Min</em>}</li>
@@ -27,7 +28,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link gama.EVariable#getError <em>Error</em>}</li>
  *   <li>{@link gama.EVariable#getOwner <em>Owner</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEVariable()
  * @model

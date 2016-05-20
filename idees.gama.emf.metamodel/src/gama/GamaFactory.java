@@ -197,15 +197,6 @@ public interface GamaFactory extends EFactory {
 	ELayer createELayer();
 
 	/**
-	 * Returns a new object of class '<em>EGraph Topology Node</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>EGraph Topology Node</em>'.
-	 * @generated
-	 */
-	EGraphTopologyNode createEGraphTopologyNode();
-
-	/**
 	 * Returns a new object of class '<em>EExperiment Link</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -224,33 +215,6 @@ public interface GamaFactory extends EFactory {
 	ELayerAspect createELayerAspect();
 
 	/**
-	 * Returns a new object of class '<em>EGrid Topology</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>EGrid Topology</em>'.
-	 * @generated
-	 */
-	EGridTopology createEGridTopology();
-
-	/**
-	 * Returns a new object of class '<em>EContinuous Topology</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>EContinuous Topology</em>'.
-	 * @generated
-	 */
-	EContinuousTopology createEContinuousTopology();
-
-	/**
-	 * Returns a new object of class '<em>ETopology</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>ETopology</em>'.
-	 * @generated
-	 */
-	ETopology createETopology();
-
-	/**
 	 * Returns a new object of class '<em>EInherit Link</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -258,24 +222,6 @@ public interface GamaFactory extends EFactory {
 	 * @generated
 	 */
 	EInheritLink createEInheritLink();
-
-	/**
-	 * Returns a new object of class '<em>EGraph Topology Edge</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>EGraph Topology Edge</em>'.
-	 * @generated
-	 */
-	EGraphTopologyEdge createEGraphTopologyEdge();
-
-	/**
-	 * Returns a new object of class '<em>EGraph Link</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>EGraph Link</em>'.
-	 * @generated
-	 */
-	EGraphLink createEGraphLink();
 
 	/**
 	 * Returns a new object of class '<em>EChart Layer</em>'.
@@ -303,6 +249,132 @@ public interface GamaFactory extends EFactory {
 	 * @generated
 	 */
 	EMonitor createEMonitor();
+
+	/**
+	 * Returns a new object of class '<em>EFacet</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EFacet</em>'.
+	 * @generated
+	 */
+	EFacet createEFacet();
+
+	/**
+	 * Returns a new object of class '<em>EPlan</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EPlan</em>'.
+	 * @generated
+	 */
+	EPlan createEPlan();
+
+	/**
+	 * Returns a new object of class '<em>EState</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EState</em>'.
+	 * @generated
+	 */
+	EState createEState();
+
+	/**
+	 * Returns a new object of class '<em>ETask</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>ETask</em>'.
+	 * @generated
+	 */
+	ETask createETask();
+
+	/**
+	 * Returns a new object of class '<em>EPlan Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EPlan Link</em>'.
+	 * @generated
+	 */
+	EPlanLink createEPlanLink();
+
+	/**
+	 * Returns a new object of class '<em>EState Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EState Link</em>'.
+	 * @generated
+	 */
+	EStateLink createEStateLink();
+
+	/**
+	 * Returns a new object of class '<em>ETask Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>ETask Link</em>'.
+	 * @generated
+	 */
+	ETaskLink createETaskLink();
+
+	/**
+	 * Returns a new object of class '<em>EGrid</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EGrid</em>'.
+	 * @generated
+	 */
+	EGrid createEGrid();
+
+	/**
+	 * Returns a new object of class '<em>EPerceive</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EPerceive</em>'.
+	 * @generated
+	 */
+	EPerceive createEPerceive();
+
+	/**
+	 * Returns a new object of class '<em>EPerceive Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EPerceive Link</em>'.
+	 * @generated
+	 */
+	EPerceiveLink createEPerceiveLink();
+
+	/**
+	 * Returns a new object of class '<em>ERule</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>ERule</em>'.
+	 * @generated
+	 */
+	ERule createERule();
+
+	/**
+	 * Returns a new object of class '<em>ERule Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>ERule Link</em>'.
+	 * @generated
+	 */
+	ERuleLink createERuleLink();
+
+	/**
+	 * Returns a new object of class '<em>EEquation</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EEquation</em>'.
+	 * @generated
+	 */
+	EEquation createEEquation();
+
+	/**
+	 * Returns a new object of class '<em>EEquation Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>EEquation Link</em>'.
+	 * @generated
+	 */
+	EEquationLink createEEquationLink();
 
 	/**
 	 * Returns the package supported by this factory.

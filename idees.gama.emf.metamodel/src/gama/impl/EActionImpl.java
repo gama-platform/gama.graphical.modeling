@@ -33,13 +33,13 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.EActionImpl#getGamlCode <em>Gaml Code</em>}</li>
  *   <li>{@link gama.impl.EActionImpl#getActionLinks <em>Action Links</em>}</li>
  *   <li>{@link gama.impl.EActionImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link gama.impl.EActionImpl#getReturnType <em>Return Type</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

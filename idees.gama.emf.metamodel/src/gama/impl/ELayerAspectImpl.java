@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.ELayerAspectImpl#getGamlCode <em>Gaml Code</em>}</li>
  *   <li>{@link gama.impl.ELayerAspectImpl#getShape <em>Shape</em>}</li>
@@ -54,7 +55,6 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  *   <li>{@link gama.impl.ELayerAspectImpl#getDepth <em>Depth</em>}</li>
  *   <li>{@link gama.impl.ELayerAspectImpl#getTexture <em>Texture</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

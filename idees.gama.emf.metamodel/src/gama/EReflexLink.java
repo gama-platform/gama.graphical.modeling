@@ -14,11 +14,11 @@ package gama;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EReflexLink#getReflex <em>Reflex</em>}</li>
  *   <li>{@link gama.EReflexLink#getSpecies <em>Species</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEReflexLink()
  * @model

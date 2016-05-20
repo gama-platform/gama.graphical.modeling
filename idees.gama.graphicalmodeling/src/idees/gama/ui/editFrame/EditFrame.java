@@ -1,8 +1,15 @@
 package idees.gama.ui.editFrame;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.jface.action.MenuManager;
@@ -11,20 +18,33 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
 
+import com.google.inject.Injector;
+
+import gama.EAction;
+import gama.EFacet;
 import gama.EGamaObject;
+import gama.EReflex;
+import gama.ESpecies;
 import gama.EWorldAgent;
+import idees.gama.diagram.GAMARessourceProvider;
 import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.diagram.ModelStructure;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
+import idees.gama.features.modelgeneration.ModelGenerator;
 import msi.gama.lang.gaml.gaml.Model;
 import msi.gama.lang.gaml.gaml.impl.S_ActionImpl;
 import msi.gama.lang.gaml.gaml.impl.S_DefinitionImpl;
@@ -33,7 +53,11 @@ import msi.gama.lang.gaml.gaml.impl.S_ExperimentImpl;
 import msi.gama.lang.gaml.gaml.impl.S_ReflexImpl;
 import msi.gama.lang.gaml.gaml.impl.S_SpeciesImpl;
 import msi.gama.lang.gaml.gaml.impl.VariableRefImpl;
+import msi.gama.lang.gaml.ui.internal.GamlActivator;
+import msi.gama.lang.utils.EGaml;
 import msi.gaml.compilation.GamlCompilationError;
+import msi.gaml.descriptions.SymbolProto;
+import msi.gaml.factories.DescriptionFactory;
 
 public abstract class EditFrame extends ApplicationWindow {
 
@@ -42,17 +66,25 @@ public abstract class EditFrame extends ApplicationWindow {
 	IFeatureProvider fp;
 	String name;
 	EGamaObject eobject;
-	StyledText validationResult;
 	ValidateText textName;
 	EditFrame frame;
 	Shell shell;
+	EmbeddedEditorModelAccess modelXText;
+	EmbeddedEditor editor;
 
+	Map<String,ValidateText> facetsEditor;
+
+	List<String> gridFacets = Arrays.asList("schedules", "frequency", "control", "neighbors","file", "cell_height", "cell_width", "width", "height", "use_regular_agents","use_individual_shapes","use_neighbors_cache");
+	List<String> globalFacets = Arrays.asList("schedules", "frequency","control", "torus");
+	List<String> speciesFacets = Arrays.asList("schedules", "frequency","control");
+	GAMARessourceProvider rp ;
 	/**
 	 * Create the application window.
 	 */
 	public EditFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature ef, final EGamaObject eobject,
 		final String name) {
 		super(null);
+		facetsEditor = new Hashtable<String,ValidateText>();
 		this.diagram = diagram;
 		frame = this;
 		this.fp = fp;
@@ -106,62 +138,108 @@ public abstract class EditFrame extends ApplicationWindow {
 		return result;
 	}
 
-	/*
-	 * protected void canvasValidation(Composite container) {
-	 * Group group = new Group(container, SWT.BORDER);
-	 * group.setLayout( new FillLayout(SWT.HORIZONTAL));
-	 * group.setText("GAML code compilation result");
-	 * 
-	 * GridData gridData = new GridData();
-	 * gridData.horizontalAlignment = SWT.FILL;
-	 * gridData.verticalAlignment = SWT.FILL;
-	 * gridData.grabExcessHorizontalSpace = true;
-	 * gridData.grabExcessVerticalSpace= true;
-	 * group.setLayoutData(gridData);
-	 * group.setLayout(new GridLayout(1, false));
-	 * 
-	 * GridData gridData2 = new GridData();
-	 * gridData2.horizontalAlignment = SWT.FILL;
-	 * gridData2.verticalAlignment = SWT.FILL;
-	 * gridData2.grabExcessHorizontalSpace = true;
-	 * gridData2.grabExcessVerticalSpace= true;
-	 * 
-	 * validationResult = new StyledText(group, SWT.BORDER);
-	 * validationResult.setLayoutData(gridData2);
-	 * validationResult.setEditable(false);
-	 * 
-	 * Button btnValidate = new Button(group, SWT.NONE);
-	 * btnValidate.addSelectionListener(new SelectionAdapter() {
-	 * 
-	 * @Override
-	 * public void widgetSelected(SelectionEvent e) {
-	 * save();
-	 * List<GamlCompilationError> errors = ModelGenerator.modelValidation(fp, diagram);
-	 * String eC = "";
-	 * StyleRange styleRange = new StyleRange();
-	 * if (errors.isEmpty()) {
-	 * eC = "No compilation error";
-	 * styleRange.start = 0;
-	 * styleRange.length = eC.length();
-	 * styleRange.fontStyle = SWT.BOLD;
-	 * styleRange.foreground = getShell().getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN);
-	 * 
-	 * }
-	 * else {
-	 * for (GamlCompilationError val : errors) eC += fromErrorToString(val) + "\n";
-	 * styleRange.start = 0;
-	 * styleRange.length = eC.length();
-	 * styleRange.fontStyle = SWT.BOLD;
-	 * styleRange.foreground = getShell().getDisplay().getSystemColor(SWT.COLOR_DARK_RED);
-	 * 
-	 * }
-	 * validationResult.setText(eC);
-	 * validationResult.setStyleRange(styleRange);
-	 * }
-	 * });
-	 * btnValidate.setText("Validate");
-	 * }
-	 */
+	
+	protected Group groupFacets(final Composite container, String gamlName, int nbCol) {
+		SymbolProto proto = "layer".equals(gamlName) ? DescriptionFactory.getStatementProto("display_population"): DescriptionFactory.getStatementProto(gamlName);
+		Group group = new Group(container, SWT.NONE);
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		group.setLayoutData(gridData);
+		group.setLayout(new GridLayout(nbCol, false));
+		List<String> facets ;
+		if ("grid".equals(gamlName)) {
+			facets = gridFacets;
+		}else if ("global".equals(gamlName)) {
+			facets = globalFacets;
+		}else if ("species".equals(gamlName)) {
+			facets = speciesFacets;
+		} else facets = new ArrayList<String>(proto.getPossibleFacets().keySet());
+		for (String facet : facets) {
+			if( proto.getFacet(facet).deprecated != null) continue;
+			if( proto.getFacet(facet).internal ) continue;
+			if ((!"name".equals(gamlName) && "name".equals(facet)) ) continue;
+			if ("layer".equals(gamlName) && ("aspect".equals(facet) || "species".equals(facet))) continue;
+			groupFacet(group,facet,proto.getFacet(facet).typesToString(),proto.getFacet(facet).doc);
+		}
+		return group;
+	}
+	
+	
+	protected void groupFacet(final Composite container, final String facetName, final String type, final String doc) {
+		Group group = new Group(container, SWT.NONE);
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		group.setLayoutData(gridData);
+
+		group.setLayout(new GridLayout(2, false));
+
+		CLabel lblName = new CLabel(group, SWT.NONE);
+		lblName.setText(facetName + " ("+type.replaceFirst(" ", "") +")"+":");
+		
+		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
+		
+		List<String> uselessName = null;
+		String nm = "";
+		if (!facetName.equals("name")) {
+			uselessName = new ArrayList<String>();
+			uselessName.add("name");
+		}
+		else {
+			nm = "name";
+		}
+		
+		ValidateText textFacet = new ValidateText(group, SWT.BORDER, diagram, fp, this, diagramEditor, nm, uselessName, null);
+		textFacet.setToolTipText(doc);
+		String val = facetValue(facetName);
+		if (val != null) textFacet.setText(val);
+		else textFacet.setText("");
+		GridData gridData2 = new GridData();
+		gridData2.horizontalAlignment = SWT.FILL;
+		gridData2.grabExcessHorizontalSpace = true;
+		textFacet.setLayoutData(gridData2);
+		if ( eobject instanceof EWorldAgent && facetName.equals("name")) {
+			textFacet.setEditable(false);
+		}
+		textFacet.setSaveData(true);
+		facetsEditor.put(facetName, textFacet);
+
+	}
+	
+	protected void groupGamlCode(final Composite container, final String title) {
+		Group group = new Group(container, SWT.NONE);
+
+		group.setLayout(new FillLayout(SWT.HORIZONTAL));
+		group.setText(title);
+
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		group.setLayoutData(gridData);
+		group.setLayout(new GridLayout(1, false));
+
+		final Injector injector = GamlActivator.getInstance().getInjector("msi.gama.lang.gaml.Gaml");
+		
+		rp = injector.getInstance(GAMARessourceProvider.class);
+		rp.setName(((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp)).getTitle(), fp, diagram);
+		EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
+		
+		editor = factory.newEditor(rp).showErrorAndWarningAnnotations().withParent(group);
+		
+		XtextResourceSet rs = EGaml.getInstance(XtextResourceSet.class);
+		rs.setClasspathURIContext(ModelGenerator.class);
+		ModelStructure struct= new ModelStructure(diagram, fp);
+		struct.writeModelWithoutElement(this.eobject);
+		
+		
+		modelXText = editor.createPartialEditor(struct.getPrefix(), struct.getText(), struct.getSuffix(),true);
+		
+	}
+	
+	
 	protected void groupName(final Composite container) {
 		groupName(container, true);
 	}
@@ -210,6 +288,7 @@ public abstract class EditFrame extends ApplicationWindow {
 		return canvasName;
 	}
 
+	
 	/**
 	 * Create the menu manager.
 	 * @return the menu manager
@@ -259,84 +338,7 @@ public abstract class EditFrame extends ApplicationWindow {
 		return new Point(743, 727);
 	}
 
-	/*
-	 * protected Canvas canvasOkCancel(Composite container) {
-	 * //****** CANVAS OK CANCEL BUTTONS *********
-	 * Canvas canvasOKCancel = new Canvas(container, SWT.BORDER);
-	 * canvasOKCancel.setBounds(10, 460, 720, 30);
-	 * 
-	 * final Button buttonOK = new Button(canvasOKCancel, SWT.PUSH);
-	 * buttonOK.setText("Ok");
-	 * buttonOK.setBounds(150, 5, 80, 20);
-	 * buttonOK.addSelectionListener(new SelectionAdapter() {
-	 * 
-	 * @Override
-	 * public void widgetSelected(SelectionEvent e) {
-	 * 
-	 * frame.save();
-	 * frame.close();
-	 * }
-	 * });
-	 * 
-	 * Button buttonCancel = new Button(canvasOKCancel, SWT.PUSH);
-	 * buttonCancel.setText("Cancel");
-	 * buttonCancel.setBounds(350, 5, 80, 20);
-	 * buttonCancel.addSelectionListener(new SelectionAdapter() {
-	 * 
-	 * @Override
-	 * public void widgetSelected(SelectionEvent e) {
-	 * frame.clean();
-	 * frame.close();
-	 * }
-	 * });
-	 * return canvasOKCancel;
-	 * }
-	 */
-
-	/*
-	 * protected Group groupOkCancel(Composite container) {
-	 * //****** CANVAS OK CANCEL BUTTONS *********
-	 * 
-	 * Group groupOkCancel = new Group(container, SWT.NONE);
-	 * groupOkCancel.setText("Validation");
-	 * GridData gridData = new GridData();
-	 * gridData.horizontalAlignment = GridData.FILL;
-	 * gridData.grabExcessHorizontalSpace = true;
-	 * groupOkCancel.setLayoutData(gridData);
-	 * 
-	 * groupOkCancel.setLayout(new GridLayout(2, true));
-	 * 
-	 * final Button buttonOK = new Button(groupOkCancel, SWT.PUSH);
-	 * GridData gridData2 = new GridData();
-	 * gridData2.horizontalAlignment = GridData.CENTER;
-	 * buttonOK.setLayoutData(gridData2);
-	 * buttonOK.setText("Ok");
-	 * buttonOK.addSelectionListener(new SelectionAdapter() {
-	 * 
-	 * @Override
-	 * public void widgetSelected(SelectionEvent e) {
-	 * 
-	 * frame.save();
-	 * frame.close();
-	 * }
-	 * });
-	 * 
-	 * Button buttonCancel = new Button(groupOkCancel, SWT.PUSH);
-	 * GridData gridData3 = new GridData();
-	 * gridData3.horizontalAlignment = GridData.CENTER;
-	 * buttonOK.setLayoutData(gridData3);
-	 * buttonCancel.setText("Cancel");
-	 * buttonCancel.addSelectionListener(new SelectionAdapter() {
-	 * 
-	 * @Override
-	 * public void widgetSelected(SelectionEvent e) {
-	 * frame.clean();
-	 * frame.close();
-	 * }
-	 * });
-	 * return groupOkCancel;
-	 * }
-	 */
+	
 	protected abstract void save(String name);
 
 	@Override
@@ -356,11 +358,70 @@ public abstract class EditFrame extends ApplicationWindow {
 	}
 
 	protected void clean() {
-
+		
 	}
 
+	
 	public void updateError() {
 
 	}
+	
+	public String facetValue(String facetName) {
+		for (EFacet facet : eobject.getFacets()) {
+			if (facet.getName().equals(facetName)) {
+				return facet.getValue();
+			}
+		}
+		return null;
+	}
+	
+	
+	public void saveFacets(){
+		for (String facet : facetsEditor.keySet()) {
+			ValidateText vt = facetsEditor.get(facet);
+			if (vt == null) continue;
+			
+			saveFacetValue(facet, facetsEditor.get(facet).getText());
+		}
+	}
 
+	public void saveFacetValue(String facetName, String facetValue){
+		for (EFacet facet : eobject.getFacets()) {
+			if (facet.getName().equals(facetName)) {
+				facet.setValue(facetValue);
+				return;
+			}
+		}
+		final EFacet eFacet = gama.GamaFactory.eINSTANCE.createEFacet();
+		TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eobject);
+		if ( domain != null ) {
+			domain.getCommandStack().execute(new RecordingCommand(domain) {
+
+				@Override
+				public void doExecute() {
+					eFacet.setName(facetName);
+					eFacet.setValue(facetValue);
+					diagram.eResource().getContents().add(eFacet);
+					eobject.getFacets().add(eFacet);
+				}
+			});
+		}
+	}
+	
+	public void saveEditorCode(){
+		if (modelXText == null) return;
+		if (eobject instanceof ESpecies) ((ESpecies) eobject).setInit(modelXText.getEditablePart());
+		else if (eobject instanceof EAction) ((EAction) eobject).setGamlCode(modelXText.getEditablePart());
+		else if (eobject instanceof EReflex) ((EReflex) eobject).setGamlCode(modelXText.getEditablePart());
+	}
+	
+	public void updateEditor(){
+		if (modelXText == null) return;
+		saveEditorCode();
+		XtextResourceSet rs = EGaml.getInstance(XtextResourceSet.class);
+		rs.setClasspathURIContext(ModelGenerator.class);
+		ModelStructure struct= new ModelStructure(diagram, fp);
+		struct.writeModelWithoutElement(this.eobject);
+		modelXText.updateModel(struct.getPrefix(), struct.getText(), struct.getSuffix());
+	}
 }

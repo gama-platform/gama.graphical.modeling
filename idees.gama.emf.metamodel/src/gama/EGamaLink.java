@@ -15,12 +15,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EGamaLink#getTarget <em>Target</em>}</li>
  *   <li>{@link gama.EGamaLink#getSource <em>Source</em>}</li>
  *   <li>{@link gama.EGamaLink#getModel <em>Model</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEGamaLink()
  * @model

@@ -23,11 +23,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.ESubSpeciesLinkImpl#getMacro <em>Macro</em>}</li>
  *   <li>{@link gama.impl.ESubSpeciesLinkImpl#getMicro <em>Micro</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

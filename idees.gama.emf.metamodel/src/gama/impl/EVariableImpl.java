@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.EVariableImpl#getInit <em>Init</em>}</li>
  *   <li>{@link gama.impl.EVariableImpl#getMin <em>Min</em>}</li>
@@ -36,7 +37,6 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *   <li>{@link gama.impl.EVariableImpl#getError <em>Error</em>}</li>
  *   <li>{@link gama.impl.EVariableImpl#getOwner <em>Owner</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

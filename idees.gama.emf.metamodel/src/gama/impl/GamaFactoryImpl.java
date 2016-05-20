@@ -31,7 +31,7 @@ public class GamaFactoryImpl extends EFactoryImpl implements GamaFactory {
 	 */
 	public static GamaFactory init() {
 		try {
-			GamaFactory theGamaFactory = (GamaFactory)EPackage.Registry.INSTANCE.getEFactory("http://gama/1.0"); 
+			GamaFactory theGamaFactory = (GamaFactory)EPackage.Registry.INSTANCE.getEFactory(GamaPackage.eNS_URI);
 			if (theGamaFactory != null) {
 				return theGamaFactory;
 			}
@@ -79,18 +79,26 @@ public class GamaFactoryImpl extends EFactoryImpl implements GamaFactory {
 			case GamaPackage.EVARIABLE: return createEVariable();
 			case GamaPackage.EWORLD_AGENT: return createEWorldAgent();
 			case GamaPackage.ELAYER: return createELayer();
-			case GamaPackage.EGRAPH_TOPOLOGY_NODE: return createEGraphTopologyNode();
 			case GamaPackage.EEXPERIMENT_LINK: return createEExperimentLink();
 			case GamaPackage.ELAYER_ASPECT: return createELayerAspect();
-			case GamaPackage.EGRID_TOPOLOGY: return createEGridTopology();
-			case GamaPackage.ECONTINUOUS_TOPOLOGY: return createEContinuousTopology();
-			case GamaPackage.ETOPOLOGY: return createETopology();
 			case GamaPackage.EINHERIT_LINK: return createEInheritLink();
-			case GamaPackage.EGRAPH_TOPOLOGY_EDGE: return createEGraphTopologyEdge();
-			case GamaPackage.EGRAPH_LINK: return createEGraphLink();
 			case GamaPackage.ECHART_LAYER: return createEChartLayer();
 			case GamaPackage.EPARAMETER: return createEParameter();
 			case GamaPackage.EMONITOR: return createEMonitor();
+			case GamaPackage.EFACET: return createEFacet();
+			case GamaPackage.EPLAN: return createEPlan();
+			case GamaPackage.ESTATE: return createEState();
+			case GamaPackage.ETASK: return createETask();
+			case GamaPackage.EPLAN_LINK: return createEPlanLink();
+			case GamaPackage.ESTATE_LINK: return createEStateLink();
+			case GamaPackage.ETASK_LINK: return createETaskLink();
+			case GamaPackage.EGRID: return createEGrid();
+			case GamaPackage.EPERCEIVE: return createEPerceive();
+			case GamaPackage.EPERCEIVE_LINK: return createEPerceiveLink();
+			case GamaPackage.ERULE: return createERule();
+			case GamaPackage.ERULE_LINK: return createERuleLink();
+			case GamaPackage.EEQUATION: return createEEquation();
+			case GamaPackage.EEQUATION_LINK: return createEEquationLink();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -291,16 +299,6 @@ public class GamaFactoryImpl extends EFactoryImpl implements GamaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EGraphTopologyNode createEGraphTopologyNode() {
-		EGraphTopologyNodeImpl eGraphTopologyNode = new EGraphTopologyNodeImpl();
-		return eGraphTopologyNode;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EExperimentLink createEExperimentLink() {
 		EExperimentLinkImpl eExperimentLink = new EExperimentLinkImpl();
 		return eExperimentLink;
@@ -321,59 +319,9 @@ public class GamaFactoryImpl extends EFactoryImpl implements GamaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EGridTopology createEGridTopology() {
-		EGridTopologyImpl eGridTopology = new EGridTopologyImpl();
-		return eGridTopology;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EContinuousTopology createEContinuousTopology() {
-		EContinuousTopologyImpl eContinuousTopology = new EContinuousTopologyImpl();
-		return eContinuousTopology;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ETopology createETopology() {
-		ETopologyImpl eTopology = new ETopologyImpl();
-		return eTopology;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EInheritLink createEInheritLink() {
 		EInheritLinkImpl eInheritLink = new EInheritLinkImpl();
 		return eInheritLink;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EGraphTopologyEdge createEGraphTopologyEdge() {
-		EGraphTopologyEdgeImpl eGraphTopologyEdge = new EGraphTopologyEdgeImpl();
-		return eGraphTopologyEdge;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EGraphLink createEGraphLink() {
-		EGraphLinkImpl eGraphLink = new EGraphLinkImpl();
-		return eGraphLink;
 	}
 
 	/**
@@ -404,6 +352,146 @@ public class GamaFactoryImpl extends EFactoryImpl implements GamaFactory {
 	public EMonitor createEMonitor() {
 		EMonitorImpl eMonitor = new EMonitorImpl();
 		return eMonitor;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EFacet createEFacet() {
+		EFacetImpl eFacet = new EFacetImpl();
+		return eFacet;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EPlan createEPlan() {
+		EPlanImpl ePlan = new EPlanImpl();
+		return ePlan;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EState createEState() {
+		EStateImpl eState = new EStateImpl();
+		return eState;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ETask createETask() {
+		ETaskImpl eTask = new ETaskImpl();
+		return eTask;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EPlanLink createEPlanLink() {
+		EPlanLinkImpl ePlanLink = new EPlanLinkImpl();
+		return ePlanLink;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EStateLink createEStateLink() {
+		EStateLinkImpl eStateLink = new EStateLinkImpl();
+		return eStateLink;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ETaskLink createETaskLink() {
+		ETaskLinkImpl eTaskLink = new ETaskLinkImpl();
+		return eTaskLink;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EGrid createEGrid() {
+		EGridImpl eGrid = new EGridImpl();
+		return eGrid;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EPerceive createEPerceive() {
+		EPerceiveImpl ePerceive = new EPerceiveImpl();
+		return ePerceive;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EPerceiveLink createEPerceiveLink() {
+		EPerceiveLinkImpl ePerceiveLink = new EPerceiveLinkImpl();
+		return ePerceiveLink;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ERule createERule() {
+		ERuleImpl eRule = new ERuleImpl();
+		return eRule;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ERuleLink createERuleLink() {
+		ERuleLinkImpl eRuleLink = new ERuleLinkImpl();
+		return eRuleLink;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEquation createEEquation() {
+		EEquationImpl eEquation = new EEquationImpl();
+		return eEquation;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEquationLink createEEquationLink() {
+		EEquationLinkImpl eEquationLink = new EEquationLinkImpl();
+		return eEquationLink;
 	}
 
 	/**

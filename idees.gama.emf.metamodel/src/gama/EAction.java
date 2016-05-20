@@ -15,13 +15,13 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EAction#getGamlCode <em>Gaml Code</em>}</li>
  *   <li>{@link gama.EAction#getActionLinks <em>Action Links</em>}</li>
  *   <li>{@link gama.EAction#getVariables <em>Variables</em>}</li>
  *   <li>{@link gama.EAction#getReturnType <em>Return Type</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEAction()
  * @model

@@ -14,11 +14,11 @@ package gama;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EActionLink#getAction <em>Action</em>}</li>
  *   <li>{@link gama.EActionLink#getSpecies <em>Species</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEActionLink()
  * @model

@@ -18,6 +18,8 @@ import org.eclipse.emf.transaction.*;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.jface.text.ITextListener;
+import org.eclipse.jface.text.TextEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.*;
 import org.eclipse.swt.events.*;
@@ -38,8 +40,6 @@ public class EditActionFrame extends EditFrame {
 	private final List<String> types = new ArrayList<String>();
 	Font titleFont;
 	CCombo returnType;
-	public EmbeddedEditor editor;
-	public EmbeddedEditorModelAccess modelXText;
 
 	/**
 	 * Create the application window.
@@ -81,7 +81,8 @@ public class EditActionFrame extends EditFrame {
 		groupVar(container);
 
 		// ****** CANVAS GAMLCODE *********
-		groupGamlCode(container);
+		groupGamlCode(container, "Gaml code");
+		
 
 		return container;
 	}
@@ -123,52 +124,16 @@ public class EditActionFrame extends EditFrame {
 			returnType.setText(action.getReturnType());
 		}
 		
+		returnType.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(final ModifyEvent event) {
+				save("returnType");
+			}});
+		
 
 	}
 
-	protected void groupGamlCode(final Composite container) {
-
-		// ****** CANVAS GAMLCODE *********
-		Group group = new Group(container, SWT.NONE);
-	
-		group.setLayout(new FillLayout(SWT.HORIZONTAL));
-		group.setText("Gaml code");
-
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		group.setLayoutData(gridData);
-		group.setLayout(new GridLayout(1, false));
-
-		GridData gridData2 = new GridData();
-		gridData2.horizontalAlignment = SWT.FILL;
-		gridData2.verticalAlignment = SWT.FILL;
-		gridData2.grabExcessHorizontalSpace = true;
-		gridData2.grabExcessVerticalSpace = true;
-
-		group.setBounds(10, 50, 720, 240);
-
-		// group.setLayout( new FillLayout(SWT.HORIZONTAL));
-		group.setText("Gaml code");
-
-		
-		final Injector injector = GamlActivator.getInstance().getInjector("msi.gama.lang.gaml.Gaml");
-		
-		GAMARessourceProvider provider = injector.getInstance(GAMARessourceProvider.class);
-		provider.setName(((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp)).getTitle(), fp, diagram);
-		EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
-		
-		editor = factory.newEditor(provider).showErrorAndWarningAnnotations().withParent(group);
-		
-		XtextResourceSet rs = EGaml.getInstance(XtextResourceSet.class);
-		rs.setClasspathURIContext(ModelGenerator.class);
-		ModelStructure struct= new ModelStructure(diagram, fp);
-		struct.writeModelWithoutElement(this.eobject);
-			
-		modelXText = editor.createPartialEditor(struct.getPrefix(), struct.getText(), struct.getSuffix(),true);
-	}
 
 	/**
 	 * Return the initial size of the window.
@@ -194,6 +159,7 @@ public class EditActionFrame extends EditFrame {
 						}
 						action.setReturnType(returnType.getText().equals("returns nothing") ? "" : returnType.getText());
 						modifyArguments();
+						updateEditor();
 					}
 					else if ( name.equals("name") ) {
 						eobject.setName(textName.getText());
@@ -204,6 +170,7 @@ public class EditActionFrame extends EditFrame {
 						}
 						action.setReturnType(returnType.getText().equals("returns nothing") ? "" : returnType.getText());
 						modifyArguments();
+						updateEditor();
 					}
 				}
 			});

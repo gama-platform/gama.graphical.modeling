@@ -1,15 +1,6 @@
 package idees.gama.features.create;
 
 
-import gama.EGridTopology;
-import gama.ESpecies;
-import gama.ESubSpeciesLink;
-import idees.gama.diagram.GamaDiagramEditor;
-import idees.gama.features.add.AddSpeciesFeature;
-import idees.gama.features.modelgeneration.ModelGenerator;
-import idees.gama.ui.image.GamaImageProvider;
-
-import idees.gama.features.ExampleUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
@@ -18,6 +9,15 @@ import org.eclipse.graphiti.features.context.impl.AddContext;
 import org.eclipse.graphiti.features.context.impl.CreateContext;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+
+import gama.EGrid;
+import gama.ESpecies;
+import gama.ESubSpeciesLink;
+import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
+import idees.gama.features.add.AddSpeciesFeature;
+import idees.gama.features.modelgeneration.ModelGenerator;
+import idees.gama.ui.image.GamaImageProvider;
 
 public class CreateSubGridLinkFeature extends AbstractCreateSpeciesComponentLinkFeature {
 
@@ -35,16 +35,13 @@ public class CreateSubGridLinkFeature extends AbstractCreateSpeciesComponentLink
 	    if (newSpeciesName == null || newSpeciesName.trim().length() == 0) {
 	    	return null;
 	    }  
-	    ESpecies newSpecies = gama.GamaFactory.eINSTANCE.createESpecies();
+	    EGrid newSpecies = gama.GamaFactory.eINSTANCE.createEGrid();
 	    newSpecies.setError("");
 	    newSpecies.setHasError(false);
 		
 		this.getDiagram().eResource().getContents().add(newSpecies);
 		newSpecies.setName(newSpeciesName);
-	    EGridTopology newTopo = gama.GamaFactory.eINSTANCE.createEGridTopology();
-		this.getDiagram().eResource().getContents().add(newTopo);
-		newSpecies.setTopology(newTopo);
-		CreateContext ac = new CreateContext();
+	  	CreateContext ac = new CreateContext();
 		ac.setLocation(context.getTargetLocation().getX(), context.getTargetLocation().getY());
 		ac.setSize(0, 0);
 		ac.setTargetContainer(getDiagram());
@@ -56,7 +53,6 @@ public class CreateSubGridLinkFeature extends AbstractCreateSpeciesComponentLink
 		cc.setLocation(context.getTargetLocation().getX() - (int)(AddSpeciesFeature.INIT_WIDTH/2.0), context.getTargetLocation().getY() - (int)(AddSpeciesFeature.INIT_HEIGHT/2.0));
 		cc.setSize(0, 0);
 		cc.setTargetContainer(getDiagram());
-		getFeatureProvider().addIfPossible(new AddContext(cc, species.getTopology()));
 		return getFeatureProvider().addIfPossible(new AddContext(cc, species));
 	}
 	

@@ -38,6 +38,7 @@ import gama.EAction;
 import gama.EAspect;
 import gama.EDisplay;
 import gama.EExperiment;
+import gama.EFacet;
 import gama.EGamaObject;
 import gama.ELayer;
 import gama.ELayerAspect;
@@ -68,8 +69,13 @@ import msi.gama.lang.gaml.validation.IGamlBuilderListener;
 import msi.gama.lang.utils.EGaml;
 import msi.gama.runtime.GAMA;
 import msi.gama.util.TOrderedHashMap;
+import msi.gaml.compilation.AbstractGamlAdditions;
 import msi.gaml.compilation.GamlCompilationError;
 import msi.gaml.descriptions.ErrorCollector;
+import msi.gaml.descriptions.OperatorProto;
+import msi.gaml.descriptions.SymbolProto;
+import msi.gaml.factories.DescriptionFactory;
+import msi.gaml.species.ISpecies;
 
 public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderListener {
 
@@ -583,6 +589,9 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 				else if ( toto instanceof EVariable ) {
 					ids.add(0, ((EVariable) toto).getName());
 				}
+				else if ( toto instanceof EFacet ) {
+					ids.add(0, ((EFacet) toto).getName());
+				}
 				if ( toto instanceof EAction ) {
 					toto = ((EAction) toto).getActionLinks().get(0).getSpecies();
 				} else if ( toto instanceof EReflex ) {
@@ -620,6 +629,8 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 			idsEObjects.put(ids, ((EVariable) obj).eContainer());
 		} else if ( obj instanceof EParameter ) {
 			idsEObjects.put(ids, ((EParameter) obj).eContainer());
+		}else if ( obj instanceof EFacet ) {
+			idsEObjects.put(ids, ((EFacet) obj).eContainer());
 		} else if ( obj instanceof EMonitor ) {
 			idsEObjects.put(ids, ((EMonitor) obj).eContainer());
 		} else {

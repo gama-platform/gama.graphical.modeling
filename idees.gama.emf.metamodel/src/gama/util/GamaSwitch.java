@@ -51,7 +51,7 @@ public class GamaSwitch<T> extends Switch<T> {
 	 * Checks whether this is a switch for the given package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @parameter ePackage the package in question.
+	 * @param ePackage the package in question.
 	 * @return whether this is a switch for the given package.
 	 * @generated
 	 */
@@ -113,6 +113,7 @@ public class GamaSwitch<T> extends Switch<T> {
 			case GamaPackage.EEXPERIMENT: {
 				EExperiment eExperiment = (EExperiment)theEObject;
 				T result = caseEExperiment(eExperiment);
+				if (result == null) result = caseESpecies(eExperiment);
 				if (result == null) result = caseEGamaObject(eExperiment);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -121,6 +122,7 @@ public class GamaSwitch<T> extends Switch<T> {
 				EGUIExperiment eguiExperiment = (EGUIExperiment)theEObject;
 				T result = caseEGUIExperiment(eguiExperiment);
 				if (result == null) result = caseEExperiment(eguiExperiment);
+				if (result == null) result = caseESpecies(eguiExperiment);
 				if (result == null) result = caseEGamaObject(eguiExperiment);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -129,6 +131,7 @@ public class GamaSwitch<T> extends Switch<T> {
 				EBatchExperiment eBatchExperiment = (EBatchExperiment)theEObject;
 				T result = caseEBatchExperiment(eBatchExperiment);
 				if (result == null) result = caseEExperiment(eBatchExperiment);
+				if (result == null) result = caseESpecies(eBatchExperiment);
 				if (result == null) result = caseEGamaObject(eBatchExperiment);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -202,14 +205,6 @@ public class GamaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case GamaPackage.EGRAPH_TOPOLOGY_NODE: {
-				EGraphTopologyNode eGraphTopologyNode = (EGraphTopologyNode)theEObject;
-				T result = caseEGraphTopologyNode(eGraphTopologyNode);
-				if (result == null) result = caseETopology(eGraphTopologyNode);
-				if (result == null) result = caseEGamaObject(eGraphTopologyNode);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case GamaPackage.EEXPERIMENT_LINK: {
 				EExperimentLink eExperimentLink = (EExperimentLink)theEObject;
 				T result = caseEExperimentLink(eExperimentLink);
@@ -224,48 +219,10 @@ public class GamaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case GamaPackage.EGRID_TOPOLOGY: {
-				EGridTopology eGridTopology = (EGridTopology)theEObject;
-				T result = caseEGridTopology(eGridTopology);
-				if (result == null) result = caseETopology(eGridTopology);
-				if (result == null) result = caseEGamaObject(eGridTopology);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case GamaPackage.ECONTINUOUS_TOPOLOGY: {
-				EContinuousTopology eContinuousTopology = (EContinuousTopology)theEObject;
-				T result = caseEContinuousTopology(eContinuousTopology);
-				if (result == null) result = caseETopology(eContinuousTopology);
-				if (result == null) result = caseEGamaObject(eContinuousTopology);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case GamaPackage.ETOPOLOGY: {
-				ETopology eTopology = (ETopology)theEObject;
-				T result = caseETopology(eTopology);
-				if (result == null) result = caseEGamaObject(eTopology);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case GamaPackage.EINHERIT_LINK: {
 				EInheritLink eInheritLink = (EInheritLink)theEObject;
 				T result = caseEInheritLink(eInheritLink);
 				if (result == null) result = caseEGamaLink(eInheritLink);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case GamaPackage.EGRAPH_TOPOLOGY_EDGE: {
-				EGraphTopologyEdge eGraphTopologyEdge = (EGraphTopologyEdge)theEObject;
-				T result = caseEGraphTopologyEdge(eGraphTopologyEdge);
-				if (result == null) result = caseETopology(eGraphTopologyEdge);
-				if (result == null) result = caseEGamaObject(eGraphTopologyEdge);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case GamaPackage.EGRAPH_LINK: {
-				EGraphLink eGraphLink = (EGraphLink)theEObject;
-				T result = caseEGraphLink(eGraphLink);
-				if (result == null) result = caseEGamaLink(eGraphLink);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -287,6 +244,104 @@ public class GamaSwitch<T> extends Switch<T> {
 				EMonitor eMonitor = (EMonitor)theEObject;
 				T result = caseEMonitor(eMonitor);
 				if (result == null) result = caseEGamaObject(eMonitor);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.EFACET: {
+				EFacet eFacet = (EFacet)theEObject;
+				T result = caseEFacet(eFacet);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.EPLAN: {
+				EPlan ePlan = (EPlan)theEObject;
+				T result = caseEPlan(ePlan);
+				if (result == null) result = caseEGamaObject(ePlan);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.ESTATE: {
+				EState eState = (EState)theEObject;
+				T result = caseEState(eState);
+				if (result == null) result = caseEGamaObject(eState);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.ETASK: {
+				ETask eTask = (ETask)theEObject;
+				T result = caseETask(eTask);
+				if (result == null) result = caseEGamaObject(eTask);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.EPLAN_LINK: {
+				EPlanLink ePlanLink = (EPlanLink)theEObject;
+				T result = caseEPlanLink(ePlanLink);
+				if (result == null) result = caseEGamaLink(ePlanLink);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.ESTATE_LINK: {
+				EStateLink eStateLink = (EStateLink)theEObject;
+				T result = caseEStateLink(eStateLink);
+				if (result == null) result = caseEGamaLink(eStateLink);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.ETASK_LINK: {
+				ETaskLink eTaskLink = (ETaskLink)theEObject;
+				T result = caseETaskLink(eTaskLink);
+				if (result == null) result = caseEGamaLink(eTaskLink);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.EGRID: {
+				EGrid eGrid = (EGrid)theEObject;
+				T result = caseEGrid(eGrid);
+				if (result == null) result = caseESpecies(eGrid);
+				if (result == null) result = caseEGamaObject(eGrid);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.EPERCEIVE: {
+				EPerceive ePerceive = (EPerceive)theEObject;
+				T result = caseEPerceive(ePerceive);
+				if (result == null) result = caseEGamaObject(ePerceive);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.EPERCEIVE_LINK: {
+				EPerceiveLink ePerceiveLink = (EPerceiveLink)theEObject;
+				T result = caseEPerceiveLink(ePerceiveLink);
+				if (result == null) result = caseEGamaLink(ePerceiveLink);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.ERULE: {
+				ERule eRule = (ERule)theEObject;
+				T result = caseERule(eRule);
+				if (result == null) result = caseEGamaObject(eRule);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.ERULE_LINK: {
+				ERuleLink eRuleLink = (ERuleLink)theEObject;
+				T result = caseERuleLink(eRuleLink);
+				if (result == null) result = caseEGamaLink(eRuleLink);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.EEQUATION: {
+				EEquation eEquation = (EEquation)theEObject;
+				T result = caseEEquation(eEquation);
+				if (result == null) result = caseEGamaObject(eEquation);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case GamaPackage.EEQUATION_LINK: {
+				EEquationLink eEquationLink = (EEquationLink)theEObject;
+				T result = caseEEquationLink(eEquationLink);
+				if (result == null) result = caseEGamaLink(eEquationLink);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -580,21 +635,6 @@ public class GamaSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EGraph Topology Node</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>EGraph Topology Node</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEGraphTopologyNode(EGraphTopologyNode object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>EExperiment Link</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -625,51 +665,6 @@ public class GamaSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EGrid Topology</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>EGrid Topology</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEGridTopology(EGridTopology object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EContinuous Topology</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>EContinuous Topology</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEContinuousTopology(EContinuousTopology object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>ETopology</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>ETopology</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseETopology(ETopology object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>EInherit Link</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -681,36 +676,6 @@ public class GamaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseEInheritLink(EInheritLink object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EGraph Topology Edge</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>EGraph Topology Edge</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEGraphTopologyEdge(EGraphTopologyEdge object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EGraph Link</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>EGraph Link</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEGraphLink(EGraphLink object) {
 		return null;
 	}
 
@@ -756,6 +721,216 @@ public class GamaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseEMonitor(EMonitor object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EFacet</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EFacet</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEFacet(EFacet object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EPlan</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EPlan</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEPlan(EPlan object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EState</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EState</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEState(EState object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ETask</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ETask</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseETask(ETask object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EPlan Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EPlan Link</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEPlanLink(EPlanLink object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EState Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EState Link</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEStateLink(EStateLink object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ETask Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ETask Link</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseETaskLink(ETaskLink object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EGrid</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EGrid</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEGrid(EGrid object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EPerceive</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EPerceive</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEPerceive(EPerceive object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EPerceive Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EPerceive Link</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEPerceiveLink(EPerceiveLink object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ERule</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ERule</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseERule(ERule object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ERule Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ERule Link</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseERuleLink(ERuleLink object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EEquation</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EEquation</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEEquation(EEquation object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EEquation Link</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EEquation Link</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEEquationLink(EEquationLink object) {
 		return null;
 	}
 

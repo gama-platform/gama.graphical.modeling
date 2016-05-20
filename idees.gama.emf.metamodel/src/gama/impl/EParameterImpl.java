@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.EParameterImpl#getVariable <em>Variable</em>}</li>
  *   <li>{@link gama.impl.EParameterImpl#getMin <em>Min</em>}</li>
@@ -30,7 +31,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *   <li>{@link gama.impl.EParameterImpl#getAmong <em>Among</em>}</li>
  *   <li>{@link gama.impl.EParameterImpl#getCategory <em>Category</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

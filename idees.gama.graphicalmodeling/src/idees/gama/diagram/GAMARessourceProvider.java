@@ -6,6 +6,8 @@ package idees.gama.diagram;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -30,11 +32,13 @@ public class GAMARessourceProvider implements IEditedResourceProvider{
 	String name;
 	IFeatureProvider fp;
 	Diagram diagram;
+	List<GamlResource> resources;
 	
 	public void setName(String name, final IFeatureProvider fp,Diagram diagram) {
 		this.name = name;
 		this.diagram = diagram;
 		this.fp = fp;
+		resources = new ArrayList<GamlResource>();
 	}
 
 	@Override
@@ -44,9 +48,13 @@ public class GAMARessourceProvider implements IEditedResourceProvider{
 		rs.setClasspathURIContext(ModelGenerator.class);
 		URI uri = URI.createPlatformResourceURI("totolala/" + name + ".gaml", true);
 		GamlResource resource = (GamlResource) rs.createResource(uri);
-		
+		resources.add(resource);
 		return resource;
 		
+	}
+
+	public List<GamlResource> getResources() {
+		return resources;
 	}
 
 }

@@ -33,12 +33,12 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.EGamaModelImpl#getObjects <em>Objects</em>}</li>
  *   <li>{@link gama.impl.EGamaModelImpl#getName <em>Name</em>}</li>
  *   <li>{@link gama.impl.EGamaModelImpl#getLinks <em>Links</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

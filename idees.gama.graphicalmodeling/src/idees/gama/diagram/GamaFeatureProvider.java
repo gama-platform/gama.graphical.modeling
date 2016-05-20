@@ -2,6 +2,7 @@ package idees.gama.diagram;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -46,20 +47,31 @@ import gama.EActionLink;
 import gama.EAspect;
 import gama.EAspectLink;
 import gama.EBatchExperiment;
-import gama.EContinuousTopology;
 import gama.EDisplay;
 import gama.EDisplayLink;
+import gama.EEquation;
+import gama.EEquationLink;
 import gama.EExperiment;
 import gama.EExperimentLink;
+import gama.EFacet;
 import gama.EGUIExperiment;
 import gama.EGamaObject;
-import gama.EGraphLink;
+import gama.EGrid;
 import gama.EInheritLink;
+import gama.EPerceive;
+import gama.EPerceiveLink;
+import gama.EPlan;
+import gama.EPlanLink;
 import gama.EReflex;
 import gama.EReflexLink;
+import gama.ERule;
+import gama.ERuleLink;
 import gama.ESpecies;
+import gama.EState;
+import gama.EStateLink;
 import gama.ESubSpeciesLink;
-import gama.ETopology;
+import gama.ETask;
+import gama.ETaskLink;
 import gama.EVariable;
 import gama.EWorldAgent;
 import idees.gama.features.add.AddActionFeature;
@@ -70,23 +82,41 @@ import idees.gama.features.add.AddBatchExperimentFeature;
 import idees.gama.features.add.AddDisplayFeature;
 import idees.gama.features.add.AddDisplayLinkFeature;
 import idees.gama.features.add.AddEExperimentLinkFeature;
-import idees.gama.features.add.AddGraphLinkFeature;
+import idees.gama.features.add.AddEquationFeature;
+import idees.gama.features.add.AddEquationLinkFeature;
+import idees.gama.features.add.AddGridFeature;
 import idees.gama.features.add.AddGuiExperimentFeature;
 import idees.gama.features.add.AddInheritingLinkFeature;
+import idees.gama.features.add.AddPerceiveFeature;
+import idees.gama.features.add.AddPerceiveLinkFeature;
+import idees.gama.features.add.AddPlanFeature;
+import idees.gama.features.add.AddPlanLinkFeature;
 import idees.gama.features.add.AddReflexFeature;
 import idees.gama.features.add.AddReflexLinkFeature;
+import idees.gama.features.add.AddRuleFeature;
+import idees.gama.features.add.AddRuleLinkFeature;
 import idees.gama.features.add.AddSpeciesFeature;
+import idees.gama.features.add.AddStateFeature;
+import idees.gama.features.add.AddStateLinkFeature;
 import idees.gama.features.add.AddSubSpecieLinkFeature;
+import idees.gama.features.add.AddTaskFeature;
+import idees.gama.features.add.AddTaskLinkFeature;
 import idees.gama.features.add.AddWorldFeature;
 import idees.gama.features.create.CreateActionLinkFeature;
 import idees.gama.features.create.CreateAspectLinkFeature;
 import idees.gama.features.create.CreateBatchExperimentLinkFeature;
 import idees.gama.features.create.CreateDisplayLinkFeature;
+import idees.gama.features.create.CreateEquationLinkFeature;
 import idees.gama.features.create.CreateGuiExperimentLinkFeature;
 import idees.gama.features.create.CreateInheritingLinkFeature;
+import idees.gama.features.create.CreatePerceiveLinkFeature;
+import idees.gama.features.create.CreatePlanLinkFeature;
 import idees.gama.features.create.CreateReflexLinkFeature;
+import idees.gama.features.create.CreateRuleLinkFeature;
+import idees.gama.features.create.CreateStateLinkFeature;
 import idees.gama.features.create.CreateSubGridLinkFeature;
 import idees.gama.features.create.CreateSubSpeciesLinkFeature;
+import idees.gama.features.create.CreateTaskLinkFeature;
 import idees.gama.features.layout.LayoutCommonFeature;
 import idees.gama.features.layout.LayoutDiagramFeature;
 import idees.gama.features.layout.LayoutEExperimentFeature;
@@ -102,6 +132,8 @@ import msi.gama.kernel.experiment.IExperimentPlan;
 import msi.gama.kernel.model.IModel;
 import msi.gama.outputs.IOutput;
 import msi.gaml.architecture.reflex.ReflexStatement;
+import msi.gaml.descriptions.SpeciesDescription;
+import msi.gaml.skills.ISkill;
 import msi.gaml.species.ISpecies;
 import msi.gaml.statements.ActionStatement;
 import msi.gaml.statements.AspectStatement;
@@ -135,12 +167,22 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 	public IAddFeature getAddFeature(final IAddContext context) {
 		if ( context.getNewObject() instanceof EWorldAgent ) {
 			return new AddWorldFeature(this);
-		} else if ( context.getNewObject() instanceof ESpecies ) {
-			return new AddSpeciesFeature(this);
 		} else if ( context.getNewObject() instanceof EAction ) {
 			return new AddActionFeature(this);
 		} else if ( context.getNewObject() instanceof EReflex ) {
 			return new AddReflexFeature(this);
+		} else if ( context.getNewObject() instanceof EPlan ) {
+			return new AddPlanFeature(this);
+		} else if ( context.getNewObject() instanceof ETask ) {
+			return new AddTaskFeature(this);
+		} else if ( context.getNewObject() instanceof EState ) {
+			return new AddStateFeature(this);
+		} else if ( context.getNewObject() instanceof ERule ) {
+			return new AddRuleFeature(this);
+		} else if ( context.getNewObject() instanceof EEquation ) {
+			return new AddEquationFeature(this);
+		} else if ( context.getNewObject() instanceof EPerceive ) {
+			return new AddPerceiveFeature(this);
 		} else if ( context.getNewObject() instanceof EAspect ) {
 			return new AddAspectFeature(this);
 		} else if ( context.getNewObject() instanceof EGUIExperiment ) {
@@ -155,6 +197,18 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			return new AddActionLinkFeature(this);
 		} else if ( context.getNewObject() instanceof EReflexLink ) {
 			return new AddReflexLinkFeature(this);
+		} else if ( context.getNewObject() instanceof EEquationLink ) {
+			return new AddEquationLinkFeature(this);
+		} else if ( context.getNewObject() instanceof EPlanLink ) {
+			return new AddPlanLinkFeature(this);
+		} else if ( context.getNewObject() instanceof EStateLink ) {
+			return new AddStateLinkFeature(this);
+		} else if ( context.getNewObject() instanceof ETaskLink ) {
+			return new AddTaskLinkFeature(this);
+		} else if ( context.getNewObject() instanceof ERuleLink ) {
+			return new AddRuleLinkFeature(this);
+		} else if ( context.getNewObject() instanceof EPerceiveLink ) {
+			return new AddPerceiveLinkFeature(this);
 		} else if ( context.getNewObject() instanceof EAspectLink ) {
 			return new AddAspectLinkFeature(this);
 		} else if ( context.getNewObject() instanceof EDisplayLink ) {
@@ -163,7 +217,11 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			return new AddEExperimentLinkFeature(this);
 		} else if ( context.getNewObject() instanceof EInheritLink ) {
 			return new AddInheritingLinkFeature(this);
-		} else if ( context.getNewObject() instanceof EGraphLink ) { return new AddGraphLinkFeature(this); }
+		} else if ( context.getNewObject() instanceof EGrid) {
+			return new AddGridFeature(this);
+		} else if ( context.getNewObject() instanceof ESpecies ) {
+			return new AddSpeciesFeature(this);
+		}		
 		return super.getAddFeature(context);
 	}
 
@@ -186,10 +244,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 					
 					diagram.eResource().getContents().add(newClass);
 					newClass.setName("world");
-					EContinuousTopology newTopo = gama.GamaFactory.eINSTANCE.createEContinuousTopology();
-					diagram.eResource().getContents().add(newTopo);
-					newClass.setTopology(newTopo);
-
+					
 					CreateContext ac = new CreateContext();
 					ac.setLocation(100, 50);
 					
@@ -301,34 +356,17 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 
 	public ESpecies createMicroSpecies(final ESpecies source, final PictogramElement sourceE, final ISpecies species,
 		final Diagram diagram, final List<String> listSpecies) {
-		ESpecies target = gama.GamaFactory.eINSTANCE.createESpecies();
+		ESpecies target =  species.isGrid() ? gama.GamaFactory.eINSTANCE.createEGrid(): gama.GamaFactory.eINSTANCE.createESpecies();
 		diagram.eResource().getContents().add(target);
-		/*
-		 * Collection<ISkill> skills = ((SpeciesDescription) species.getDescription()).getSkills().values();
-		 * for (ISkill sk : skills) {
-		 * target.getSkills().add(sk.toString());
-		 * 
-		 * }
-		 */
+		Collection<ISkill> skills = ((SpeciesDescription) species.getDescription()).getSkills().values();
+		 for (ISkill sk : skills) {
+			 target.getSkills().add(sk.toString());
+		 }
 		target.setName(species.getName());
-
-		ETopology newTopo = null;
-		if ( species.isGrid() ) {
-			newTopo = gama.GamaFactory.eINSTANCE.createEGridTopology();
-		} else if ( species.isGraph() ) {
-			newTopo = gama.GamaFactory.eINSTANCE.createEGraphTopologyNode();
-		} else {
-			newTopo = gama.GamaFactory.eINSTANCE.createEContinuousTopology();
+		
+		for ( IVariable var : species.getVars() ) {
+			addVariable(var, target, listSpecies);
 		}
-
-		diagram.eResource().getContents().add(newTopo);
-		target.setTopology(newTopo);
-
-		/*for ( IVariable var : species.getVars() ) {
-			if ( ((Variable) var).getgSkill() == null ) {
-				addVariable(var, target, listSpecies);
-			}
-		}*/
 
 		CreateContext ac = new CreateContext();
 
@@ -552,7 +590,10 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			}
 		}
 		if ( reflex.hasFacet(IKeyword.WHEN) ) {
-			target.setCondition(reflex.getFacet(IKeyword.WHEN).serialize(false));
+			EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+			target.getFacets().add(facet);
+			facet.setName(IKeyword.WHEN);
+			facet.setValue(reflex.getFacet(IKeyword.WHEN).serialize(false));
 		}
 
 		target.setGamlCode(gmlCode);
@@ -666,10 +707,11 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		return new ICreateConnectionFeature[] {
 			new CreateSubSpeciesLinkFeature(this),
 			new CreateSubGridLinkFeature(this),
-			// new CreateSubGraphSpeciesFeature(this),
 			new CreateInheritingLinkFeature(this), new CreateActionLinkFeature(this),
 			new CreateReflexLinkFeature(this), new CreateAspectLinkFeature(this), new CreateDisplayLinkFeature(this),
-			new CreateBatchExperimentLinkFeature(this), new CreateGuiExperimentLinkFeature(this) };
+			new CreateBatchExperimentLinkFeature(this), new CreateGuiExperimentLinkFeature(this),
+			new CreatePlanLinkFeature(this),new CreateTaskLinkFeature(this),new CreateStateLinkFeature(this),
+			new CreateRuleLinkFeature(this),new CreateEquationLinkFeature(this),new CreatePerceiveLinkFeature(this)};
 	}
 
 	@Override

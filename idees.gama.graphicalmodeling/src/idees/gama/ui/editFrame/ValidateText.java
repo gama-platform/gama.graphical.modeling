@@ -67,8 +67,8 @@ public class ValidateText extends StyledText {
 			// loc.add(0, "world");
 		}
 
-		colValid = new Color(getDisplay(), 100, 255, 100);
-		colNotValid = new Color(getDisplay(), 255, 100, 100);
+		colValid = new Color(getDisplay(), 150, 255, 150);
+		colNotValid = new Color(getDisplay(), 255, 150, 150);
 		error = editor.containErrors(loc, name, uselessName);
 		tip.setMessage(error);
 

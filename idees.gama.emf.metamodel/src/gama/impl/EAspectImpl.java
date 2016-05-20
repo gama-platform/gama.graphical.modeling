@@ -29,12 +29,12 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.EAspectImpl#getGamlCode <em>Gaml Code</em>}</li>
  *   <li>{@link gama.impl.EAspectImpl#getAspectLinks <em>Aspect Links</em>}</li>
  *   <li>{@link gama.impl.EAspectImpl#getLayers <em>Layers</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

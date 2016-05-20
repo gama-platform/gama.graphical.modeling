@@ -14,11 +14,11 @@ package gama;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EInheritLink#getParent <em>Parent</em>}</li>
  *   <li>{@link gama.EInheritLink#getChild <em>Child</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEInheritLink()
  * @model

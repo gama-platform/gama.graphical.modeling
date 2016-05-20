@@ -1,15 +1,29 @@
 package idees.gama.features.add;
 
-import gama.*;
-import idees.gama.ui.image.GamaImageProvider;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
-import org.eclipse.graphiti.mm.algorithms.*;
-import org.eclipse.graphiti.mm.algorithms.styles.*;
-import org.eclipse.graphiti.mm.pictograms.*;
-import org.eclipse.graphiti.services.*;
+import org.eclipse.graphiti.mm.algorithms.Image;
+import org.eclipse.graphiti.mm.algorithms.Polyline;
+import org.eclipse.graphiti.mm.algorithms.RoundedRectangle;
+import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.styles.Color;
+import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
+import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.mm.pictograms.Shape;
+import org.eclipse.graphiti.services.Graphiti;
+import org.eclipse.graphiti.services.IGaService;
+import org.eclipse.graphiti.services.IPeCreateService;
+
+import gama.ESpecies;
+import gama.EVariable;
+import gama.impl.ESpeciesImpl;
+import idees.gama.ui.image.GamaImageProvider;
 
 public class AddSpeciesFeature extends AbstractAddShapeFeature {
 
@@ -17,9 +31,6 @@ public class AddSpeciesFeature extends AbstractAddShapeFeature {
 	public static final int INIT_HEIGHT = 100;
 
 	private static final List<Integer> CONTINUOUS_BACKGROUND = Arrays.asList(255, 255, 150);
-	private static final List<Integer> GRID_BACKGROUND = Arrays.asList(255, 204, 150);
-	private static final List<Integer> GRAPH_NODE_BACKGROUND = Arrays.asList(155, 255, 150);
-	private static final List<Integer> GRAPH_EDGE_BACKGROUND = Arrays.asList(100, 255, 150);
 
 	public AddSpeciesFeature(final IFeatureProvider fp) {
 		super(fp);
@@ -28,7 +39,7 @@ public class AddSpeciesFeature extends AbstractAddShapeFeature {
 	@Override
 	public boolean canAdd(final IAddContext context) {
 		// check if user wants to add a EClass
-		if ( context.getNewObject() instanceof ESpecies ) {
+		if ( context.getNewObject().getClass().equals(ESpeciesImpl.class) ) {
 			// check if user wants to add to a diagram
 			if ( context.getTargetContainer() instanceof Diagram ) { return true; }
 		}
@@ -58,15 +69,7 @@ public class AddSpeciesFeature extends AbstractAddShapeFeature {
 			roundedRectangle.setForeground(manageColor(error ? ColorDisplay.CLASS_FOREGROUND_ERROR
 				: ColorDisplay.CLASS_FOREGROUND_OK));
 			if ( addedClass.getColorPicto().isEmpty() ) {
-				if ( addedClass.getTopology() instanceof EContinuousTopology ) {
-					addedClass.getColorPicto().addAll(CONTINUOUS_BACKGROUND);
-				} else if ( addedClass.getTopology() instanceof EGridTopology ) {
-					addedClass.getColorPicto().addAll(GRID_BACKGROUND);
-				} else if ( addedClass.getTopology() instanceof EGraphTopologyNode ) {
-					addedClass.getColorPicto().addAll(GRAPH_NODE_BACKGROUND);
-				} else if ( addedClass.getTopology() instanceof EGraphTopologyEdge ) {
-					addedClass.getColorPicto().addAll(GRAPH_EDGE_BACKGROUND);
-				}
+				addedClass.getColorPicto().addAll(CONTINUOUS_BACKGROUND);
 			}
 			List<Integer> currentColor = addedClass.getColorPicto();
 			Color color =
@@ -137,16 +140,7 @@ public class AddSpeciesFeature extends AbstractAddShapeFeature {
 		{
 
 			Shape shape3 = peCreateService.createShape(containerShape, false);
-			Image icon1 = null;
-			if ( addedClass.getTopology() instanceof EContinuousTopology ) {
-				icon1 = gaService.createImage(shape3, GamaImageProvider.IMG_SPECIESCONTINUOUSTOPO);
-			} else if ( addedClass.getTopology() instanceof EGridTopology ) {
-				icon1 = gaService.createImage(shape3, GamaImageProvider.IMG_SPECIESGRIDTOPO);
-			} else if ( addedClass.getTopology() instanceof EGraphTopologyNode ) {
-				icon1 = gaService.createImage(shape3, GamaImageProvider.IMG_SPECIESGRAPHNODETOPO);
-			} else if ( addedClass.getTopology() instanceof EGraphTopologyEdge ) {
-				icon1 = gaService.createImage(shape3, GamaImageProvider.IMG_SPECIESGRAPHEDGETOPO);
-			}
+			Image icon1 = gaService.createImage(shape3, GamaImageProvider.IMG_SPECIESCONTINUOUSTOPO);
 			gaService.setLocationAndSize(icon1, 20 - width / 2, 3, 30, 15);
 
 			link(shape3, addedClass);

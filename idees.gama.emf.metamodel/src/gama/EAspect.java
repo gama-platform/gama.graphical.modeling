@@ -15,12 +15,12 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EAspect#getGamlCode <em>Gaml Code</em>}</li>
  *   <li>{@link gama.EAspect#getAspectLinks <em>Aspect Links</em>}</li>
  *   <li>{@link gama.EAspect#getLayers <em>Layers</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEAspect()
  * @model

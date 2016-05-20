@@ -9,7 +9,6 @@ import org.eclipse.graphiti.features.context.impl.CreateContext;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 
-import gama.EContinuousTopology;
 import gama.ESpecies;
 import gama.ESubSpeciesLink;
 import idees.gama.diagram.GamaDiagramEditor;
@@ -43,9 +42,6 @@ public class CreateSubSpeciesLinkFeature extends AbstractCreateSpeciesComponentL
 	  	System.out.println("this.getDiagram().eResource().getContents(): " + this.getDiagram().eResource().getContents());
 		newSpecies.setName(newSpeciesName);
 		CreateContext ac = new CreateContext();
-		EContinuousTopology newTopo = gama.GamaFactory.eINSTANCE.createEContinuousTopology();
-		this.getDiagram().eResource().getContents().add(newTopo);
-		newSpecies.setTopology(newTopo);
 		ac.setLocation(context.getTargetLocation().getX(), context.getTargetLocation().getY());
 		ac.setSize(0, 0);
 		ac.setTargetContainer(getDiagram());
@@ -83,7 +79,7 @@ public class CreateSubSpeciesLinkFeature extends AbstractCreateSpeciesComponentL
 		}
 		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(getFeatureProvider()));
 		
-		//diagramEditor.addEOject(target);
+		diagramEditor.addEOject(target);
 		
 		return newConnection;
 	}

@@ -17,14 +17,15 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EGamaObject#getName <em>Name</em>}</li>
  *   <li>{@link gama.EGamaObject#getModel <em>Model</em>}</li>
  *   <li>{@link gama.EGamaObject#getColorPicto <em>Color Picto</em>}</li>
  *   <li>{@link gama.EGamaObject#getHasError <em>Has Error</em>}</li>
  *   <li>{@link gama.EGamaObject#getError <em>Error</em>}</li>
+ *   <li>{@link gama.EGamaObject#getFacets <em>Facets</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEGamaObject()
  * @model
@@ -153,5 +154,21 @@ public interface EGamaObject extends EObject {
 	 * @generated
 	 */
 	void setError(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Facets</b></em>' containment reference list.
+	 * The list contents are of type {@link gama.EFacet}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Facets</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Facets</em>' containment reference list.
+	 * @see gama.GamaPackage#getEGamaObject_Facets()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<EFacet> getFacets();
 
 } // EGamaObject

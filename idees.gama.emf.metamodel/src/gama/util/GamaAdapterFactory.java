@@ -148,10 +148,6 @@ public class GamaAdapterFactory extends AdapterFactoryImpl {
 				return createELayerAdapter();
 			}
 			@Override
-			public Adapter caseEGraphTopologyNode(EGraphTopologyNode object) {
-				return createEGraphTopologyNodeAdapter();
-			}
-			@Override
 			public Adapter caseEExperimentLink(EExperimentLink object) {
 				return createEExperimentLinkAdapter();
 			}
@@ -160,28 +156,8 @@ public class GamaAdapterFactory extends AdapterFactoryImpl {
 				return createELayerAspectAdapter();
 			}
 			@Override
-			public Adapter caseEGridTopology(EGridTopology object) {
-				return createEGridTopologyAdapter();
-			}
-			@Override
-			public Adapter caseEContinuousTopology(EContinuousTopology object) {
-				return createEContinuousTopologyAdapter();
-			}
-			@Override
-			public Adapter caseETopology(ETopology object) {
-				return createETopologyAdapter();
-			}
-			@Override
 			public Adapter caseEInheritLink(EInheritLink object) {
 				return createEInheritLinkAdapter();
-			}
-			@Override
-			public Adapter caseEGraphTopologyEdge(EGraphTopologyEdge object) {
-				return createEGraphTopologyEdgeAdapter();
-			}
-			@Override
-			public Adapter caseEGraphLink(EGraphLink object) {
-				return createEGraphLinkAdapter();
 			}
 			@Override
 			public Adapter caseEChartLayer(EChartLayer object) {
@@ -194,6 +170,62 @@ public class GamaAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseEMonitor(EMonitor object) {
 				return createEMonitorAdapter();
+			}
+			@Override
+			public Adapter caseEFacet(EFacet object) {
+				return createEFacetAdapter();
+			}
+			@Override
+			public Adapter caseEPlan(EPlan object) {
+				return createEPlanAdapter();
+			}
+			@Override
+			public Adapter caseEState(EState object) {
+				return createEStateAdapter();
+			}
+			@Override
+			public Adapter caseETask(ETask object) {
+				return createETaskAdapter();
+			}
+			@Override
+			public Adapter caseEPlanLink(EPlanLink object) {
+				return createEPlanLinkAdapter();
+			}
+			@Override
+			public Adapter caseEStateLink(EStateLink object) {
+				return createEStateLinkAdapter();
+			}
+			@Override
+			public Adapter caseETaskLink(ETaskLink object) {
+				return createETaskLinkAdapter();
+			}
+			@Override
+			public Adapter caseEGrid(EGrid object) {
+				return createEGridAdapter();
+			}
+			@Override
+			public Adapter caseEPerceive(EPerceive object) {
+				return createEPerceiveAdapter();
+			}
+			@Override
+			public Adapter caseEPerceiveLink(EPerceiveLink object) {
+				return createEPerceiveLinkAdapter();
+			}
+			@Override
+			public Adapter caseERule(ERule object) {
+				return createERuleAdapter();
+			}
+			@Override
+			public Adapter caseERuleLink(ERuleLink object) {
+				return createERuleLinkAdapter();
+			}
+			@Override
+			public Adapter caseEEquation(EEquation object) {
+				return createEEquationAdapter();
+			}
+			@Override
+			public Adapter caseEEquationLink(EEquationLink object) {
+				return createEEquationLinkAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -482,20 +514,6 @@ public class GamaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link gama.EGraphTopologyNode <em>EGraph Topology Node</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see gama.EGraphTopologyNode
-	 * @generated
-	 */
-	public Adapter createEGraphTopologyNodeAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link gama.EExperimentLink <em>EExperiment Link</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -524,48 +542,6 @@ public class GamaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link gama.EGridTopology <em>EGrid Topology</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see gama.EGridTopology
-	 * @generated
-	 */
-	public Adapter createEGridTopologyAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link gama.EContinuousTopology <em>EContinuous Topology</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see gama.EContinuousTopology
-	 * @generated
-	 */
-	public Adapter createEContinuousTopologyAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link gama.ETopology <em>ETopology</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see gama.ETopology
-	 * @generated
-	 */
-	public Adapter createETopologyAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link gama.EInheritLink <em>EInherit Link</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -576,34 +552,6 @@ public class GamaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createEInheritLinkAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link gama.EGraphTopologyEdge <em>EGraph Topology Edge</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see gama.EGraphTopologyEdge
-	 * @generated
-	 */
-	public Adapter createEGraphTopologyEdgeAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link gama.EGraphLink <em>EGraph Link</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see gama.EGraphLink
-	 * @generated
-	 */
-	public Adapter createEGraphLinkAdapter() {
 		return null;
 	}
 
@@ -646,6 +594,202 @@ public class GamaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createEMonitorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.EFacet <em>EFacet</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.EFacet
+	 * @generated
+	 */
+	public Adapter createEFacetAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.EPlan <em>EPlan</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.EPlan
+	 * @generated
+	 */
+	public Adapter createEPlanAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.EState <em>EState</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.EState
+	 * @generated
+	 */
+	public Adapter createEStateAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.ETask <em>ETask</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.ETask
+	 * @generated
+	 */
+	public Adapter createETaskAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.EPlanLink <em>EPlan Link</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.EPlanLink
+	 * @generated
+	 */
+	public Adapter createEPlanLinkAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.EStateLink <em>EState Link</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.EStateLink
+	 * @generated
+	 */
+	public Adapter createEStateLinkAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.ETaskLink <em>ETask Link</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.ETaskLink
+	 * @generated
+	 */
+	public Adapter createETaskLinkAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.EGrid <em>EGrid</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.EGrid
+	 * @generated
+	 */
+	public Adapter createEGridAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.EPerceive <em>EPerceive</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.EPerceive
+	 * @generated
+	 */
+	public Adapter createEPerceiveAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.EPerceiveLink <em>EPerceive Link</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.EPerceiveLink
+	 * @generated
+	 */
+	public Adapter createEPerceiveLinkAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.ERule <em>ERule</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.ERule
+	 * @generated
+	 */
+	public Adapter createERuleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.ERuleLink <em>ERule Link</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.ERuleLink
+	 * @generated
+	 */
+	public Adapter createERuleLinkAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.EEquation <em>EEquation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.EEquation
+	 * @generated
+	 */
+	public Adapter createEEquationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link gama.EEquationLink <em>EEquation Link</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see gama.EEquationLink
+	 * @generated
+	 */
+	public Adapter createEEquationLinkAdapter() {
 		return null;
 	}
 

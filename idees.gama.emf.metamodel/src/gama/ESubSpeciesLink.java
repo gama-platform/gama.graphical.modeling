@@ -14,11 +14,11 @@ package gama;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.ESubSpeciesLink#getMacro <em>Macro</em>}</li>
  *   <li>{@link gama.ESubSpeciesLink#getMicro <em>Micro</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getESubSpeciesLink()
  * @model

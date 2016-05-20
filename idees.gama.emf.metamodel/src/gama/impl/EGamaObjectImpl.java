@@ -6,6 +6,7 @@
  */
 package gama.impl;
 
+import gama.EFacet;
 import gama.EGamaModel;
 import gama.EGamaObject;
 import gama.GamaPackage;
@@ -24,7 +25,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EDataTypeEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -32,14 +35,15 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.EGamaObjectImpl#getName <em>Name</em>}</li>
  *   <li>{@link gama.impl.EGamaObjectImpl#getModel <em>Model</em>}</li>
  *   <li>{@link gama.impl.EGamaObjectImpl#getColorPicto <em>Color Picto</em>}</li>
  *   <li>{@link gama.impl.EGamaObjectImpl#getHasError <em>Has Error</em>}</li>
  *   <li>{@link gama.impl.EGamaObjectImpl#getError <em>Error</em>}</li>
+ *   <li>{@link gama.impl.EGamaObjectImpl#getFacets <em>Facets</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -115,6 +119,16 @@ public class EGamaObjectImpl extends EObjectImpl implements EGamaObject {
 	protected String error = ERROR_EDEFAULT;
 
 	/**
+	 * The cached value of the '{@link #getFacets() <em>Facets</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFacets()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<EFacet> facets;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -161,7 +175,7 @@ public class EGamaObjectImpl extends EObjectImpl implements EGamaObject {
 	 */
 	public EGamaModel getModel() {
 		if (eContainerFeatureID() != GamaPackage.EGAMA_OBJECT__MODEL) return null;
-		return (EGamaModel)eContainer();
+		return (EGamaModel)eInternalContainer();
 	}
 
 	/**
@@ -254,6 +268,18 @@ public class EGamaObjectImpl extends EObjectImpl implements EGamaObject {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<EFacet> getFacets() {
+		if (facets == null) {
+			facets = new EObjectContainmentEList<EFacet>(EFacet.class, this, GamaPackage.EGAMA_OBJECT__FACETS);
+		}
+		return facets;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -275,6 +301,8 @@ public class EGamaObjectImpl extends EObjectImpl implements EGamaObject {
 		switch (featureID) {
 			case GamaPackage.EGAMA_OBJECT__MODEL:
 				return basicSetModel(null, msgs);
+			case GamaPackage.EGAMA_OBJECT__FACETS:
+				return ((InternalEList<?>)getFacets()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -311,6 +339,8 @@ public class EGamaObjectImpl extends EObjectImpl implements EGamaObject {
 				return getHasError();
 			case GamaPackage.EGAMA_OBJECT__ERROR:
 				return getError();
+			case GamaPackage.EGAMA_OBJECT__FACETS:
+				return getFacets();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -340,6 +370,10 @@ public class EGamaObjectImpl extends EObjectImpl implements EGamaObject {
 			case GamaPackage.EGAMA_OBJECT__ERROR:
 				setError((String)newValue);
 				return;
+			case GamaPackage.EGAMA_OBJECT__FACETS:
+				getFacets().clear();
+				getFacets().addAll((Collection<? extends EFacet>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -367,6 +401,9 @@ public class EGamaObjectImpl extends EObjectImpl implements EGamaObject {
 			case GamaPackage.EGAMA_OBJECT__ERROR:
 				setError(ERROR_EDEFAULT);
 				return;
+			case GamaPackage.EGAMA_OBJECT__FACETS:
+				getFacets().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -389,6 +426,8 @@ public class EGamaObjectImpl extends EObjectImpl implements EGamaObject {
 				return HAS_ERROR_EDEFAULT == null ? hasError != null : !HAS_ERROR_EDEFAULT.equals(hasError);
 			case GamaPackage.EGAMA_OBJECT__ERROR:
 				return ERROR_EDEFAULT == null ? error != null : !ERROR_EDEFAULT.equals(error);
+			case GamaPackage.EGAMA_OBJECT__FACETS:
+				return facets != null && !facets.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

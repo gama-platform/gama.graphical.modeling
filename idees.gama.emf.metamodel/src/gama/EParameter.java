@@ -14,6 +14,7 @@ package gama;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EParameter#getVariable <em>Variable</em>}</li>
  *   <li>{@link gama.EParameter#getMin <em>Min</em>}</li>
@@ -23,7 +24,6 @@ package gama;
  *   <li>{@link gama.EParameter#getAmong <em>Among</em>}</li>
  *   <li>{@link gama.EParameter#getCategory <em>Category</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEParameter()
  * @model

@@ -15,19 +15,19 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EExperiment#getExperimentLink <em>Experiment Link</em>}</li>
  *   <li>{@link gama.EExperiment#getDisplayLinks <em>Display Links</em>}</li>
  *   <li>{@link gama.EExperiment#getParameters <em>Parameters</em>}</li>
  *   <li>{@link gama.EExperiment#getMonitors <em>Monitors</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEExperiment()
  * @model
  * @generated
  */
-public interface EExperiment extends EGamaObject {
+public interface EExperiment extends ESpecies {
 	/**
 	 * Returns the value of the '<em><b>Experiment Link</b></em>' reference.
 	 * <!-- begin-user-doc -->

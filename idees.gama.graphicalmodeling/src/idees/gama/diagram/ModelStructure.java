@@ -5,8 +5,14 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 
 import gama.EAction;
+import gama.EEquation;
+import gama.EPerceive;
+import gama.EPlan;
 import gama.EReflex;
+import gama.ERule;
 import gama.ESpecies;
+import gama.EState;
+import gama.ETask;
 import idees.gama.features.modelgeneration.ModelGenerator;
 
 public class ModelStructure {
@@ -30,6 +36,7 @@ public class ModelStructure {
 		String id = getElementId(element);
 		inModel = id != null;
 		String model = ModelGenerator.generateModel(fp, diagram, id);
+		//String model = ModelGenerator.generateModel(fp, diagram, id);
 		if (inModel) {
 			String[] mds = model.split(id);
 			if (mds.length < 3) {
@@ -65,6 +72,24 @@ public class ModelStructure {
 		}else if (newElement instanceof ESpecies) {
 			ESpecies species = (ESpecies) newElement;
 			return "species:"+ species.getName(); 
+		}else if (newElement instanceof EEquation) {
+			EEquation equation = (EEquation) newElement;
+			return "equation:"+ equation.getEquationLinks().get(0).getSpecies().getName() + ":"+ equation.getName(); 
+		}else if (newElement instanceof EState) {
+			EState reflex = (EState) newElement;
+			return "reflex:"+ reflex.getStateLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
+		}else if (newElement instanceof ETask) {
+			ETask reflex = (ETask) newElement;
+			return "reflex:"+ reflex.getTaskLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
+		}else if (newElement instanceof EPlan) {
+			EPlan reflex = (EPlan) newElement;
+			return "reflex:"+ reflex.getPlanLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
+		}else if (newElement instanceof EPerceive) {
+			EPerceive reflex = (EPerceive) newElement;
+			return "reflex:"+ reflex.getPerceiveLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
+		}else if (newElement instanceof ERule) {
+			ERule reflex = (ERule) newElement;
+			return "reflex:"+ reflex.getRuleLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
 		}
 		return null;
 	}

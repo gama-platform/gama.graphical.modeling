@@ -28,12 +28,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.EGamaLinkImpl#getTarget <em>Target</em>}</li>
  *   <li>{@link gama.impl.EGamaLinkImpl#getSource <em>Source</em>}</li>
  *   <li>{@link gama.impl.EGamaLinkImpl#getModel <em>Model</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -160,7 +160,7 @@ public class EGamaLinkImpl extends EObjectImpl implements EGamaLink {
 	 */
 	public EGamaModel getModel() {
 		if (eContainerFeatureID() != GamaPackage.EGAMA_LINK__MODEL) return null;
-		return (EGamaModel)eContainer();
+		return (EGamaModel)eInternalContainer();
 	}
 
 	/**

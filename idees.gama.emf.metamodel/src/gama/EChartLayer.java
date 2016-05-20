@@ -14,12 +14,12 @@ package gama;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EChartLayer#getStyle <em>Style</em>}</li>
  *   <li>{@link gama.EChartLayer#getColor <em>Color</em>}</li>
  *   <li>{@link gama.EChartLayer#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEChartLayer()
  * @model

@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.ELayer#getGamlCode <em>Gaml Code</em>}</li>
  *   <li>{@link gama.ELayer#getDisplay <em>Display</em>}</li>
@@ -23,23 +24,16 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link gama.ELayer#getText <em>Text</em>}</li>
  *   <li>{@link gama.ELayer#getSize <em>Size</em>}</li>
  *   <li>{@link gama.ELayer#getSpecies <em>Species</em>}</li>
- *   <li>{@link gama.ELayer#getTransparency <em>Transparency</em>}</li>
  *   <li>{@link gama.ELayer#getAgents <em>Agents</em>}</li>
- *   <li>{@link gama.ELayer#getPosition_x <em>Position x</em>}</li>
- *   <li>{@link gama.ELayer#getPosition_y <em>Position y</em>}</li>
- *   <li>{@link gama.ELayer#getSize_x <em>Size x</em>}</li>
- *   <li>{@link gama.ELayer#getSize_y <em>Size y</em>}</li>
  *   <li>{@link gama.ELayer#getAspect <em>Aspect</em>}</li>
  *   <li>{@link gama.ELayer#getColor <em>Color</em>}</li>
  *   <li>{@link gama.ELayer#getIsColorCst <em>Is Color Cst</em>}</li>
  *   <li>{@link gama.ELayer#getColorRBG <em>Color RBG</em>}</li>
  *   <li>{@link gama.ELayer#getGrid <em>Grid</em>}</li>
- *   <li>{@link gama.ELayer#getRefresh <em>Refresh</em>}</li>
  *   <li>{@link gama.ELayer#getChartlayers <em>Chartlayers</em>}</li>
  *   <li>{@link gama.ELayer#getChart_type <em>Chart type</em>}</li>
  *   <li>{@link gama.ELayer#isShowLines <em>Show Lines</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getELayer()
  * @model
@@ -229,32 +223,6 @@ public interface ELayer extends EGamaObject {
 	void setSpecies(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Transparency</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Transparency</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Transparency</em>' attribute.
-	 * @see #setTransparency(String)
-	 * @see gama.GamaPackage#getELayer_Transparency()
-	 * @model
-	 * @generated
-	 */
-	String getTransparency();
-
-	/**
-	 * Sets the value of the '{@link gama.ELayer#getTransparency <em>Transparency</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Transparency</em>' attribute.
-	 * @see #getTransparency()
-	 * @generated
-	 */
-	void setTransparency(String value);
-
-	/**
 	 * Returns the value of the '<em><b>Agents</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -279,110 +247,6 @@ public interface ELayer extends EGamaObject {
 	 * @generated
 	 */
 	void setAgents(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Position x</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Position x</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Position x</em>' attribute.
-	 * @see #setPosition_x(String)
-	 * @see gama.GamaPackage#getELayer_Position_x()
-	 * @model
-	 * @generated
-	 */
-	String getPosition_x();
-
-	/**
-	 * Sets the value of the '{@link gama.ELayer#getPosition_x <em>Position x</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Position x</em>' attribute.
-	 * @see #getPosition_x()
-	 * @generated
-	 */
-	void setPosition_x(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Position y</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Position y</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Position y</em>' attribute.
-	 * @see #setPosition_y(String)
-	 * @see gama.GamaPackage#getELayer_Position_y()
-	 * @model
-	 * @generated
-	 */
-	String getPosition_y();
-
-	/**
-	 * Sets the value of the '{@link gama.ELayer#getPosition_y <em>Position y</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Position y</em>' attribute.
-	 * @see #getPosition_y()
-	 * @generated
-	 */
-	void setPosition_y(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Size x</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Size x</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Size x</em>' attribute.
-	 * @see #setSize_x(String)
-	 * @see gama.GamaPackage#getELayer_Size_x()
-	 * @model
-	 * @generated
-	 */
-	String getSize_x();
-
-	/**
-	 * Sets the value of the '{@link gama.ELayer#getSize_x <em>Size x</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Size x</em>' attribute.
-	 * @see #getSize_x()
-	 * @generated
-	 */
-	void setSize_x(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Size y</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Size y</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Size y</em>' attribute.
-	 * @see #setSize_y(String)
-	 * @see gama.GamaPackage#getELayer_Size_y()
-	 * @model
-	 * @generated
-	 */
-	String getSize_y();
-
-	/**
-	 * Sets the value of the '{@link gama.ELayer#getSize_y <em>Size y</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Size y</em>' attribute.
-	 * @see #getSize_y()
-	 * @generated
-	 */
-	void setSize_y(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Aspect</b></em>' attribute.
@@ -503,32 +367,6 @@ public interface ELayer extends EGamaObject {
 	 * @generated
 	 */
 	void setGrid(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Refresh</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Refresh</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Refresh</em>' attribute.
-	 * @see #setRefresh(String)
-	 * @see gama.GamaPackage#getELayer_Refresh()
-	 * @model
-	 * @generated
-	 */
-	String getRefresh();
-
-	/**
-	 * Sets the value of the '{@link gama.ELayer#getRefresh <em>Refresh</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Refresh</em>' attribute.
-	 * @see #getRefresh()
-	 * @generated
-	 */
-	void setRefresh(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Chartlayers</b></em>' reference list.

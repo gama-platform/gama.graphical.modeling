@@ -32,17 +32,17 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.EExperimentImpl#getExperimentLink <em>Experiment Link</em>}</li>
  *   <li>{@link gama.impl.EExperimentImpl#getDisplayLinks <em>Display Links</em>}</li>
  *   <li>{@link gama.impl.EExperimentImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link gama.impl.EExperimentImpl#getMonitors <em>Monitors</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
-public class EExperimentImpl extends EGamaObjectImpl implements EExperiment {
+public class EExperimentImpl extends ESpeciesImpl implements EExperiment {
 	/**
 	 * The cached value of the '{@link #getExperimentLink() <em>Experiment Link</em>}' reference.
 	 * <!-- begin-user-doc -->

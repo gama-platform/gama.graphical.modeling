@@ -24,11 +24,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.EDisplayLinkImpl#getExperiment <em>Experiment</em>}</li>
  *   <li>{@link gama.impl.EDisplayLinkImpl#getDisplay <em>Display</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -55,7 +55,7 @@ public class ModelGenerationFeature extends AbstractCustomFeature {
  
     @Override
     public void execute(ICustomContext context) {
-   		String gamlModel = ModelGenerator.generateModel(this.getFeatureProvider(), getDiagram(),null);
+    	String gamlModel = ModelGenerator.generateModel(this.getFeatureProvider(), getDiagram(),null);
     		List<Shape> contents = getDiagram().getChildren();
     		URI uri = null;
     		if (contents != null) {

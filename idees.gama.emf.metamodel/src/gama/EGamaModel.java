@@ -17,12 +17,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.EGamaModel#getObjects <em>Objects</em>}</li>
  *   <li>{@link gama.EGamaModel#getName <em>Name</em>}</li>
  *   <li>{@link gama.EGamaModel#getLinks <em>Links</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getEGamaModel()
  * @model

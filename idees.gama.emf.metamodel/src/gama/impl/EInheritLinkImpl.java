@@ -23,11 +23,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.EInheritLinkImpl#getParent <em>Parent</em>}</li>
  *   <li>{@link gama.impl.EInheritLinkImpl#getChild <em>Child</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

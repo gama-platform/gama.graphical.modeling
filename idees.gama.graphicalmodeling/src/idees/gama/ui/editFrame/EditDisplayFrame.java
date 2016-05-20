@@ -28,19 +28,17 @@ public class EditDisplayFrame extends EditFrame {
 
 	List<ESpecies> species;
 	List<ESpecies> grids;
-	ValidateText textColor;
-	ValidateText textRefresh;
-
-	Button btnCstCol;
-	Button btnExpressionCol;
-	Color color;
-	int[] rgb;
-	Label colorLabel;
-	Button btnOpenGL;
-	Button btnJava2D;
-
+	
 	Diagram diagram;
 	final Map<ELayer, EditLayerFrame> layerFrames;
+
+
+	private static final Pattern DOUBLE_PATTERN = Pattern
+		.compile("[\\x00-\\x20]*[+-]?(NaN|Infinity|((((\\p{Digit}+)(\\.)?((\\p{Digit}+)?)"
+			+ "([eE][+-]?(\\p{Digit}+))?)|(\\.((\\p{Digit}+))([eE][+-]?(\\p{Digit}+))?)|"
+			+ "(((0[xX](\\p{XDigit}+)(\\.)?)|(0[xX](\\p{XDigit}+)?(\\.)(\\p{XDigit}+)))"
+			+ "[pP][+-]?(\\p{Digit}+)))[fFdD]?))[\\x00-\\x20]*");
+
 
 	/**
 	 * Create the application window.
@@ -52,18 +50,14 @@ public class EditDisplayFrame extends EditFrame {
 		species = new ArrayList<ESpecies>();
 		grids = new ArrayList<ESpecies>();
 		this.diagram = diagram;
-		rgb = new int[3];
-		rgb[0] = rgb[1] = rgb[2] = 255;
 		List<Shape> contents = diagram.getChildren();
 		for ( Shape sh : contents ) {
 			Object obj = fp.getBusinessObjectForPictogramElement(sh);
+			if ( obj instanceof EGrid ) {
+				grids.add((ESpecies) obj);
+			} 
 			if ( obj instanceof ESpecies ) {
-				ESpecies spe = (ESpecies) obj;
-				if ( spe.getTopology() != null && spe.getTopology() instanceof EGridTopology ) {
-					grids.add((ESpecies) obj);
-				} else {
-					species.add((ESpecies) obj);
-				}
+				species.add((ESpecies) obj);
 			}
 		}
 		frame = this;
@@ -72,12 +66,6 @@ public class EditDisplayFrame extends EditFrame {
 		ModelGenerator.modelValidation(fp, diagram);
 
 	}
-
-	private static final Pattern DOUBLE_PATTERN = Pattern
-		.compile("[\\x00-\\x20]*[+-]?(NaN|Infinity|((((\\p{Digit}+)(\\.)?((\\p{Digit}+)?)"
-			+ "([eE][+-]?(\\p{Digit}+))?)|(\\.((\\p{Digit}+))([eE][+-]?(\\p{Digit}+))?)|"
-			+ "(((0[xX](\\p{XDigit}+)(\\.)?)|(0[xX](\\p{XDigit}+)?(\\.)(\\p{XDigit}+)))"
-			+ "[pP][+-]?(\\p{Digit}+)))[fFdD]?))[\\x00-\\x20]*");
 
 	private void loadData() {
 		EDisplay display = (EDisplay) eobject;
@@ -90,41 +78,6 @@ public class EditDisplayFrame extends EditFrame {
 				.getShell().getDisplay(), 100, 255, 100));
 
 		}
-
-		if ( display.getIsColorCst() != null ) {
-			btnCstCol.setSelection(display.getIsColorCst());
-			btnExpressionCol.setSelection(!display.getIsColorCst());
-		}
-		if ( display.getName() != null ) {
-			textName.setText(display.getName());
-		}
-		if ( display.getColor() != null ) {
-			textColor.setText(display.getColor());
-		}
-		if ( btnCstCol.getSelection() ) {
-			textColor.setEnabled(false);
-		}
-		if ( display.getColorRBG().size() == 3 ) {
-			rgb[0] = display.getColorRBG().get(0);
-			rgb[1] = display.getColorRBG().get(1);
-			rgb[2] = display.getColorRBG().get(2);
-
-			color.dispose();
-			color = new Color(frame.getShell().getDisplay(), new RGB(rgb[0], rgb[1], rgb[2]));
-			colorLabel.setBackground(color);
-		}
-		if ( display.getOpengl() != null ) {
-			btnOpenGL.setSelection(display.getOpengl());
-			btnJava2D.setSelection(!display.getOpengl());
-		}
-		if ( display.getRefresh() != null ) {
-			textRefresh.setText(display.getRefresh());
-		}
-		textName.setSaveData(true);
-		textRefresh.setSaveData(true);
-		textName.getLinkedVts().add(textRefresh);
-		textColor.setSaveData(true);
-		textName.getLinkedVts().add(textColor);
 
 	}
 
@@ -141,12 +94,12 @@ public class EditDisplayFrame extends EditFrame {
 		// ****** CANVAS NAME *********
 		groupName(container);
 
+	
+		groupFacets(container, "display",2);
+				
 		// ****** CANVAS LAYERS *********
 		groupLayers(container);
 
-		buildCanvasParam(container);
-
-		// ****** CANVAS OK/CANCEL *********
 		loadData();
 
 		return container;
@@ -347,195 +300,13 @@ public class EditDisplayFrame extends EditFrame {
 		}
 	}
 
-	public void buildCanvasParam(final Composite container) {
-		// ****** CANVAS PARAMETERS *********
-		Group group = new Group(container, SWT.NONE);
-		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
-
-		group.setLayout(new GridLayout(1, false));
-		group.setText("Display properties");
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		group.setLayoutData(gridData);
-
-		Composite containerColor = new Composite(group, SWT.NONE);
-		containerColor.setLayout(new GridLayout(6, false));
-		GridData gridData3 = new GridData();
-		gridData3.horizontalAlignment = SWT.FILL;
-		gridData3.grabExcessHorizontalSpace = true;
-		containerColor.setLayoutData(gridData3);
-
-		// COLOR
-		CLabel lblColor = new CLabel(containerColor, SWT.NONE);
-		lblColor.setText("Background color:");
-
-		btnCstCol = new Button(containerColor, SWT.RADIO);
-		btnCstCol.setText("Constant");
-		btnCstCol.setSelection(true);
-		btnCstCol.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				textColor.setEnabled(false);
-				if ( textColor.isSaveData() ) {
-					save("");
-					ModelGenerator.modelValidation(fp, diagram);
-					diagramEditor.updateEObjectErrors();
-				}
-			}
-		});
-
-		// Start with white
-
-		rgb[0] = 255;
-		rgb[1] = 255;
-		rgb[2] = 255;
-
-		color = new Color(frame.getShell().getDisplay(), new RGB(rgb[0], rgb[1], rgb[2]));
-
-		// Use a label full of spaces to show the color
-		colorLabel = new Label(containerColor, SWT.NONE);
-		colorLabel.setText("                  ");
-		colorLabel.setBackground(color);
-
-		Button button = new Button(containerColor, SWT.PUSH);
-		button.setText("Color...");
-		button.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(final SelectionEvent event) {
-				// Create the color-change dialog
-				ColorDialog dlg = new ColorDialog(frame.getShell());
-
-				// Set the selected color in the dialog from
-				// user's selected color
-				dlg.setRGB(colorLabel.getBackground().getRGB());
-
-				// Change the title bar text
-				dlg.setText("Choose a Color");
-
-				// Open the dialog and retrieve the selected color
-				RGB rgbL = dlg.open();
-				if ( rgbL != null ) {
-					rgb[0] = rgbL.red;
-					rgb[1] = rgbL.green;
-					rgb[2] = rgbL.blue;
-					save("");
-					ModelGenerator.modelValidation(fp, diagram);
-					diagramEditor.updateEObjectErrors();
-
-					// Dispose the old color, create the
-					// new one, and set into the label
-					color.dispose();
-					color = new Color(frame.getShell().getDisplay(), rgbL);
-					colorLabel.setBackground(color);
-				}
-			}
-		});
-
-		btnExpressionCol = new Button(containerColor, SWT.RADIO);
-		btnExpressionCol.setText("Expression:");
-		btnExpressionCol.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				textColor.setEnabled(true);
-				if ( textColor.isSaveData() ) {
-					save("");
-					ModelGenerator.modelValidation(fp, diagram);
-					diagramEditor.updateEObjectErrors();
-				}
-			}
-		});
-
-		// textColor = new Text(containerColor, SWT.BORDER);
-		textColor =
-			new ValidateText(containerColor, SWT.BORDER, diagram, fp, frame, diagramEditor, "background:", null, null);
-
-		GridData gridDataTC = new GridData();
-		gridDataTC.horizontalAlignment = SWT.FILL;
-		gridDataTC.grabExcessHorizontalSpace = true;
-		textColor.setLayoutData(gridDataTC);
-
-		// REFRESH
-		Composite containerRefresh = new Composite(group, SWT.NONE);
-		GridData gridDataRR = new GridData();
-		gridDataRR.horizontalAlignment = SWT.FILL;
-		gridDataRR.grabExcessHorizontalSpace = true;
-		containerRefresh.setLayoutData(gridDataRR);
-		containerRefresh.setLayout(new GridLayout(2, false));
-
-		CLabel lblRefresh = new CLabel(containerRefresh, SWT.NONE);
-		lblRefresh.setText("Refresh:");
-
-		// textRefresh = new Text(containerRefresh, SWT.BORDER);
-		textRefresh =
-			new ValidateText(containerRefresh, SWT.BORDER, diagram, fp, frame, diagramEditor, "refresh_every:", null,
-				null);
-
-		textRefresh.setText("1");
-		GridData gridDataR = new GridData();
-		gridDataR.horizontalAlignment = SWT.FILL;
-		gridDataR.grabExcessHorizontalSpace = true;
-		textRefresh.setLayoutData(gridDataR);
-
-		// OPENGL
-		Composite containerType = new Composite(group, SWT.NONE);
-		GridData gridDataT = new GridData();
-		gridDataT.horizontalAlignment = SWT.FILL;
-		gridDataT.grabExcessHorizontalSpace = true;
-		containerType.setLayoutData(gridDataT);
-		containerType.setLayout(new GridLayout(3, false));
-
-		CLabel lblType = new CLabel(containerType, SWT.NONE);
-		lblType.setText("Type:");
-
-		Composite cOpenGl = new Composite(containerType, SWT.NONE);
-		GridData gridDataOp = new GridData();
-		gridDataOp.horizontalAlignment = SWT.FILL;
-		gridDataOp.grabExcessHorizontalSpace = true;
-		cOpenGl.setLayoutData(gridDataOp);
-		cOpenGl.setLayout(new GridLayout(2, false));
-
-		btnJava2D = new Button(cOpenGl, SWT.RADIO);
-		btnJava2D.setText("Java 2D");
-		btnJava2D.setSelection(true);
-		btnJava2D.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				if ( textColor.isSaveData() ) {
-					save("");
-					ModelGenerator.modelValidation(fp, diagram);
-					diagramEditor.updateEObjectErrors();
-				}
-			}
-		});
-
-		btnOpenGL = new Button(cOpenGl, SWT.RADIO);
-		btnOpenGL.setText("Open GL");
-		btnOpenGL.setSelection(false);
-		btnOpenGL.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				if ( textColor.isSaveData() ) {
-					save("");
-					ModelGenerator.modelValidation(fp, diagram);
-					diagramEditor.updateEObjectErrors();
-				}
-			}
-		});
-
-	}
-
+	
 	/**
 	 * Return the initial size of the window.
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(743, 545);
+		return new Point(743, 645);
 	}
 
 	public Table getLayerViewer() {
@@ -545,14 +316,7 @@ public class EditDisplayFrame extends EditFrame {
 	private void modifyOtherProperties() {
 		EDisplay display = (EDisplay) eobject;
 		display.setName(textName.getText());
-		display.setIsColorCst(btnCstCol.getSelection());
-		display.setColor(textColor.getText());
-		display.getColorRBG().clear();
-		display.getColorRBG().add(rgb[0]);
-		display.getColorRBG().add(rgb[1]);
-		display.getColorRBG().add(rgb[2]);
-		display.setOpengl(btnOpenGL.getSelection());
-		display.setRefresh(textRefresh.getText());
+		saveFacets();
 	}
 
 	@Override
@@ -593,8 +357,7 @@ public class EditDisplayFrame extends EditFrame {
 
 	public boolean testBasicOk(final ELayer lay, final List<String> speciesStr) {
 		return (lay.getType() == null || lay.getType().equals("species") && speciesStr.contains(lay.getSpecies())) &&
-			isNumber(lay.getTransparency()) && isNumber(lay.getPosition_x()) && isNumber(lay.getPosition_y()) &&
-			isNumber(lay.getSize_x()) && isNumber(lay.getSize_y()) &&
+			
 			!ModelGenerator.hasSyntaxError(fp, lay.getName(), true);
 	}
 

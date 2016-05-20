@@ -1,13 +1,12 @@
 package idees.gama.features.add;
 
-
-
-import gama.EGraphLink;
+import gama.ESubSpeciesLink;
 
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IAddConnectionContext;
 import org.eclipse.graphiti.features.context.IAddContext;
 import org.eclipse.graphiti.features.impl.AbstractAddFeature;
+import org.eclipse.graphiti.mm.GraphicsAlgorithmContainer;
 import org.eclipse.graphiti.mm.algorithms.Polyline;
 import org.eclipse.graphiti.mm.algorithms.Text;
 import org.eclipse.graphiti.mm.pictograms.Connection;
@@ -18,15 +17,15 @@ import org.eclipse.graphiti.services.IGaService;
 import org.eclipse.graphiti.services.IPeCreateService;
 import org.eclipse.graphiti.util.IColorConstant;
 
-public class AddGraphLinkFeature extends AbstractAddFeature {
+public class AddSubGridLinkFeature extends AbstractAddFeature {
  
-    public AddGraphLinkFeature (IFeatureProvider fp) {
+    public AddSubGridLinkFeature (IFeatureProvider fp) {
         super(fp);
     }
  
     public PictogramElement add(IAddContext context) {
     	IAddConnectionContext addConContext = (IAddConnectionContext) context;
-        EGraphLink addedEReference = (EGraphLink) context.getNewObject();
+        ESubSpeciesLink addedEReference = (ESubSpeciesLink) context.getNewObject();
         IPeCreateService peCreateService = Graphiti.getPeCreateService();
        
        
@@ -39,11 +38,11 @@ public class AddGraphLinkFeature extends AbstractAddFeature {
         IGaService gaService = Graphiti.getGaService();
         Polyline polyline = gaService.createPolyline(connection);
         polyline.setLineWidth(4);
-        polyline.setForeground(manageColor(IColorConstant.GREEN));
+        polyline.setForeground(manageColor(IColorConstant.ORANGE));
  
         // create link and wire it
         link(connection, addedEReference);
- 
+        
         // add dynamic text decorator for the association name
         ConnectionDecorator textDecorator =
             peCreateService.createConnectionDecorator(connection, true,
@@ -52,7 +51,13 @@ public class AddGraphLinkFeature extends AbstractAddFeature {
         		//createDefaultText(textDecorator);
         text.setForeground(manageColor(IColorConstant.BLACK));
         gaService.setLocation(text, 10, 0);
-        text.setValue("edge/node");
+        text.setValue("is macro agent of");
+ 
+        // add static graphical decorator (composition and navigable)
+        ConnectionDecorator cd;
+        cd = peCreateService
+              .createConnectionDecorator(connection, false, 1.0, true);
+        createArrow(cd);
  
         return connection;
     }
@@ -61,9 +66,20 @@ public class AddGraphLinkFeature extends AbstractAddFeature {
         // return true if given business object is an EReference
         // note, that the context must be an instance of IAddConnectionContext
        if (context instanceof IAddConnectionContext
-            && context.getNewObject() instanceof EGraphLink) {
+            && context.getNewObject() instanceof ESubSpeciesLink) {
     		 return true;
         }
     	return false;
+    }
+    
+    private Polyline createArrow(GraphicsAlgorithmContainer gaContainer) {
+        
+        IGaService gaService = Graphiti.getGaService();
+        Polyline polyline =
+            gaService.createPolyline(gaContainer, new int[] { -15, 10, 0, 0, -15,
+                -10 });
+        polyline.setForeground(manageColor(IColorConstant.ORANGE));
+        polyline.setLineWidth(4);
+        return polyline;
     }
 }

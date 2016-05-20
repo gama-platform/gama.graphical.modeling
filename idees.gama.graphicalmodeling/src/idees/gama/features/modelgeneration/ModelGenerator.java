@@ -27,17 +27,33 @@ import gama.EBatchExperiment;
 import gama.EChartLayer;
 import gama.EDisplay;
 import gama.EDisplayLink;
+import gama.EEquation;
+import gama.EEquationLink;
 import gama.EExperiment;
 import gama.EExperimentLink;
-import gama.EGridTopology;
+import gama.EFacet;
+import gama.EGamaLink;
+import gama.EGamaObject;
+import gama.EGrid;
 import gama.EInheritLink;
 import gama.ELayer;
 import gama.ELayerAspect;
 import gama.EMonitor;
 import gama.EParameter;
+import gama.EPerceive;
+import gama.EPerceiveLink;
+import gama.EPlan;
+import gama.EPlanLink;
+import gama.EReflex;
 import gama.EReflexLink;
+import gama.ERule;
+import gama.ERuleLink;
 import gama.ESpecies;
+import gama.EState;
+import gama.EStateLink;
 import gama.ESubSpeciesLink;
+import gama.ETask;
+import gama.ETaskLink;
 import gama.EVariable;
 import gama.EWorldAgent;
 import idees.gama.diagram.GamaDiagramEditor;
@@ -160,6 +176,7 @@ public class ModelGenerator {
 
 	public static List<GamlCompilationError>
 		modelValidation(final IFeatureProvider fp, final Diagram diagram/* ,ValidateStyledText vst */) {
+		
 		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		diagramEditor.initIdsEObjects();
 
@@ -210,38 +227,22 @@ public class ModelGenerator {
 			sp += "\t";
 		}
 		model += sp;
-		if ( species.getTopology() != null && species.getTopology() instanceof EGridTopology ) {
-			EGridTopology gt = (EGridTopology) species.getTopology();
-			model +=
-				"grid " +
-					species.getName() +
-					(gt.getNb_columns() != null && !gt.getNb_columns().isEmpty() ? " width:" + gt.getNb_columns() : "") +
-					(gt.getNb_rows() != null && !gt.getNb_rows().isEmpty() ? " height:" + gt.getNb_rows() : "");
-			if ( gt.getNeighbourhoodType() == null ) {
-				model += " neighbours:4";
-			} else {
-				if ( gt.getNeighbourhoodType().equals("expression") ) {
-					if ( gt.getNeighbourhood() != null && !gt.getNeighbourhood().isEmpty() ) {
-						model += " neighbours:" + gt.getNeighbourhood();
-					}
-				} else {
-					model += " neighbours:" + gt.getNeighbourhoodType().toCharArray()[0];
-				}
-			}
-			if ( species.getTorus() != null && !species.getTorus().isEmpty() && !species.getTorus().equals("false") ) {
-				model += " torus:" + species.getTorus();
-			}
+		if ( species instanceof EGrid) {
+			model += "grid " + species.getName() ;
 		} else {
 			model += "species " + species.getName();
 		}
-		if ( species.getInheritsFrom() != null ) {
-			model += " parent:" + species.getInheritsFrom().getName();
+		
+		for ( EInheritLink link : species.getInheritingLinks() ) {
+			model += " parent:" + link.getParent();
 		}
+		
 		if ( species.getSkills() != null && !species.getSkills().isEmpty() ) {
 			model += " skills:" + species.getSkills();
 		}
-		if ( species.getSchedules() != null && !species.getSchedules().isEmpty() ) {
-			model += " schedules:" + species.getSchedules();
+		for (EFacet facet :species.getFacets()) {
+			if ((facet.getValue().replace(" ", "")).isEmpty()) continue;
+			model += " "+ facet.getName()+":" + facet.getValue();
 		}
 		model += " {" + EL;
 		for ( EVariable var : species.getVariables() ) {
@@ -279,11 +280,55 @@ public class ModelGenerator {
 				idT = ModelStructure.getElementId(reflexMap.get(reflex).getReflex()); 
 				isId = idT.equals(id);
 				if (isId) model+= EL + idT + EL;
-				model += defineReflex(reflexMap.get(reflex), isId? -1:level + 1);
+				model += defineGeneric(reflexMap.get(reflex), isId? -1:level + 1);
 				if (isId) model+= EL + idT + EL;
 				
 			}
 		}
+		
+		for ( EStateLink link : species.getStateLinks() ) {
+			String idT2 = ModelStructure.getElementId(link.getState()); 
+			boolean isId2 = idT2.equals(id);
+			if (isId2) model+= EL + idT2 + EL;
+			model += defineGeneric(link, isId2? -1:level);
+			if (isId2) model+= EL + idT2 + EL;
+		}
+		for ( ETaskLink link : species.getTaskLinks() ) {
+			String idT2 = ModelStructure.getElementId(link.getTask()); 
+			boolean isId2 = idT2.equals(id);
+			if (isId2) model+= EL + idT2 + EL;
+			model += defineGeneric(link, isId2? -1:level);
+			if (isId2) model+= EL + idT2 + EL;
+		}
+		for ( EEquationLink link : species.getEquationLinks() ) {
+			String idT2 = ModelStructure.getElementId(link.getEquation()); 
+			boolean isId2 = idT2.equals(id);
+			if (isId2) model+= EL + idT2 + EL;
+			model += defineGeneric(link, isId2? -1:level);
+			if (isId2) model+= EL + idT2 + EL;
+		}
+		for ( EPlanLink link : species.getPlanLinks() ) {
+			String idT2 = ModelStructure.getElementId(link.getPlan()); 
+			boolean isId2 = idT2.equals(id);
+			if (isId2) model+= EL + idT2 + EL;
+			model += defineGeneric(link, isId2? -1:level);
+			if (isId2) model+= EL + idT2 + EL;
+		}
+		for ( ERuleLink link : species.getRuleLinks() ) {
+			String idT2 = ModelStructure.getElementId(link.getRule()); 
+			boolean isId2 = idT2.equals(id);
+			if (isId2) model+= EL + idT2 + EL;
+			model += defineGeneric(link, isId2? -1:level);
+			if (isId2) model+= EL + idT2 + EL;
+		}
+		for ( EPerceiveLink link : species.getPerceiveLinks() ) {
+			String idT2 = ModelStructure.getElementId(link.getPerceive()); 
+			boolean isId2 = idT2.equals(id);
+			if (isId2) model+= EL + idT2 + EL;
+			model += defineGeneric(link, isId2? -1:level);
+			if (isId2) model+= EL + idT2 + EL;
+		}
+		
 		for ( EAspectLink link : species.getAspectLinks() ) {
 			model += defineAspect(link, level + 1);
 		}
@@ -293,9 +338,7 @@ public class ModelGenerator {
 
 		model += sp + "}" + EL;
 
-		for ( EInheritLink link : species.getInheritingLinks() ) {
-			model += defineSpecies(link.getChild(), level, id);
-		}
+		
 
 		return model;
 	}
@@ -383,28 +426,46 @@ public class ModelGenerator {
 		return result;
 	}
 
-	static String defineReflex(final EReflexLink link, final int level) {
-		if ( link == null || link.getReflex() == null ) { return ""; }
+	static String defineGeneric(final EGamaLink link, final int level) {
+		if ( link == null || link.getTarget() == null ) { return ""; }
+		EGamaObject object = link.getTarget();
 		String result = "";
 		String sp = "";
 		for ( int i = 0; i < level; i++ ) {
 			sp += "\t";
 		}
-		if ( link.getReflex().getCondition() != null && !link.getReflex().getCondition().isEmpty() ) {
-			result +=
-				sp + "reflex " + link.getReflex().getName() + " when: " + link.getReflex().getCondition() + " {" + EL;
-		} else {
-			result += sp + "reflex " + link.getReflex().getName() + " {" + EL;
+		String type = "";
+		if (object instanceof EReflex) type = "reflex";
+		else if (object instanceof EState)  type = "state";
+		else if (object instanceof ETask)  type = "task";
+		else if (object instanceof EEquation)  type = "equation";
+		else if (object instanceof EPlan)  type = "plan";
+		else if (object instanceof EPerceive)  type = "perceive";
+		else if (object instanceof ERule)  type = "rule";
+		result += type+" " + link.getTarget().getName();
+		for (EFacet facet : object.getFacets()) {
+			if ((facet.getValue().replace(" ", "")).isEmpty()) continue;
+			result += " "+ facet.getName()+":" + facet.getValue();
 		}
-		String code = link.getReflex().getGamlCode();
+		String code = null;
+		if (object instanceof EReflex) code = ((EReflex) object).getGamlCode();
+		else if (object instanceof EState) code = ((EState) object).getGamlCode();
+		else if (object instanceof EEquation) code = ((EEquation) object).getGamlCode();
+		else if (object instanceof ETask) code = ((ETask) object).getGamlCode();
+		else if (object instanceof EPlan) code = ((EPlan) object).getGamlCode();
+		else if (object instanceof EPerceive) code = ((EPerceive) object).getGamlCode();
+		result +=" {" + EL;
 		if ( code != null && !code.isEmpty() ) {
 			for ( String line : code.split(EL) ) {
 				result += sp + (level == -1 ? "":"\t") + line + EL;
 			}
 		}
-		result += sp + "}" + EL;
+			
+			result += sp + "}" + EL;
 		return result;
 	}
+	
+	
 
 	static String defineAspect(final EAspectLink link, final int level) {
 		if ( link == null || link.getAspect() == null ) { return ""; }
@@ -533,20 +594,9 @@ public class ModelGenerator {
 		EDisplay disp = link.getDisplay();
 		String model = EL + "\t\t";
 		model += "display " + disp.getName();
-		if ( disp.getRefresh() != null && !disp.getRefresh().isEmpty() && !disp.getRefresh().equals("1") ) {
-			model += " refresh_every: " + disp.getRefresh();
-		}
-		if ( disp.getOpengl() != null && disp.getOpengl() ) {
-			model += " type: opengl";
-		}
-		if ( disp.getColor() != null &&
-			(disp.getColorRBG().get(0) != 255 || disp.getColorRBG().get(1) != 255 || disp.getColorRBG().get(2) != 255 || !disp
-				.getIsColorCst()) ) {
-			if ( disp.getIsColorCst() ) {
-				model += " background: rgb(" + disp.getColorRBG() + ")";
-			} else if ( disp.getColor() != null && !disp.getColor().isEmpty() ) {
-				model += " background: " + disp.getColor();
-			}
+		for (EFacet facet : disp.getFacets()) {
+			if ((facet.getValue().replace(" ", "")).isEmpty()) continue;
+			model += " "+ facet.getName()+":" + facet.getValue();
 		}
 
 		model += " {";
@@ -638,29 +688,13 @@ public class ModelGenerator {
 				}
 				model += lay.getType() + " \"" + lay.getName() + "\" type:" + lay.getChart_type() + background;
 			}
-			if ( lay.getTransparency() != null && !lay.getTransparency().isEmpty() &&
-				!lay.getTransparency().equals("0.0") ) {
-				model += " transparency:" + lay.getTransparency();
-			}
-			if ( lay.getRefresh() != null && !lay.getRefresh().isEmpty() && !lay.getRefresh().equals("true") ) {
-				model += " refresh:" + lay.getRefresh();
-			}
-			String size = "";
-			if ( lay.getSize_x() != null && lay.getSize_y() != null &&
-				(!lay.getSize_x().equals("1.0") || !lay.getSize_y().equals("1.0")) ) {
-				size =
-					" size:{" + (lay.getSize_x().isEmpty() ? "1.0" : lay.getSize_x()) + "," +
-						(lay.getSize_y().isEmpty() ? "1.0" : lay.getSize_y()) + "}";
-			}
-			String position = "";
-			if ( lay.getPosition_x() != null && lay.getPosition_y() != null &&
-				(!lay.getPosition_x().equals("0.0") || !lay.getPosition_y().equals("0.0")) ) {
-				position =
-					" position:{" + (lay.getPosition_x().isEmpty() ? "0.0" : lay.getPosition_x()) + "," +
-						(lay.getPosition_y().isEmpty() ? "0.0" : lay.getPosition_y()) + "}";
+			
+			for (EFacet facet : lay.getFacets()) {
+				if ((facet.getValue().replace(" ", "")).isEmpty()) continue;
+				model += " "+ facet.getName()+":" + facet.getValue();
 			}
 			if ( lay.getType().equals("chart") ) {
-				model += size + position + "{" + EL;
+				model +=  "{" + EL;
 				if ( lay.getChartlayers() != null && !lay.getChartlayers().isEmpty() ) {
 					for ( EChartLayer cl : lay.getChartlayers() ) {
 						model +=
@@ -672,7 +706,7 @@ public class ModelGenerator {
 				}
 				model += "\t\t\t}" + EL;
 			} else {
-				model += size + position + ";" + EL;
+				model += ";" + EL;
 			}
 		}
 
@@ -700,39 +734,22 @@ public class ModelGenerator {
 				modelName = "_" + modelName;
 			}
 			model = "model " + modelName + EL + EL + "global";
-			if ( worldAgent.getTorus() != null && !worldAgent.getTorus().isEmpty() &&
-				!worldAgent.getTorus().equals("false") ) {
-				model += " torus:" + worldAgent.getTorus();
-			}
+			
 			if ( worldAgent.getSkills() != null && !worldAgent.getSkills().isEmpty() ) {
 				model += " skills:" + worldAgent.getSkills();
 			}
-			if ( worldAgent.getSchedules() != null && !worldAgent.getSchedules().isEmpty() ) {
-				model += " schedules:" + worldAgent.getSchedules();
+			for (EFacet facet : worldAgent.getFacets()) {
+				if ((facet.getValue().replace(" ", "")).isEmpty()) continue;
+				model += " "+ facet.getName()+":" + facet.getValue();
 			}
+			
 			model += " {" + EL;
 			int level = 1;
 			for ( EVariable var : worldAgent.getVariables() ) {
 				model += defineVariable(var, level);
 			}
-			if ( worldAgent.getBoundsType() != null ) {
-				if ( worldAgent.getBoundsType().equals("expression") ) {
-					if ( worldAgent.getBoundsExpression() != null && !worldAgent.getBoundsExpression().isEmpty() ) {
-						model += "\tgeometry shape <-" + worldAgent.getBoundsExpression() + ";" + EL;
-					}
-				} else if ( worldAgent.getBoundsType().equals("width-height") ) {
-					model +=
-						"\tgeometry shape <- rectangle(" +
-							(worldAgent.getBoundsWidth() != null && !worldAgent.getBoundsWidth().isEmpty() ? worldAgent
-								.getBoundsWidth() : "100") +
-							"," +
-							(worldAgent.getBoundsHeigth() != null && !worldAgent.getBoundsHeigth().isEmpty()
-								? worldAgent.getBoundsHeigth() : "100") + ");" + EL;
-				} else if ( worldAgent.getBoundsType().equals("file") && worldAgent.getBoundsPath() != null &&
-					!worldAgent.getBoundsPath().isEmpty() ) {
-					model += "\tgeometry shape <- envelope(file(\"" + worldAgent.getBoundsPath() + "\"));" + EL;
-				}
-			}
+			
+			
 
 			for ( EActionLink link : worldAgent.getActionLinks() ) {
 				String idA = ModelStructure.getElementId(link.getAction()); 
@@ -759,10 +776,55 @@ public class ModelGenerator {
 					String idT = ModelStructure.getElementId(reflexMap.get(reflex).getReflex()); 
 					boolean isId = idT.equals(id);
 					if (isId) model+= EL + idT + EL;
-					model += defineReflex(reflexMap.get(reflex), isId? -1:level);
+					model += defineGeneric(reflexMap.get(reflex), isId? -1:level);
 					if (isId) model+= EL + idT + EL;
 				}
 			}
+			
+			for ( EStateLink link : worldAgent.getStateLinks() ) {
+				String idT = ModelStructure.getElementId(link.getState()); 
+				boolean isId = idT.equals(id);
+				if (isId) model+= EL + idT + EL;
+				model += defineGeneric(link, isId? -1:level);
+				if (isId) model+= EL + idT + EL;
+				
+			}
+			for ( ETaskLink link : worldAgent.getTaskLinks() ) {
+				String idT = ModelStructure.getElementId(link.getTask()); 
+				boolean isId = idT.equals(id);
+				if (isId) model+= EL + idT + EL;
+				model += defineGeneric(link, isId? -1:level);
+				if (isId) model+= EL + idT + EL;
+			}
+			for ( EEquationLink link : worldAgent.getEquationLinks() ) {
+				String idT = ModelStructure.getElementId(link.getEquation()); 
+				boolean isId = idT.equals(id);
+				if (isId) model+= EL + idT + EL;
+				model += defineGeneric(link, isId? -1:level);
+				if (isId) model+= EL + idT + EL;
+			}
+			for ( EPlanLink link : worldAgent.getPlanLinks() ) {
+				String idT = ModelStructure.getElementId(link.getPlan()); 
+				boolean isId = idT.equals(id);
+				if (isId) model+= EL + idT + EL;
+				model += defineGeneric(link, isId? -1:level);
+				if (isId) model+= EL + idT + EL;
+			}
+			for ( ERuleLink link : worldAgent.getRuleLinks() ) {
+				String idT = ModelStructure.getElementId(link.getRule()); 
+				boolean isId = idT.equals(id);
+				if (isId) model+= EL + idT + EL;
+				model += defineGeneric(link, isId? -1:level);
+				if (isId) model+= EL + idT + EL;
+			}
+			for ( EPerceiveLink link : worldAgent.getPerceiveLinks() ) {
+				String idT = ModelStructure.getElementId(link.getPerceive()); 
+				boolean isId = idT.equals(id);
+				if (isId) model+= EL + idT + EL;
+				model += defineGeneric(link, isId? -1:level);
+				if (isId) model+= EL + idT + EL;
+			}
+			
 			for ( EAspectLink link : worldAgent.getAspectLinks() ) {
 				model += defineAspect(link, level);
 			}

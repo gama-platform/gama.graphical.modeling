@@ -15,43 +15,27 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link gama.ESpecies#getVariables <em>Variables</em>}</li>
  *   <li>{@link gama.ESpecies#getReflexList <em>Reflex List</em>}</li>
- *   <li>{@link gama.ESpecies#getTorus <em>Torus</em>}</li>
  *   <li>{@link gama.ESpecies#getExperimentLinks <em>Experiment Links</em>}</li>
  *   <li>{@link gama.ESpecies#getAspectLinks <em>Aspect Links</em>}</li>
  *   <li>{@link gama.ESpecies#getActionLinks <em>Action Links</em>}</li>
  *   <li>{@link gama.ESpecies#getReflexLinks <em>Reflex Links</em>}</li>
- *   <li>{@link gama.ESpecies#getShape <em>Shape</em>}</li>
- *   <li>{@link gama.ESpecies#getLocation <em>Location</em>}</li>
- *   <li>{@link gama.ESpecies#getSize <em>Size</em>}</li>
- *   <li>{@link gama.ESpecies#getWidth <em>Width</em>}</li>
- *   <li>{@link gama.ESpecies#getHeigth <em>Heigth</em>}</li>
- *   <li>{@link gama.ESpecies#getRadius <em>Radius</em>}</li>
  *   <li>{@link gama.ESpecies#getMicroSpeciesLinks <em>Micro Species Links</em>}</li>
  *   <li>{@link gama.ESpecies#getMacroSpeciesLinks <em>Macro Species Links</em>}</li>
  *   <li>{@link gama.ESpecies#getSkills <em>Skills</em>}</li>
- *   <li>{@link gama.ESpecies#getTopology <em>Topology</em>}</li>
  *   <li>{@link gama.ESpecies#getInheritsFrom <em>Inherits From</em>}</li>
- *   <li>{@link gama.ESpecies#getTorusType <em>Torus Type</em>}</li>
- *   <li>{@link gama.ESpecies#getShapeType <em>Shape Type</em>}</li>
- *   <li>{@link gama.ESpecies#getLocationType <em>Location Type</em>}</li>
- *   <li>{@link gama.ESpecies#getPoints <em>Points</em>}</li>
- *   <li>{@link gama.ESpecies#getExpressionShape <em>Expression Shape</em>}</li>
- *   <li>{@link gama.ESpecies#getExpressionLoc <em>Expression Loc</em>}</li>
- *   <li>{@link gama.ESpecies#getExpressionTorus <em>Expression Torus</em>}</li>
- *   <li>{@link gama.ESpecies#getShapeFunction <em>Shape Function</em>}</li>
- *   <li>{@link gama.ESpecies#getShapeUpdate <em>Shape Update</em>}</li>
- *   <li>{@link gama.ESpecies#getShapeIsFunction <em>Shape Is Function</em>}</li>
- *   <li>{@link gama.ESpecies#getLocationIsFunction <em>Location Is Function</em>}</li>
- *   <li>{@link gama.ESpecies#getLocationFunction <em>Location Function</em>}</li>
- *   <li>{@link gama.ESpecies#getLocationUpdate <em>Location Update</em>}</li>
  *   <li>{@link gama.ESpecies#getInit <em>Init</em>}</li>
  *   <li>{@link gama.ESpecies#getInheritingLinks <em>Inheriting Links</em>}</li>
- *   <li>{@link gama.ESpecies#getSchedules <em>Schedules</em>}</li>
+ *   <li>{@link gama.ESpecies#getPlanLinks <em>Plan Links</em>}</li>
+ *   <li>{@link gama.ESpecies#getStateLinks <em>State Links</em>}</li>
+ *   <li>{@link gama.ESpecies#getTaskLinks <em>Task Links</em>}</li>
+ *   <li>{@link gama.ESpecies#getPerceiveLinks <em>Perceive Links</em>}</li>
+ *   <li>{@link gama.ESpecies#getRuleLinks <em>Rule Links</em>}</li>
+ *   <li>{@link gama.ESpecies#getEquationLinks <em>Equation Links</em>}</li>
  * </ul>
- * </p>
  *
  * @see gama.GamaPackage#getESpecies()
  * @model
@@ -89,32 +73,6 @@ public interface ESpecies extends EGamaObject {
 	 * @generated
 	 */
 	EList<String> getReflexList();
-
-	/**
-	 * Returns the value of the '<em><b>Torus</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Torus</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Torus</em>' attribute.
-	 * @see #setTorus(String)
-	 * @see gama.GamaPackage#getESpecies_Torus()
-	 * @model
-	 * @generated
-	 */
-	String getTorus();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getTorus <em>Torus</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Torus</em>' attribute.
-	 * @see #getTorus()
-	 * @generated
-	 */
-	void setTorus(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Experiment Links</b></em>' reference list.
@@ -181,162 +139,6 @@ public interface ESpecies extends EGamaObject {
 	EList<EReflexLink> getReflexLinks();
 
 	/**
-	 * Returns the value of the '<em><b>Shape</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Shape</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Shape</em>' attribute.
-	 * @see #setShape(String)
-	 * @see gama.GamaPackage#getESpecies_Shape()
-	 * @model
-	 * @generated
-	 */
-	String getShape();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getShape <em>Shape</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Shape</em>' attribute.
-	 * @see #getShape()
-	 * @generated
-	 */
-	void setShape(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Location</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Location</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Location</em>' attribute.
-	 * @see #setLocation(String)
-	 * @see gama.GamaPackage#getESpecies_Location()
-	 * @model
-	 * @generated
-	 */
-	String getLocation();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getLocation <em>Location</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Location</em>' attribute.
-	 * @see #getLocation()
-	 * @generated
-	 */
-	void setLocation(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Size</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Size</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Size</em>' attribute.
-	 * @see #setSize(String)
-	 * @see gama.GamaPackage#getESpecies_Size()
-	 * @model
-	 * @generated
-	 */
-	String getSize();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getSize <em>Size</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Size</em>' attribute.
-	 * @see #getSize()
-	 * @generated
-	 */
-	void setSize(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Width</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Width</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Width</em>' attribute.
-	 * @see #setWidth(String)
-	 * @see gama.GamaPackage#getESpecies_Width()
-	 * @model
-	 * @generated
-	 */
-	String getWidth();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getWidth <em>Width</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Width</em>' attribute.
-	 * @see #getWidth()
-	 * @generated
-	 */
-	void setWidth(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Heigth</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Heigth</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Heigth</em>' attribute.
-	 * @see #setHeigth(String)
-	 * @see gama.GamaPackage#getESpecies_Heigth()
-	 * @model
-	 * @generated
-	 */
-	String getHeigth();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getHeigth <em>Heigth</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Heigth</em>' attribute.
-	 * @see #getHeigth()
-	 * @generated
-	 */
-	void setHeigth(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Radius</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Radius</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Radius</em>' attribute.
-	 * @see #setRadius(String)
-	 * @see gama.GamaPackage#getESpecies_Radius()
-	 * @model
-	 * @generated
-	 */
-	String getRadius();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getRadius <em>Radius</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Radius</em>' attribute.
-	 * @see #getRadius()
-	 * @generated
-	 */
-	void setRadius(String value);
-
-	/**
 	 * Returns the value of the '<em><b>Micro Species Links</b></em>' reference list.
 	 * The list contents are of type {@link gama.ESubSpeciesLink}.
 	 * <!-- begin-user-doc -->
@@ -385,32 +187,6 @@ public interface ESpecies extends EGamaObject {
 	EList<String> getSkills();
 
 	/**
-	 * Returns the value of the '<em><b>Topology</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Topology</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Topology</em>' reference.
-	 * @see #setTopology(ETopology)
-	 * @see gama.GamaPackage#getESpecies_Topology()
-	 * @model
-	 * @generated
-	 */
-	ETopology getTopology();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getTopology <em>Topology</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Topology</em>' reference.
-	 * @see #getTopology()
-	 * @generated
-	 */
-	void setTopology(ETopology value);
-
-	/**
 	 * Returns the value of the '<em><b>Inherits From</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -435,344 +211,6 @@ public interface ESpecies extends EGamaObject {
 	 * @generated
 	 */
 	void setInheritsFrom(ESpecies value);
-
-	/**
-	 * Returns the value of the '<em><b>Torus Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Torus Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Torus Type</em>' attribute.
-	 * @see #setTorusType(String)
-	 * @see gama.GamaPackage#getESpecies_TorusType()
-	 * @model
-	 * @generated
-	 */
-	String getTorusType();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getTorusType <em>Torus Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Torus Type</em>' attribute.
-	 * @see #getTorusType()
-	 * @generated
-	 */
-	void setTorusType(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Shape Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Shape Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Shape Type</em>' attribute.
-	 * @see #setShapeType(String)
-	 * @see gama.GamaPackage#getESpecies_ShapeType()
-	 * @model
-	 * @generated
-	 */
-	String getShapeType();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getShapeType <em>Shape Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Shape Type</em>' attribute.
-	 * @see #getShapeType()
-	 * @generated
-	 */
-	void setShapeType(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Location Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Location Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Location Type</em>' attribute.
-	 * @see #setLocationType(String)
-	 * @see gama.GamaPackage#getESpecies_LocationType()
-	 * @model
-	 * @generated
-	 */
-	String getLocationType();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getLocationType <em>Location Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Location Type</em>' attribute.
-	 * @see #getLocationType()
-	 * @generated
-	 */
-	void setLocationType(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Points</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Points</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Points</em>' attribute.
-	 * @see #setPoints(String)
-	 * @see gama.GamaPackage#getESpecies_Points()
-	 * @model
-	 * @generated
-	 */
-	String getPoints();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getPoints <em>Points</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Points</em>' attribute.
-	 * @see #getPoints()
-	 * @generated
-	 */
-	void setPoints(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Expression Shape</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Expression Shape</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Expression Shape</em>' attribute.
-	 * @see #setExpressionShape(String)
-	 * @see gama.GamaPackage#getESpecies_ExpressionShape()
-	 * @model
-	 * @generated
-	 */
-	String getExpressionShape();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getExpressionShape <em>Expression Shape</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Expression Shape</em>' attribute.
-	 * @see #getExpressionShape()
-	 * @generated
-	 */
-	void setExpressionShape(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Expression Loc</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Expression Loc</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Expression Loc</em>' attribute.
-	 * @see #setExpressionLoc(String)
-	 * @see gama.GamaPackage#getESpecies_ExpressionLoc()
-	 * @model
-	 * @generated
-	 */
-	String getExpressionLoc();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getExpressionLoc <em>Expression Loc</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Expression Loc</em>' attribute.
-	 * @see #getExpressionLoc()
-	 * @generated
-	 */
-	void setExpressionLoc(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Expression Torus</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Expression Torus</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Expression Torus</em>' attribute.
-	 * @see #setExpressionTorus(String)
-	 * @see gama.GamaPackage#getESpecies_ExpressionTorus()
-	 * @model
-	 * @generated
-	 */
-	String getExpressionTorus();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getExpressionTorus <em>Expression Torus</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Expression Torus</em>' attribute.
-	 * @see #getExpressionTorus()
-	 * @generated
-	 */
-	void setExpressionTorus(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Shape Function</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Shape Function</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Shape Function</em>' attribute.
-	 * @see #setShapeFunction(String)
-	 * @see gama.GamaPackage#getESpecies_ShapeFunction()
-	 * @model
-	 * @generated
-	 */
-	String getShapeFunction();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getShapeFunction <em>Shape Function</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Shape Function</em>' attribute.
-	 * @see #getShapeFunction()
-	 * @generated
-	 */
-	void setShapeFunction(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Shape Update</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Shape Update</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Shape Update</em>' attribute.
-	 * @see #setShapeUpdate(String)
-	 * @see gama.GamaPackage#getESpecies_ShapeUpdate()
-	 * @model
-	 * @generated
-	 */
-	String getShapeUpdate();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getShapeUpdate <em>Shape Update</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Shape Update</em>' attribute.
-	 * @see #getShapeUpdate()
-	 * @generated
-	 */
-	void setShapeUpdate(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Shape Is Function</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Shape Is Function</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Shape Is Function</em>' attribute.
-	 * @see #setShapeIsFunction(Boolean)
-	 * @see gama.GamaPackage#getESpecies_ShapeIsFunction()
-	 * @model
-	 * @generated
-	 */
-	Boolean getShapeIsFunction();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getShapeIsFunction <em>Shape Is Function</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Shape Is Function</em>' attribute.
-	 * @see #getShapeIsFunction()
-	 * @generated
-	 */
-	void setShapeIsFunction(Boolean value);
-
-	/**
-	 * Returns the value of the '<em><b>Location Is Function</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Location Is Function</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Location Is Function</em>' attribute.
-	 * @see #setLocationIsFunction(Boolean)
-	 * @see gama.GamaPackage#getESpecies_LocationIsFunction()
-	 * @model
-	 * @generated
-	 */
-	Boolean getLocationIsFunction();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getLocationIsFunction <em>Location Is Function</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Location Is Function</em>' attribute.
-	 * @see #getLocationIsFunction()
-	 * @generated
-	 */
-	void setLocationIsFunction(Boolean value);
-
-	/**
-	 * Returns the value of the '<em><b>Location Function</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Location Function</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Location Function</em>' attribute.
-	 * @see #setLocationFunction(String)
-	 * @see gama.GamaPackage#getESpecies_LocationFunction()
-	 * @model
-	 * @generated
-	 */
-	String getLocationFunction();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getLocationFunction <em>Location Function</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Location Function</em>' attribute.
-	 * @see #getLocationFunction()
-	 * @generated
-	 */
-	void setLocationFunction(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Location Update</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Location Update</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Location Update</em>' attribute.
-	 * @see #setLocationUpdate(String)
-	 * @see gama.GamaPackage#getESpecies_LocationUpdate()
-	 * @model
-	 * @generated
-	 */
-	String getLocationUpdate();
-
-	/**
-	 * Sets the value of the '{@link gama.ESpecies#getLocationUpdate <em>Location Update</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Location Update</em>' attribute.
-	 * @see #getLocationUpdate()
-	 * @generated
-	 */
-	void setLocationUpdate(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Init</b></em>' attribute.
@@ -817,29 +255,99 @@ public interface ESpecies extends EGamaObject {
 	EList<EInheritLink> getInheritingLinks();
 
 	/**
-	 * Returns the value of the '<em><b>Schedules</b></em>' attribute.
+	 * Returns the value of the '<em><b>Plan Links</b></em>' reference list.
+	 * The list contents are of type {@link gama.EPlanLink}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Schedules</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Plan Links</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Schedules</em>' attribute.
-	 * @see #setSchedules(String)
-	 * @see gama.GamaPackage#getESpecies_Schedules()
+	 * @return the value of the '<em>Plan Links</em>' reference list.
+	 * @see gama.GamaPackage#getESpecies_PlanLinks()
 	 * @model
 	 * @generated
 	 */
-	String getSchedules();
+	EList<EPlanLink> getPlanLinks();
 
 	/**
-	 * Sets the value of the '{@link gama.ESpecies#getSchedules <em>Schedules</em>}' attribute.
+	 * Returns the value of the '<em><b>State Links</b></em>' reference list.
+	 * The list contents are of type {@link gama.EStateLink}.
 	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>State Links</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Schedules</em>' attribute.
-	 * @see #getSchedules()
+	 * @return the value of the '<em>State Links</em>' reference list.
+	 * @see gama.GamaPackage#getESpecies_StateLinks()
+	 * @model
 	 * @generated
 	 */
-	void setSchedules(String value);
+	EList<EStateLink> getStateLinks();
+
+	/**
+	 * Returns the value of the '<em><b>Task Links</b></em>' reference list.
+	 * The list contents are of type {@link gama.ETaskLink}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Task Links</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Task Links</em>' reference list.
+	 * @see gama.GamaPackage#getESpecies_TaskLinks()
+	 * @model
+	 * @generated
+	 */
+	EList<ETaskLink> getTaskLinks();
+
+	/**
+	 * Returns the value of the '<em><b>Perceive Links</b></em>' reference list.
+	 * The list contents are of type {@link gama.EPerceiveLink}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Perceive Links</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Perceive Links</em>' reference list.
+	 * @see gama.GamaPackage#getESpecies_PerceiveLinks()
+	 * @model
+	 * @generated
+	 */
+	EList<EPerceiveLink> getPerceiveLinks();
+
+	/**
+	 * Returns the value of the '<em><b>Rule Links</b></em>' reference list.
+	 * The list contents are of type {@link gama.ERuleLink}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Rule Links</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Rule Links</em>' reference list.
+	 * @see gama.GamaPackage#getESpecies_RuleLinks()
+	 * @model
+	 * @generated
+	 */
+	EList<ERuleLink> getRuleLinks();
+
+	/**
+	 * Returns the value of the '<em><b>Equation Links</b></em>' reference list.
+	 * The list contents are of type {@link gama.EEquationLink}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Equation Links</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Equation Links</em>' reference list.
+	 * @see gama.GamaPackage#getESpecies_EquationLinks()
+	 * @model
+	 * @generated
+	 */
+	EList<EEquationLink> getEquationLinks();
 
 } // ESpecies

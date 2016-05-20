@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -66,17 +67,11 @@ public class EditLayerFrame extends EditFrame {
 	private String[] aspects;
 	EditLayerFrame layerFrame;
 
-	private ValidateText textX;
-	private ValidateText textY;
-	private ValidateText positionX;
-	private ValidateText positionY;
 	private ValidateText textPath;
 	private ValidateText textText;
 	private ValidateText textSizeText;
 	private ValidateText textAgents;
 
-	private ValidateText transparency;
-	private ValidateText textRefresh;
 
 	Composite speciesComp;
 	Composite chartComp;
@@ -171,28 +166,6 @@ public class EditLayerFrame extends EditFrame {
 		ELayer elayer = (ELayer) eobject;
 		if ( elayer.getType() != null ) {
 			comboType.setText(elayer.getType());
-		}
-		if ( elayer.getSize_x() != null ) {
-			textX.setText(elayer.getSize_x());
-		}
-
-		if ( elayer.getSize_y() != null ) {
-			textY.setText(elayer.getSize_y());
-		}
-		if ( elayer.getPosition_x() != null ) {
-			positionX.setText(elayer.getPosition_x());
-		}
-		if ( elayer.getPosition_y() != null ) {
-			positionY.setText(elayer.getPosition_y());
-		}
-		if ( elayer.getFile() != null ) {
-			textPath.setText(elayer.getFile());
-		}
-		if ( elayer.getRefresh() != null ) {
-			textRefresh.setText(((ELayer) eobject).getRefresh());
-		}
-		if ( elayer.getTransparency() != null ) {
-			transparency.setText(elayer.getTransparency());
 		}
 		if ( elayer.getText() != null ) {
 			textText.setText(elayer.getText());
@@ -381,24 +354,27 @@ public class EditLayerFrame extends EditFrame {
 		canvasName(comp, false);
 		buildCanvasTopo(comp);
 
-		Canvas canvas = canvasProperties(comp);
-		canvas.setLocation(10, 310);
+		Group group = groupFacets(comp, "layer",2);
+		group.setBounds(10,310,720, 230);
+		
+		//Canvas canvas = canvasProperties(comp);
+		//canvas.setLocation(10, 310);
 		comp.pack();
 		if ( edit ) {
 			loadData();
 			updateVisible();
 		}
 
-		textX.setSaveData(true);
-		textY.setSaveData(true);
-		positionX.setSaveData(true);
-		positionY.setSaveData(true);
+		//textX.setSaveData(true);
+		//textY.setSaveData(true);
+		//positionX.setSaveData(true);
+		//positionY.setSaveData(true);
 		textPath.setSaveData(true);
 		textText.setSaveData(true);
 		textSizeText.setSaveData(true);
 		textAgents.setSaveData(true);
-		transparency.setSaveData(true);
-		textRefresh.setSaveData(true);
+		//transparency.setSaveData(true);
+		//textRefresh.setSaveData(true);
 
 		textColorGrid.setSaveData(true);
 		textColorText.setSaveData(true);
@@ -423,15 +399,9 @@ public class EditLayerFrame extends EditFrame {
 				@Override
 				public void doExecute() {
 					modifyChartLayers();
+					saveFacets();
 					elayer.setType(comboType.getText());
 					elayer.setName(textName.getText());
-					elayer.setSize_x(textX.getText());
-					elayer.setSize_y(textY.getText());
-					elayer.setPosition_x(positionX.getText());
-					elayer.setPosition_y(positionY.getText());
-
-					elayer.setRefresh(textRefresh.getText());
-					elayer.setTransparency(transparency.getText());
 					elayer.setFile(textPath.getText());
 					elayer.setText(textText.getText());
 					elayer.setSize(textSizeText.getText());
@@ -504,82 +474,11 @@ public class EditLayerFrame extends EditFrame {
 
 	}
 
-	public Canvas canvasProperties(final Composite container) {
-		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
-		Canvas canvasProp = new Canvas(container, SWT.BORDER);
-		canvasProp.setSize(720, 130);
-		CLabel lblPosition = new CLabel(canvasProp, SWT.NONE);
-		lblPosition.setBounds(10, 10, 90, 20);
-		lblPosition.setText("Position");
 
-		CLabel lblPositionX = new CLabel(canvasProp, SWT.NONE);
-		lblPositionX.setBounds(100, 10, 100, 20);
-		lblPositionX.setText("X ([0.0,1.0])");
-
-		positionX = new ValidateText(canvasProp, SWT.BORDER, diagram, fp, this, diagramEditor, "position:", null, null);
-		positionX.setBounds(200, 10, 100, 20);
-		positionX.setText("0.0");
-
-		CLabel lblPositionY = new CLabel(canvasProp, SWT.NONE);
-		lblPositionY.setBounds(400, 10, 100, 20);
-		lblPositionY.setText("Y ([0.0,1.0])");
-
-		positionY = new ValidateText(canvasProp, SWT.BORDER, diagram, fp, this, diagramEditor, "position:", null, null);
-		positionY.setBounds(500, 10, 100, 20);
-		positionY.setText("0.0");
-
-		CLabel lblSize = new CLabel(canvasProp, SWT.NONE);
-		lblSize.setBounds(10, 40, 90, 20);
-		lblSize.setText("Size");
-
-		CLabel lblSizeX = new CLabel(canvasProp, SWT.NONE);
-		lblSizeX.setBounds(100, 40, 100, 20);
-		lblSizeX.setText("width ([0.0,1.0])");
-
-		textX = new ValidateText(canvasProp, SWT.BORDER, diagram, fp, this, diagramEditor, "size:", null, null);
-		textX.setBounds(200, 40, 100, 20);
-		textX.setText("1.0");
-
-		CLabel lblSizeY = new CLabel(canvasProp, SWT.NONE);
-		lblSizeY.setBounds(400, 40, 100, 20);
-		lblSizeY.setText("height ([0.0,1.0])");
-
-		textY = new ValidateText(canvasProp, SWT.BORDER, diagram, fp, this, diagramEditor, "size:", null, null);
-		textY.setBounds(500, 40, 100, 20);
-		textY.setText("1.0");
-
-		CLabel lblTransp = new CLabel(canvasProp, SWT.NONE);
-		lblTransp.setBounds(10, 70, 90, 20);
-		lblTransp.setText("Transparency");
-
-		transparency =
-			new ValidateText(canvasProp, SWT.BORDER, diagram, fp, this, diagramEditor, "transparency:", null, null);
-		transparency.setBounds(100, 70, 200, 20);
-		transparency.setText("0.0");
-
-		CLabel lblRefresh = new CLabel(canvasProp, SWT.NONE);
-		lblRefresh.setBounds(10, 100, 90, 20);
-		lblRefresh.setText("Refresh");
-
-		textRefresh =
-			new ValidateText(canvasProp, SWT.BORDER, diagram, fp, this, diagramEditor, "refresh:", null, null);
-		textRefresh.setBounds(100, 100, 200, 20);
-		textRefresh.setText("true");
-
-		return canvasProp;
-	}
 
 	private void updateVisible() {
 		String val = comboType.getText();
-		int size = textX.getLoc().size() - 1;
-		textX.getLoc().remove(size);
-		textX.getLoc().add(val);
-		textY.getLoc().remove(size);
-		textY.getLoc().add(val);
-		positionX.getLoc().remove(size);
-		positionX.getLoc().add(val);
-		positionY.getLoc().remove(size);
-		positionY.getLoc().add(val);
+		int size = textPath.getLoc().size() - 1;
 		textPath.getLoc().remove(size);
 		textPath.getLoc().add(val);
 		textText.getLoc().remove(size);
@@ -588,8 +487,6 @@ public class EditLayerFrame extends EditFrame {
 		textSizeText.getLoc().add(val);
 		textAgents.getLoc().remove(size);
 		textAgents.getLoc().add(val);
-		transparency.getLoc().remove(size);
-		transparency.getLoc().add(val);
 		textColorChart.getLoc().remove(size);
 		textColorChart.getLoc().add(val);
 		textColorText.getLoc().remove(size);
@@ -712,9 +609,8 @@ public class EditLayerFrame extends EditFrame {
 			@Override
 			public void widgetSelected(final SelectionEvent event) {
 				updateVisible();
-				if ( textX.isSaveData() ) {
-					save("");
-				}
+				save("");
+				
 				frame.updateLayerId();
 				ModelGenerator.modelValidation(fp, diagram);
 				diagramEditor.updateEObjectErrors();
@@ -743,7 +639,7 @@ public class EditLayerFrame extends EditFrame {
 			public void modifyText(final ModifyEvent event) {
 				comboAspectsSpecies.setItems(aspectsSpecies.get(comboSpecies.getText()));
 				comboAspectsSpecies.setText(aspectsSpecies.get(comboSpecies.getText())[0]);
-				if ( textX.isSaveData() ) {
+				if ( textColorText.isSaveData() ) {
 					save("");
 				}
 
@@ -768,7 +664,7 @@ public class EditLayerFrame extends EditFrame {
 
 			@Override
 			public void modifyText(final ModifyEvent event) {
-				if ( textX.isSaveData() ) {
+				if ( textColorText.isSaveData() ) {
 					save("");
 				}
 
@@ -802,7 +698,7 @@ public class EditLayerFrame extends EditFrame {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if ( textX.isSaveData() ) {
+				if ( textColorText.isSaveData() ) {
 					save("");
 				}
 
@@ -813,7 +709,7 @@ public class EditLayerFrame extends EditFrame {
 
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {
-				if ( textX.isSaveData() ) {
+				if ( textColorText.isSaveData() ) {
 					save("");
 				}
 
@@ -921,7 +817,7 @@ public class EditLayerFrame extends EditFrame {
 
 			@Override
 			public void modifyText(final ModifyEvent event) {
-				if ( textX.isSaveData() ) {
+				if ( textColorText.isSaveData() ) {
 					save("");
 				}
 

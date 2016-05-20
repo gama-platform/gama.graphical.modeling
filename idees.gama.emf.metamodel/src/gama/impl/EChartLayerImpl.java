@@ -21,12 +21,12 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link gama.impl.EChartLayerImpl#getStyle <em>Style</em>}</li>
  *   <li>{@link gama.impl.EChartLayerImpl#getColor <em>Color</em>}</li>
  *   <li>{@link gama.impl.EChartLayerImpl#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

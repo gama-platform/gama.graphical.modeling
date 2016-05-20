@@ -39,8 +39,20 @@ public class MyGamaToolBehaviorProvider extends DefaultToolBehaviorProvider {
 				customFeature = new EditActionFeature(getFeatureProvider(), frames.get(bo), this);
 			} else if ( bo instanceof EReflex ) {
 				customFeature = new EditReflexFeature(getFeatureProvider(), frames.get(bo), this);
+			} else if ( bo instanceof EPlan ) {
+				customFeature = new EditPlanFeature(getFeatureProvider(), frames.get(bo), this);
+			} else if ( bo instanceof EPerceive ) {
+				customFeature = new EditPerceiveFeature(getFeatureProvider(), frames.get(bo), this);
+			} else if ( bo instanceof ERule ) {
+				customFeature = new EditRuleFeature(getFeatureProvider(), frames.get(bo), this);
+			} else if ( bo instanceof ETask ) {
+				customFeature = new EditTaskFeature(getFeatureProvider(), frames.get(bo), this);
+			} else if ( bo instanceof EState ) {
+				customFeature = new EditStateFeature(getFeatureProvider(), frames.get(bo), this);
 			} else if ( bo instanceof EAspect ) {
 				customFeature = new EditAspectFeature(getFeatureProvider(), frames.get(bo), this);
+			} else if ( bo instanceof EEquation ) {
+				customFeature = new EditEquationFeature(getFeatureProvider(), frames.get(bo), this);
 			} else if ( bo instanceof EDisplay ) {
 				customFeature = new EditDisplayFeature(getFeatureProvider(), frames.get(bo), this);
 			} /*
@@ -75,10 +87,11 @@ public class MyGamaToolBehaviorProvider extends DefaultToolBehaviorProvider {
 					cf.getCreateLargeImageId());
 			connectionCreationToolEntry.addCreateConnectionFeature(cf);
 			if ( cf instanceof CreateSubSpeciesLinkFeature || cf instanceof CreateSubGridLinkFeature ||
-				cf instanceof CreateSubGraphSpeciesFeature || cf instanceof CreateInheritingLinkFeature ) {
+				 cf instanceof CreateInheritingLinkFeature ) {
 				compartmentAgentEntry.addToolEntry(connectionCreationToolEntry);
 			} else if ( cf instanceof CreateActionLinkFeature || cf instanceof CreateAspectLinkFeature ||
-				cf instanceof CreateReflexLinkFeature ) {
+				cf instanceof CreateReflexLinkFeature ||cf instanceof CreatePlanLinkFeature ||cf instanceof CreateTaskLinkFeature ||
+				cf instanceof CreateEquationLinkFeature|| cf instanceof CreateStateLinkFeature ||cf instanceof CreatePerceiveLinkFeature||cf instanceof CreateRuleLinkFeature) {
 				compartmentAgentFeatureEntry.addToolEntry(connectionCreationToolEntry);
 			} else {
 				compartmentExperimentEntry.addToolEntry(connectionCreationToolEntry);
