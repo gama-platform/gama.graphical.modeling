@@ -17,7 +17,7 @@ public class AddRuleFeature extends AbstractAddShapeFeature {
 	public static final int INIT_WIDTH = 150;
 	public static final int INIT_HEIGHT = 50;
 
-	private static final List<Integer> CLASS_BACKGROUND = Arrays.asList(137, 171, 142);
+	private static final List<Integer> CLASS_BACKGROUND = Arrays.asList(255, 180, 28);
 
 	public AddRuleFeature(final IFeatureProvider fp) {
 		super(fp);

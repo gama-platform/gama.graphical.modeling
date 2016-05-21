@@ -27,7 +27,7 @@ public class AddTaskFeature extends AbstractAddShapeFeature {
 	public static final int INIT_WIDTH = 150;
 	public static final int INIT_HEIGHT = 50;
 
-	private static final List<Integer> CLASS_BACKGROUND = Arrays.asList(160, 223, 182);
+	private static final List<Integer> CLASS_BACKGROUND = Arrays.asList(225, 255, 209);
 
 	public AddTaskFeature(final IFeatureProvider fp) {
 		super(fp);

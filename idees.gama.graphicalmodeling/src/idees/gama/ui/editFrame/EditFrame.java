@@ -17,7 +17,10 @@ import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -72,11 +75,12 @@ public abstract class EditFrame extends ApplicationWindow {
 	EmbeddedEditorModelAccess modelXText;
 	EmbeddedEditor editor;
 
-	Map<String,ValidateText> facetsEditor;
+	Map<String,Composite> facetsEditor;
 
 	List<String> gridFacets = Arrays.asList("schedules", "frequency", "control", "neighbors","file", "cell_height", "cell_width", "width", "height", "use_regular_agents","use_individual_shapes","use_neighbors_cache");
 	List<String> globalFacets = Arrays.asList("schedules", "frequency","control", "torus");
 	List<String> speciesFacets = Arrays.asList("schedules", "frequency","control");
+	Map<String,List<String>> comboValues;
 	GAMARessourceProvider rp ;
 	/**
 	 * Create the application window.
@@ -84,7 +88,7 @@ public abstract class EditFrame extends ApplicationWindow {
 	public EditFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature ef, final EGamaObject eobject,
 		final String name) {
 		super(null);
-		facetsEditor = new Hashtable<String,ValidateText>();
+		facetsEditor = new Hashtable<String,Composite>();
 		this.diagram = diagram;
 		frame = this;
 		this.fp = fp;
@@ -160,12 +164,52 @@ public abstract class EditFrame extends ApplicationWindow {
 			if( proto.getFacet(facet).internal ) continue;
 			if ((!"name".equals(gamlName) && "name".equals(facet)) ) continue;
 			if ("layer".equals(gamlName) && ("aspect".equals(facet) || "species".equals(facet))) continue;
-			groupFacet(group,facet,proto.getFacet(facet).typesToString(),proto.getFacet(facet).doc);
+			if (comboValues != null && comboValues.containsKey(facet))
+				groupFacetCombo(group,facet,comboValues.get(facet),proto.getFacet(facet).doc);
+			else groupFacet(group,facet,proto.getFacet(facet).typesToString(),proto.getFacet(facet).doc);
 		}
 		return group;
 	}
 	
-	
+	protected void groupFacetCombo(final Composite container, final String facetName, final List<String> values, final String doc) {
+		Group group = new Group(container, SWT.NONE);
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		group.setLayoutData(gridData);
+
+		group.setLayout(new GridLayout(2, false));
+
+		CLabel lblName = new CLabel(group, SWT.NONE);
+		lblName.setText(facetName +":");
+		
+		CCombo textFacet = new CCombo(group, SWT.BORDER);
+		String[] items = new String[values.size()];
+		for (int i = 0; i< values.size(); i++) 
+			items[i] = values.get(i);
+		textFacet.setItems(items);
+		textFacet.setText(values.get(0));
+			
+		textFacet.setToolTipText(doc);
+		String val = facetValue(facetName);
+		if (val != null && ! val.isEmpty()) textFacet.setText(val);
+		GridData gridData2 = new GridData();
+		gridData2.horizontalAlignment = SWT.FILL;
+		gridData2.grabExcessHorizontalSpace = true;
+		textFacet.setLayoutData(gridData2);
+		facetsEditor.put(facetName, textFacet);
+		textFacet.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				save(null);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {}
+		});
+
+	}
 	protected void groupFacet(final Composite container, final String facetName, final String type, final String doc) {
 		Group group = new Group(container, SWT.NONE);
 		GridData gridData = new GridData();
@@ -378,10 +422,12 @@ public abstract class EditFrame extends ApplicationWindow {
 	
 	public void saveFacets(){
 		for (String facet : facetsEditor.keySet()) {
-			ValidateText vt = facetsEditor.get(facet);
+			Composite vt = facetsEditor.get(facet);
 			if (vt == null) continue;
-			
-			saveFacetValue(facet, facetsEditor.get(facet).getText());
+			if (vt instanceof ValidateText)
+				saveFacetValue(facet, ((ValidateText) facetsEditor.get(facet)).getText());
+			else if (vt instanceof CCombo)
+				saveFacetValue(facet, ((CCombo) facetsEditor.get(facet)).getText());
 		}
 	}
 
@@ -407,6 +453,7 @@ public abstract class EditFrame extends ApplicationWindow {
 			});
 		}
 	}
+	
 	
 	public void saveEditorCode(){
 		if (modelXText == null) return;

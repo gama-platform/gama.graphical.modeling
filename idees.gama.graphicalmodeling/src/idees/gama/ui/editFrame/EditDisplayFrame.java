@@ -9,6 +9,8 @@ import java.util.*;
 import java.util.List;
 import java.util.regex.Pattern;
 import msi.gama.util.TOrderedHashMap;
+import msi.gaml.compilation.AbstractGamlAdditions;
+
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.*;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -46,6 +48,9 @@ public class EditDisplayFrame extends EditFrame {
 	public EditDisplayFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature eaf,
 		final EGamaObject display, final String name) {
 		super(diagram, fp, eaf, display, name == null ? "Display definition" : name);
+		comboValues = new Hashtable();
+		comboValues.put("type", Arrays.asList("java2D","opengl"));
+
 		layerFrames = new TOrderedHashMap<ELayer, EditLayerFrame>();
 		species = new ArrayList<ESpecies>();
 		grids = new ArrayList<ESpecies>();

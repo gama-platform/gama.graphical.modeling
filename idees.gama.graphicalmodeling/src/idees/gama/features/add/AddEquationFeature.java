@@ -17,7 +17,7 @@ public class AddEquationFeature extends AbstractAddShapeFeature {
 	public static final int INIT_WIDTH = 150;
 	public static final int INIT_HEIGHT = 50;
 
-	private static final List<Integer> CLASS_BACKGROUND = Arrays.asList(137, 171, 142);
+	private static final List<Integer> CLASS_BACKGROUND = Arrays.asList(254, 196, 255);
 
 	public AddEquationFeature(final IFeatureProvider fp) {
 		super(fp);
@@ -88,7 +88,7 @@ public class AddEquationFeature extends AbstractAddShapeFeature {
 
 			Shape shape3 = peCreateService.createShape(containerShape, false);
 
-			Image icon1 = gaService.createImage(shape3, GamaImageProvider.IMG_REFLEXLINK);
+			Image icon1 = gaService.createImage(shape3, GamaImageProvider.IMG_EQUATION);
 			gaService.setLocationAndSize(icon1, 100, 100, 15, 15);
 
 			link(shape3, addedClass);

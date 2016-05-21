@@ -3,6 +3,8 @@ package idees.gama.ui.editFrame;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -102,7 +104,14 @@ public class EditSpeciesFrame extends EditFrame {
 		skillsStrs.addAll(AbstractGamlAdditions.getAllSkills());
 		skillsStrs.removeAll(AbstractGamlAdditions.ARCHITECTURES);
 		skillsStrs.remove("grid");
-
+		
+		comboValues = new Hashtable();
+		List<String> values = new ArrayList(AbstractGamlAdditions.ARCHITECTURES);
+		values.remove("reflex");
+		Collections.sort(values);
+		values.add(0,"reflex");
+		comboValues.put("control", values);
+		
 		reflexStrs = new ArrayList<String>();
 		List<String> newReflex = new ArrayList<String>();
 		for ( EReflexLink link : species.getReflexLinks() ) {

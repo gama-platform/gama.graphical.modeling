@@ -140,7 +140,7 @@ public class AddGridFeature extends AbstractAddShapeFeature {
 		{
 
 			Shape shape3 = peCreateService.createShape(containerShape, false);
-			Image icon1 = gaService.createImage(shape3, GamaImageProvider.IMG_SPECIESGRIDTOPO);
+			Image icon1 = gaService.createImage(shape3, GamaImageProvider.IMG_SUBGRIDLINK);
 			
 			gaService.setLocationAndSize(icon1, 20 - width / 2, 3, 30, 15);
 

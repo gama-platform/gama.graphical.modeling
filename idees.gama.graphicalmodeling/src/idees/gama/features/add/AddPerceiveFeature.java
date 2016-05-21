@@ -17,7 +17,7 @@ public class AddPerceiveFeature extends AbstractAddShapeFeature {
 	public static final int INIT_WIDTH = 150;
 	public static final int INIT_HEIGHT = 50;
 
-	private static final List<Integer> CLASS_BACKGROUND = Arrays.asList(137, 171, 142);
+	private static final List<Integer> CLASS_BACKGROUND = Arrays.asList(239, 255, 82);
 
 	public AddPerceiveFeature(final IFeatureProvider fp) {
 		super(fp);

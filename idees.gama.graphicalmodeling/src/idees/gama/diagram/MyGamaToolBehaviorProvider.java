@@ -75,9 +75,15 @@ public class MyGamaToolBehaviorProvider extends DefaultToolBehaviorProvider {
 		PaletteCompartmentEntry compartmentAgentEntry = new PaletteCompartmentEntry("Agents", null);
 		PaletteCompartmentEntry compartmentAgentFeatureEntry = new PaletteCompartmentEntry("Agent features", null);
 		PaletteCompartmentEntry compartmentExperimentEntry = new PaletteCompartmentEntry("Experiments", null);
+		PaletteCompartmentEntry compartmentBDI = new PaletteCompartmentEntry("BDI Architecture", null);
+		PaletteCompartmentEntry compartmentFSM = new PaletteCompartmentEntry("Finite State Machine", null);
+		PaletteCompartmentEntry compartmentTask = new PaletteCompartmentEntry("Task-based Architecture", null);
 		ret.add(compartmentAgentEntry);
 		ret.add(compartmentAgentFeatureEntry);
 		ret.add(compartmentExperimentEntry);
+		ret.add(compartmentBDI);
+		ret.add(compartmentFSM);
+		ret.add(compartmentTask);
 
 		IFeatureProvider featureProvider = getFeatureProvider();
 		ICreateConnectionFeature[] createConnectionFeatures = featureProvider.getCreateConnectionFeatures();
@@ -90,9 +96,14 @@ public class MyGamaToolBehaviorProvider extends DefaultToolBehaviorProvider {
 				 cf instanceof CreateInheritingLinkFeature ) {
 				compartmentAgentEntry.addToolEntry(connectionCreationToolEntry);
 			} else if ( cf instanceof CreateActionLinkFeature || cf instanceof CreateAspectLinkFeature ||
-				cf instanceof CreateReflexLinkFeature ||cf instanceof CreatePlanLinkFeature ||cf instanceof CreateTaskLinkFeature ||
-				cf instanceof CreateEquationLinkFeature|| cf instanceof CreateStateLinkFeature ||cf instanceof CreatePerceiveLinkFeature||cf instanceof CreateRuleLinkFeature) {
+				cf instanceof CreateReflexLinkFeature || cf instanceof CreateEquationLinkFeature) {
 				compartmentAgentFeatureEntry.addToolEntry(connectionCreationToolEntry);
+			} else if (cf instanceof CreatePerceiveLinkFeature||cf instanceof CreateRuleLinkFeature||cf instanceof CreatePlanLinkFeature) {
+				compartmentBDI.addToolEntry(connectionCreationToolEntry);
+			} else if (cf instanceof CreateStateLinkFeature) {
+				compartmentFSM.addToolEntry(connectionCreationToolEntry);
+			} else if ( cf instanceof CreateTaskLinkFeature) {
+				compartmentTask.addToolEntry(connectionCreationToolEntry);
 			} else {
 				compartmentExperimentEntry.addToolEntry(connectionCreationToolEntry);
 			}

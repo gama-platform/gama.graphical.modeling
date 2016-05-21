@@ -16,7 +16,7 @@ public class AddStateFeature extends AbstractAddShapeFeature {
 	public static final int INIT_WIDTH = 150;
 	public static final int INIT_HEIGHT = 50;
 
-	private static final List<Integer> CLASS_BACKGROUND = Arrays.asList(71, 250, 101);
+	private static final List<Integer> CLASS_BACKGROUND = Arrays.asList(255, 225, 217);
 
 	public AddStateFeature(final IFeatureProvider fp) {
 		super(fp);

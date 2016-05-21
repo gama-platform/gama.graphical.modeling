@@ -126,7 +126,7 @@ public class AddWorldFeature extends AbstractAddShapeFeature {
 
 			Shape shape3 = peCreateService.createShape(containerShape, false);
 
-			Image icon1 = gaService.createImage(shape3, GamaImageProvider.IMG_SPECIESCONTINUOUSTOPO);
+			Image icon1 = gaService.createImage(shape3, GamaImageProvider.IMG_SUBSPECIESLINK);
 			gaService.setLocationAndSize(icon1, 20 - width / 2, 3, 30, 15);
 
 			link(shape3, addedClass);
