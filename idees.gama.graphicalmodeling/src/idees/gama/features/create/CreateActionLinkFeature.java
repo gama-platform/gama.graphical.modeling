@@ -2,12 +2,16 @@ package idees.gama.features.create;
 
 import gama.EAction;
 import gama.EActionLink;
+import gama.EPerceiveLink;
 import gama.ESpecies;
 import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.add.AddActionFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
 import idees.gama.ui.image.GamaImageProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
@@ -31,11 +35,19 @@ public class CreateActionLinkFeature extends AbstractCreateSpeciesComponentLinkF
 	}
 
 	
-	private EAction createEAction(ICreateConnectionContext context) {
+	private EAction createEAction(ICreateConnectionContext context, ESpecies source) {
 		String newActionName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_action");
 	    if (newActionName == null || newActionName.trim().length() == 0) {
 	    	return null;
 	    }  
+	    String initName = newActionName;
+	    List<String> names = new ArrayList<String>();
+	    for (EActionLink li : source.getActionLinks())names.add(li.getAction().getName());
+	    int cpt = 2;
+	    while (names.contains(newActionName)) {
+	    	newActionName = initName + cpt;
+	    	cpt++;
+	    }
 		EAction newAction = gama.GamaFactory.eINSTANCE.createEAction();
 		newAction.setError("");
 		newAction.setHasError(false);
@@ -60,7 +72,7 @@ public class CreateActionLinkFeature extends AbstractCreateSpeciesComponentLinkF
 		Connection newConnection = null;
 		ESpecies source = getESpecies(context.getSourceAnchor());
 		
-		EAction target = createEAction(context);
+		EAction target = createEAction(context,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addEAction(context, target);
 			// create new business object

@@ -7,9 +7,12 @@ import idees.gama.ui.image.GamaImageProvider;
 import gama.EEquation;
 import gama.EEquationLink;
 import gama.ESpecies;
-
+import gama.ESubSpeciesLink;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.add.AddEquationFeature;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
@@ -31,16 +34,23 @@ public class CreateEquationLinkFeature extends AbstractCreateSpeciesComponentLin
 		super(fp, "has the equation", "Create equation link");
 	}
 
-    private EEquation createEEquation(ICreateConnectionContext context) {
-		String newRuleName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_equation");
-	    if (newRuleName == null || newRuleName.trim().length() == 0) {
+    private EEquation createEEquation(ICreateConnectionContext context, ESpecies source) {
+		String newEquName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_equation");
+	    if (newEquName == null || newEquName.trim().length() == 0) {
 	    	return null;
 	    }  
+	    String initName = newEquName;
+	    List<String> names = new ArrayList<String>();
+	    int cpt = 2;
+	    while (names.contains(newEquName)) {
+	    	newEquName = initName + cpt;
+	    	cpt++;
+	    }
 	    EEquation newRule = gama.GamaFactory.eINSTANCE.createEEquation();
 	    newRule.setError("");
 	    newRule.setHasError(false);
 		this.getDiagram().eResource().getContents().add(newRule);
-		newRule.setName(newRuleName);
+		newRule.setName(newEquName);
 		CreateContext ac = new CreateContext();
 		ac.setLocation(context.getTargetLocation().getX(), context.getTargetLocation().getY());
 		ac.setSize(0, 0);
@@ -60,7 +70,7 @@ public class CreateEquationLinkFeature extends AbstractCreateSpeciesComponentLin
 		Connection newConnection = null;
 		ESpecies source = getESpecies(context.getSourceAnchor());
 		
-		EEquation target = createEEquation(context);
+		EEquation target = createEEquation(context,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addEEquation(context, target);
 			// create new business object

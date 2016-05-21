@@ -8,9 +8,12 @@ import gama.EFacet;
 import gama.ERule;
 import gama.ERuleLink;
 import gama.ESpecies;
-
+import gama.ESubSpeciesLink;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.add.AddRuleFeature;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
@@ -33,11 +36,19 @@ public class CreateRuleLinkFeature extends AbstractCreateSpeciesComponentLinkFea
 		super(fp, "has the rule", "Create rule link");
 	}
 
-    private ERule createERule(ICreateConnectionContext context) {
+    private ERule createERule(ICreateConnectionContext context, ESpecies source) {
 		String newRuleName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_rule");
 	    if (newRuleName == null || newRuleName.trim().length() == 0) {
 	    	return null;
 	    }  
+	    String initName = newRuleName;
+	    List<String> names = new ArrayList<String>();
+	    for (ERuleLink li : source.getRuleLinks())names.add(li.getRule().getName());
+	    int cpt = 2;
+	    while (names.contains(newRuleName)) {
+	    	newRuleName = initName + cpt;
+	    	cpt++;
+	    }
 	    ERule newRule = gama.GamaFactory.eINSTANCE.createERule();
 	    newRule.setError("");
 	    newRule.setHasError(false);
@@ -62,7 +73,7 @@ public class CreateRuleLinkFeature extends AbstractCreateSpeciesComponentLinkFea
 		Connection newConnection = null;
 		ESpecies source = getESpecies(context.getSourceAnchor());
 		
-		ERule target = createERule(context);
+		ERule target = createERule(context,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addERule(context, target);
 			// create new business object

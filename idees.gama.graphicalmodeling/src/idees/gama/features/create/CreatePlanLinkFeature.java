@@ -8,9 +8,12 @@ import gama.EFacet;
 import gama.EPlan;
 import gama.EPlanLink;
 import gama.ESpecies;
-
+import gama.ESubSpeciesLink;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.add.AddPlanFeature;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
@@ -33,11 +36,19 @@ public class CreatePlanLinkFeature extends AbstractCreateSpeciesComponentLinkFea
 		super(fp, "has the plan", "Create plan link");
 	}
 
-    private EPlan createEPlan(ICreateConnectionContext context) {
+    private EPlan createEPlan(ICreateConnectionContext context, ESpecies source) {
 		String newPlanName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_plan");
 	    if (newPlanName == null || newPlanName.trim().length() == 0) {
 	    	return null;
 	    }  
+	    String initName = newPlanName;
+	    List<String> names = new ArrayList<String>();
+	    for (EPlanLink li : source.getPlanLinks())names.add(li.getPlan().getName());
+	    int cpt = 2;
+	    while (names.contains(newPlanName)) {
+	    	newPlanName = initName + cpt;
+	    	cpt++;
+	    }
 	    EPlan newPlan = gama.GamaFactory.eINSTANCE.createEPlan();
 	    newPlan.setError("");
 	    newPlan.setHasError(false);
@@ -62,7 +73,7 @@ public class CreatePlanLinkFeature extends AbstractCreateSpeciesComponentLinkFea
 		Connection newConnection = null;
 		ESpecies source = getESpecies(context.getSourceAnchor());
 		
-		EPlan target = createEPlan(context);
+		EPlan target = createEPlan(context,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addEPlan(context, target);
 			// create new business object

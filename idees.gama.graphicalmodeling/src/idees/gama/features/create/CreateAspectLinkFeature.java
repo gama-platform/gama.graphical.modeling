@@ -5,11 +5,16 @@ import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.add.AddAspectFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
 import idees.gama.ui.image.GamaImageProvider;
+import gama.EActionLink;
 import gama.EAspect;
 import gama.EAspectLink;
 import gama.ESpecies;
 
 import idees.gama.features.ExampleUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
@@ -30,11 +35,19 @@ public class CreateAspectLinkFeature extends AbstractCreateSpeciesComponentLinkF
 		super(fp, "has the aspect", "Create aspect link");
 	}
 	
-	private EAspect createEAspect(ICreateConnectionContext context) {
+	private EAspect createEAspect(ICreateConnectionContext context, ESpecies source) {
 		String newAspectName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_aspect");
 	    if (newAspectName == null || newAspectName.trim().length() == 0) {
 	    	return null;
 	    }  
+	    String initName = newAspectName;
+	    List<String> names = new ArrayList<String>();
+	    for (EAspectLink li : source.getAspectLinks())names.add(li.getAspect().getName());
+	    int cpt = 2;
+	    while (names.contains(newAspectName)) {
+	    	newAspectName = initName + cpt;
+	    	cpt++;
+	    }
 	    EAspect newAspect = gama.GamaFactory.eINSTANCE.createEAspect();
 	    newAspect.setError("");
 	    newAspect.setHasError(false);
@@ -59,7 +72,7 @@ public class CreateAspectLinkFeature extends AbstractCreateSpeciesComponentLinkF
 		Connection newConnection = null;
 		ESpecies source = getESpecies(context.getSourceAnchor());
 		
-		EAspect target = createEAspect(context);
+		EAspect target = createEAspect(context,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addEAspect(context, target);
 			// create new business object

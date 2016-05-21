@@ -6,9 +6,15 @@ import idees.gama.features.modelgeneration.ModelGenerator;
 import idees.gama.ui.image.GamaImageProvider;
 import gama.EDisplay;
 import gama.EDisplayLink;
+import gama.EExperiment;
 import gama.EGUIExperiment;
-
+import gama.ESpecies;
+import gama.ESubSpeciesLink;
 import idees.gama.features.ExampleUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
@@ -48,7 +54,7 @@ public class CreateDisplayLinkFeature extends AbstractCreateConnectionFeature {
 		return false;
 	}
 
-	private EDisplay createEDisplay(ICreateConnectionContext context, boolean askName) {
+	private EDisplay createEDisplay(ICreateConnectionContext context, boolean askName, EExperiment source) {
 		String newDisplayName = "my_display";
 		if (askName) {
 			newDisplayName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_display");
@@ -56,6 +62,14 @@ public class CreateDisplayLinkFeature extends AbstractCreateConnectionFeature {
 		    	return null;
 		    } 
 		}
+		 String initName = newDisplayName;
+		    List<String> names = new ArrayList<String>();
+		    for (EDisplayLink li : source.getDisplayLinks())names.add(li.getDisplay().getName());
+		    int cpt = 2;
+		    while (names.contains(newDisplayName)) {
+		    	newDisplayName = initName + cpt;
+		    	cpt++;
+		    }
 	    EDisplay newDisplay = gama.GamaFactory.eINSTANCE.createEDisplay();
 	    newDisplay.setError("");
 	    newDisplay.setHasError(false);
@@ -84,7 +98,7 @@ public class CreateDisplayLinkFeature extends AbstractCreateConnectionFeature {
 		Connection newConnection = null;
 		EGUIExperiment source = getEExperiment(context.getSourceAnchor());
 		
-		EDisplay target = createEDisplay(context, askName);
+		EDisplay target = createEDisplay(context, askName, source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addEDisplay(context, target);
 			// create new business object

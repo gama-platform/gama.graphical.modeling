@@ -8,8 +8,12 @@ import idees.gama.ui.image.GamaImageProvider;
 import gama.EReflex;
 import gama.EReflexLink;
 import gama.ESpecies;
-
+import gama.ESubSpeciesLink;
 import idees.gama.features.ExampleUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
@@ -30,11 +34,19 @@ public class CreateReflexLinkFeature extends AbstractCreateSpeciesComponentLinkF
 		super(fp, "has the reflex", "Create reflex link");
 	}
 
-    private EReflex createEReflex(ICreateConnectionContext context) {
+    private EReflex createEReflex(ICreateConnectionContext context, ESpecies source) {
 		String newReflexName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_reflex");
 	    if (newReflexName == null || newReflexName.trim().length() == 0) {
 	    	return null;
-	    }  
+	    } 
+	    String initName = newReflexName;
+	    List<String> names = new ArrayList<String>();
+	    for (EReflexLink li : source.getReflexLinks())names.add(li.getReflex().getName());
+	    int cpt = 2;
+	    while (names.contains(newReflexName)) {
+	    	newReflexName = initName + cpt;
+	    	cpt++;
+	    }
 	    EReflex newReflex = gama.GamaFactory.eINSTANCE.createEReflex();
 	    newReflex.setError("");
 	    newReflex.setHasError(false);
@@ -59,7 +71,7 @@ public class CreateReflexLinkFeature extends AbstractCreateSpeciesComponentLinkF
 		Connection newConnection = null;
 		ESpecies source = getESpecies(context.getSourceAnchor());
 		
-		EReflex target = createEReflex(context);
+		EReflex target = createEReflex(context,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addEReflex(context, target);
 			// create new business object

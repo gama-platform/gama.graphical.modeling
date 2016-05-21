@@ -59,6 +59,7 @@ import msi.gama.lang.gaml.gaml.impl.VariableRefImpl;
 import msi.gama.lang.gaml.ui.internal.GamlActivator;
 import msi.gama.lang.utils.EGaml;
 import msi.gaml.compilation.GamlCompilationError;
+import msi.gaml.descriptions.FacetProto;
 import msi.gaml.descriptions.SymbolProto;
 import msi.gaml.factories.DescriptionFactory;
 
@@ -160,13 +161,14 @@ public abstract class EditFrame extends ApplicationWindow {
 			facets = speciesFacets;
 		} else facets = new ArrayList<String>(proto.getPossibleFacets().keySet());
 		for (String facet : facets) {
-			if( proto.getFacet(facet).deprecated != null) continue;
-			if( proto.getFacet(facet).internal ) continue;
+			FacetProto pt =  proto.getFacet(facet);
+			if( pt.deprecated != null) continue;
+			if( pt.internal ) continue;
 			if ((!"name".equals(gamlName) && "name".equals(facet)) ) continue;
 			if ("layer".equals(gamlName) && ("aspect".equals(facet) || "species".equals(facet))) continue;
 			if (comboValues != null && comboValues.containsKey(facet))
-				groupFacetCombo(group,facet,comboValues.get(facet),proto.getFacet(facet).doc);
-			else groupFacet(group,facet,proto.getFacet(facet).typesToString(),proto.getFacet(facet).doc);
+				groupFacetCombo(group,facet,comboValues.get(facet),pt.doc);
+			else groupFacet(group,facet,pt.typesToString(),pt.doc);
 		}
 		return group;
 	}
@@ -177,7 +179,7 @@ public abstract class EditFrame extends ApplicationWindow {
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		group.setLayoutData(gridData);
-
+		
 		group.setLayout(new GridLayout(2, false));
 
 		CLabel lblName = new CLabel(group, SWT.NONE);
@@ -216,7 +218,6 @@ public abstract class EditFrame extends ApplicationWindow {
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		group.setLayoutData(gridData);
-
 		group.setLayout(new GridLayout(2, false));
 
 		CLabel lblName = new CLabel(group, SWT.NONE);

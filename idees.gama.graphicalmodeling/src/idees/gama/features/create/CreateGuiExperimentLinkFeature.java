@@ -7,9 +7,15 @@ import idees.gama.ui.image.GamaImageProvider;
 import gama.EExperiment;
 import gama.EExperimentLink;
 import gama.EGUIExperiment;
+import gama.ESpecies;
+import gama.ESubSpeciesLink;
 import gama.EWorldAgent;
 
 import idees.gama.features.ExampleUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
@@ -34,7 +40,7 @@ public class CreateGuiExperimentLinkFeature  extends AbstractCreateConnectionFea
 		super(fp, "is composed of a GUI experiment", "Create a new GUI experiment");
 	}
 
-	private EGUIExperiment createEGUIExperiment(ICreateConnectionContext context, boolean askName) {
+	private EGUIExperiment createEGUIExperiment(ICreateConnectionContext context, boolean askName, ESpecies source) {
 		String newGUIName = "my_GUI_xp";
 		if (askName) {
 			newGUIName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_GUI_xp");
@@ -42,6 +48,14 @@ public class CreateGuiExperimentLinkFeature  extends AbstractCreateConnectionFea
 		    	return null;
 		    }  
 		}  
+		 String initName = newGUIName;
+		    List<String> names = new ArrayList<String>();
+		    for (EExperimentLink li : source.getExperimentLinks())names.add(li.getExperiment().getName());
+		    int cpt = 2;
+		    while (names.contains(newGUIName)) {
+		    	newGUIName = initName + cpt;
+		    	cpt++;
+		    }
 	    EGUIExperiment newGUIExp= gama.GamaFactory.eINSTANCE.createEGUIExperiment();
 	    newGUIExp.setError("");
 	    newGUIExp.setHasError(false);
@@ -71,7 +85,7 @@ public class CreateGuiExperimentLinkFeature  extends AbstractCreateConnectionFea
 	public Connection create(ICreateConnectionContext context, boolean askName) {
 		Connection newConnection = null;
 		EWorldAgent source = getEWorldAgent(context.getSourceAnchor());
-		EGUIExperiment target = createEGUIExperiment(context, askName);
+		EGUIExperiment target = createEGUIExperiment(context, askName,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addEGUIExperiment(context, target);
 			// create new business object

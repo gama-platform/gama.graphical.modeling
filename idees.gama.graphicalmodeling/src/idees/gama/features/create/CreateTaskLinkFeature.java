@@ -8,10 +8,11 @@ import gama.ETask;
 import gama.ETaskLink;
 import gama.EFacet;
 import gama.ESpecies;
-
+import gama.ESubSpeciesLink;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.add.AddTaskFeature;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,11 +37,19 @@ public class CreateTaskLinkFeature extends AbstractCreateSpeciesComponentLinkFea
 		super(fp, "has the task", "Create task link");
 	}
 
-    private ETask createETask(ICreateConnectionContext context) {
+    private ETask createETask(ICreateConnectionContext context, ESpecies source) {
 		String newTaskName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_task");
 	    if (newTaskName == null || newTaskName.trim().length() == 0) {
 	    	return null;
 	    }  
+	    String initName = newTaskName;
+	    List<String> names = new ArrayList<String>();
+	    for (ETaskLink li : source.getTaskLinks())names.add(li.getTask().getName());
+	    int cpt = 2;
+	    while (names.contains(newTaskName)) {
+	    	newTaskName = initName + cpt;
+	    	cpt++;
+	    }
 	    ETask newTask = gama.GamaFactory.eINSTANCE.createETask();
 	    newTask.setError("");
 	    newTask.setHasError(false);
@@ -65,7 +74,7 @@ public class CreateTaskLinkFeature extends AbstractCreateSpeciesComponentLinkFea
 		Connection newConnection = null;
 		ESpecies source = getESpecies(context.getSourceAnchor());
 		
-		ETask target = createETask(context);
+		ETask target = createETask(context,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addETask(context, target);
 			// create new business object
@@ -83,9 +92,16 @@ public class CreateTaskLinkFeature extends AbstractCreateSpeciesComponentLinkFea
 			source.getTaskLinks().add(eReference);
 			target.getTaskLinks().add(eReference);
 		}
+		
 		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(getFeatureProvider()));
 		diagramEditor.addEOject(target);
-		
+		if (source.getStateLinks().size() == 1) {
+			EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+			facet.setValue("1");
+			facet.setName("weight");
+			facet.setOwner(target);
+			target.getFacets().add(facet);
+		}
 		return newConnection;
 	}
 

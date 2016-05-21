@@ -1,9 +1,12 @@
 package idees.gama.features.create;
 
 
+import gama.EAspectLink;
 import gama.EBatchExperiment;
 import gama.EExperiment;
 import gama.EExperimentLink;
+import gama.ESpecies;
+import gama.ESubSpeciesLink;
 import gama.EWorldAgent;
 import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.add.AddBatchExperimentFeature;
@@ -11,6 +14,10 @@ import idees.gama.features.modelgeneration.ModelGenerator;
 import idees.gama.ui.image.GamaImageProvider;
 
 import idees.gama.features.ExampleUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
@@ -35,11 +42,19 @@ public class CreateBatchExperimentLinkFeature  extends AbstractCreateConnectionF
 		super(fp, "is composed of a batch experiment", "Create a new batch experiment");
 	}
 
-	private EBatchExperiment createEBatchExperiment(ICreateConnectionContext context) {
+	private EBatchExperiment createEBatchExperiment(ICreateConnectionContext context, ESpecies source) {
 		String newBatchName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_batch_xp");
 	    if (newBatchName == null || newBatchName.length() == 0) {
 	    	return null;
 	    }  
+	    String initName = newBatchName;
+	    List<String> names = new ArrayList<String>();
+	    for (ESubSpeciesLink li : source.getMicroSpeciesLinks())names.add(li.getMicro().getName());
+	    int cpt = 2;
+	    while (names.contains(newBatchName)) {
+	    	newBatchName = initName + cpt;
+	    	cpt++;
+	    }
 	    EBatchExperiment newBatchExp= gama.GamaFactory.eINSTANCE.createEBatchExperiment();
 	    newBatchExp.setError("");
 	    newBatchExp.setHasError(false);
@@ -63,7 +78,7 @@ public class CreateBatchExperimentLinkFeature  extends AbstractCreateConnectionF
 	public Connection create(ICreateConnectionContext context) {
 		Connection newConnection = null;
 		EWorldAgent source = getEWorldAgent(context.getSourceAnchor());
-		EBatchExperiment target = createEBatchExperiment(context);
+		EBatchExperiment target = createEBatchExperiment(context,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addEBatchExperiment(context, target);
 			// create new business object

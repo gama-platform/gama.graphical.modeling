@@ -1,5 +1,8 @@
 package idees.gama.features.create;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
@@ -28,11 +31,19 @@ public class CreateSubSpeciesLinkFeature extends AbstractCreateSpeciesComponentL
 		super(fp, "is composed of a species", "Create a new species");
 	}
 
-	private ESpecies createESpecies(ICreateConnectionContext context) {
+	private ESpecies createESpecies(ICreateConnectionContext context,ESpecies source) {
 		String newSpeciesName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_species");
 	    if (newSpeciesName == null || newSpeciesName.trim().length() == 0) {
 	    	return null;
 	    }  
+	    String initName = newSpeciesName;
+	    List<String> names = new ArrayList<String>();
+	    for (ESubSpeciesLink li : source.getMicroSpeciesLinks())names.add(li.getMicro().getName());
+	    int cpt = 2;
+	    while (names.contains(newSpeciesName)) {
+	    	newSpeciesName = initName + cpt;
+	    	cpt++;
+	    }
 	    ESpecies newSpecies = gama.GamaFactory.eINSTANCE.createESpecies();
 	    newSpecies.setError("");
 	    newSpecies.setHasError(false);
@@ -59,7 +70,7 @@ public class CreateSubSpeciesLinkFeature extends AbstractCreateSpeciesComponentL
 	public Connection create(ICreateConnectionContext context) {
 		Connection newConnection = null;
 		ESpecies source = getESpecies(context.getSourceAnchor());
-		ESpecies target = createESpecies(context);
+		ESpecies target = createESpecies(context,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addESpecies(context, target);
 			// create new business object

@@ -39,11 +39,11 @@ public class EditStateFrame extends EditActionFrame {
 
 		// ****** CANVAS GAMLCODE *********
 		groupCondition(container);
+		
 
 		// ****** CANVAS GAMLCODE *********
 		groupGamlCode(container, "Gaml code");
 		
-
 		return container;
 	}
 

@@ -12,6 +12,9 @@ import gama.ESpecies;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.add.AddPerceiveFeature;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
@@ -33,11 +36,19 @@ public class CreatePerceiveLinkFeature extends AbstractCreateSpeciesComponentLin
 		super(fp, "has the perception", "Create perception link");
 	}
 
-    private EPerceive createEPerceive(ICreateConnectionContext context) {
+    private EPerceive createEPerceive(ICreateConnectionContext context,ESpecies source ) {
 		String newPerceiveName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_perception");
 	    if (newPerceiveName == null || newPerceiveName.trim().length() == 0) {
 	    	return null;
-	    }  
+	    } 
+	    String initName = newPerceiveName;
+	    List<String> names = new ArrayList<String>();
+	    for (EPerceiveLink li : source.getPerceiveLinks())names.add(li.getPerceive().getName());
+	    int cpt = 2;
+	    while (names.contains(newPerceiveName)) {
+	    	newPerceiveName = initName + cpt;
+	    	cpt++;
+	    }
 	    EPerceive newPerceive = gama.GamaFactory.eINSTANCE.createEPerceive();
 	    newPerceive.setError("");
 	    newPerceive.setHasError(false);
@@ -62,7 +73,7 @@ public class CreatePerceiveLinkFeature extends AbstractCreateSpeciesComponentLin
 		Connection newConnection = null;
 		ESpecies source = getESpecies(context.getSourceAnchor());
 		
-		EPerceive target = createEPerceive(context);
+		EPerceive target = createEPerceive(context,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addEPerceive(context, target);
 			// create new business object
@@ -80,9 +91,17 @@ public class CreatePerceiveLinkFeature extends AbstractCreateSpeciesComponentLin
 			source.getPerceiveLinks().add(eReference);
 			target.getPerceiveLinks().add(eReference);
 		}
+		
+		
 		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(getFeatureProvider()));
 		diagramEditor.addEOject(target);
-		
+		if (source.getStateLinks().size() == 1) {
+			EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+			facet.setValue("[]");
+			facet.setName("target");
+			facet.setOwner(target);
+			target.getFacets().add(facet);
+		}
 		return newConnection;
 	}
 

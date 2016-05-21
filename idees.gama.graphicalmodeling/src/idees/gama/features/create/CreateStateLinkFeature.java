@@ -8,8 +8,12 @@ import gama.EFacet;
 import gama.ESpecies;
 import gama.EState;
 import gama.EStateLink;
+import gama.ESubSpeciesLink;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.add.AddStateFeature;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
@@ -32,11 +36,19 @@ public class CreateStateLinkFeature extends AbstractCreateSpeciesComponentLinkFe
 		super(fp, "has the state", "Create state link");
 	}
 
-    private EState createEState(ICreateConnectionContext context) {
+    private EState createEState(ICreateConnectionContext context, ESpecies source) {
 		String newStateName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_state");
 	    if (newStateName == null || newStateName.trim().length() == 0) {
 	    	return null;
-	    }  
+	    } 
+	    String initName = newStateName;
+	    List<String> names = new ArrayList<String>();
+	    for (EStateLink li : source.getStateLinks())names.add(li.getState().getName());
+	    int cpt = 2;
+	    while (names.contains(newStateName)) {
+	    	newStateName = initName + cpt;
+	    	cpt++;
+	    }
 	    EState newState = gama.GamaFactory.eINSTANCE.createEState();
 	    newState.setError("");
 	    newState.setHasError(false);
@@ -46,6 +58,7 @@ public class CreateStateLinkFeature extends AbstractCreateSpeciesComponentLinkFe
 		ac.setLocation(context.getTargetLocation().getX(), context.getTargetLocation().getY());
 		ac.setSize(0, 0);
 		ac.setTargetContainer(getDiagram());
+		
 		return newState;
 	}
 	
@@ -61,7 +74,7 @@ public class CreateStateLinkFeature extends AbstractCreateSpeciesComponentLinkFe
 		Connection newConnection = null;
 		ESpecies source = getESpecies(context.getSourceAnchor());
 		
-		EState target = createEState(context);
+		EState target = createEState(context,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addEState(context, target);
 			// create new business object
@@ -81,7 +94,13 @@ public class CreateStateLinkFeature extends AbstractCreateSpeciesComponentLinkFe
 		}
 		GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(getFeatureProvider()));
 		diagramEditor.addEOject(target);
-		
+		if (source.getStateLinks().size() == 1) {
+			EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+			facet.setValue("true");
+			facet.setName("initial");
+			facet.setOwner(target);
+			target.getFacets().add(facet);
+		}
 		return newConnection;
 	}
 

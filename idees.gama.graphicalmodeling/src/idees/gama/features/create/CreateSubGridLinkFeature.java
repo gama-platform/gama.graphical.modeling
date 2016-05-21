@@ -1,6 +1,9 @@
 package idees.gama.features.create;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.IContext;
 import org.eclipse.graphiti.features.context.ICreateConnectionContext;
@@ -30,11 +33,19 @@ public class CreateSubGridLinkFeature extends AbstractCreateSpeciesComponentLink
 		super(fp, "is composed of a grid", "Create a new grid");
 	}
 
-	private ESpecies createEGrid(ICreateConnectionContext context) {
+	private ESpecies createEGrid(ICreateConnectionContext context, ESpecies source) {
 		String newSpeciesName = ExampleUtil.askString(TITLE, USER_QUESTION, "my_cell");
 	    if (newSpeciesName == null || newSpeciesName.trim().length() == 0) {
 	    	return null;
-	    }  
+	    } 
+	    String initName = newSpeciesName;
+	    List<String> names = new ArrayList<String>();
+	    for (ESubSpeciesLink li : source.getMicroSpeciesLinks())names.add(li.getMicro().getName());
+	    int cpt = 2;
+	    while (names.contains(newSpeciesName)) {
+	    	newSpeciesName = initName + cpt;
+	    	cpt++;
+	    }
 	    EGrid newSpecies = gama.GamaFactory.eINSTANCE.createEGrid();
 	    newSpecies.setError("");
 	    newSpecies.setHasError(false);
@@ -59,7 +70,7 @@ public class CreateSubGridLinkFeature extends AbstractCreateSpeciesComponentLink
 	public Connection create(ICreateConnectionContext context) {
 		Connection newConnection = null;
 		ESpecies source = getESpecies(context.getSourceAnchor());
-		ESpecies target = createEGrid(context);
+		ESpecies target = createEGrid(context,source);
 		if (source != null && target != null) {
 			PictogramElement targetpe = addEGrid(context, target);
 			// create new business object
