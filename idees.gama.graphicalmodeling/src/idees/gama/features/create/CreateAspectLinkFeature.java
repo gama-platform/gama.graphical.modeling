@@ -49,6 +49,7 @@ public class CreateAspectLinkFeature extends AbstractCreateSpeciesComponentLinkF
 	    	cpt++;
 	    }
 	    EAspect newAspect = gama.GamaFactory.eINSTANCE.createEAspect();
+	    newAspect.setDefineGamlCode(false);
 	    newAspect.setError("");
 	    newAspect.setHasError(false);
 		this.getDiagram().eResource().getContents().add(newAspect);

@@ -758,6 +758,15 @@ public class GamaPackageImpl extends EPackageImpl implements GamaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getEAspect_DefineGamlCode() {
+		return (EAttribute)eAspectEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getEReflex() {
 		return eReflexEClass;
 	}
@@ -1048,6 +1057,24 @@ public class GamaPackageImpl extends EPackageImpl implements GamaPackage {
 	 */
 	public EAttribute getEDisplay_LayerList() {
 		return (EAttribute)eDisplayEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEDisplay_GamlCode() {
+		return (EAttribute)eDisplayEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEDisplay_DefineGamlCode() {
+		return (EAttribute)eDisplayEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2147,6 +2174,7 @@ public class GamaPackageImpl extends EPackageImpl implements GamaPackage {
 		createEAttribute(eAspectEClass, EASPECT__GAML_CODE);
 		createEReference(eAspectEClass, EASPECT__ASPECT_LINKS);
 		createEReference(eAspectEClass, EASPECT__LAYERS);
+		createEAttribute(eAspectEClass, EASPECT__DEFINE_GAML_CODE);
 
 		eReflexEClass = createEClass(EREFLEX);
 		createEAttribute(eReflexEClass, EREFLEX__GAML_CODE);
@@ -2191,6 +2219,8 @@ public class GamaPackageImpl extends EPackageImpl implements GamaPackage {
 		createEReference(eDisplayEClass, EDISPLAY__LAYERS);
 		createEReference(eDisplayEClass, EDISPLAY__DISPLAY_LINK);
 		createEAttribute(eDisplayEClass, EDISPLAY__LAYER_LIST);
+		createEAttribute(eDisplayEClass, EDISPLAY__GAML_CODE);
+		createEAttribute(eDisplayEClass, EDISPLAY__DEFINE_GAML_CODE);
 
 		eVariableEClass = createEClass(EVARIABLE);
 		createEAttribute(eVariableEClass, EVARIABLE__INIT);
@@ -2437,6 +2467,7 @@ public class GamaPackageImpl extends EPackageImpl implements GamaPackage {
 		initEAttribute(getEAspect_GamlCode(), ecorePackage.getEString(), "gamlCode", null, 0, 1, EAspect.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getEAspect_AspectLinks(), this.getEAspectLink(), null, "aspectLinks", null, 0, -1, EAspect.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getEAspect_Layers(), this.getELayerAspect(), null, "layers", null, 0, -1, EAspect.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEAspect_DefineGamlCode(), ecorePackage.getEBoolean(), "defineGamlCode", null, 0, 1, EAspect.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eReflexEClass, EReflex.class, "EReflex", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getEReflex_GamlCode(), ecorePackage.getEString(), "gamlCode", null, 0, 1, EReflex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
@@ -2481,6 +2512,8 @@ public class GamaPackageImpl extends EPackageImpl implements GamaPackage {
 		initEReference(getEDisplay_Layers(), this.getELayer(), null, "layers", null, 0, -1, EDisplay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getEDisplay_DisplayLink(), this.getEDisplayLink(), null, "displayLink", null, 0, 1, EDisplay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEDisplay_LayerList(), ecorePackage.getEString(), "layerList", null, 0, -1, EDisplay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEDisplay_GamlCode(), ecorePackage.getEString(), "gamlCode", null, 0, 1, EDisplay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEDisplay_DefineGamlCode(), ecorePackage.getEBoolean(), "defineGamlCode", null, 0, 1, EDisplay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eVariableEClass, EVariable.class, "EVariable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getEVariable_Init(), ecorePackage.getEString(), "init", null, 0, 1, EVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

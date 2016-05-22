@@ -330,7 +330,11 @@ public class ModelGenerator {
 		}
 		
 		for ( EAspectLink link : species.getAspectLinks() ) {
-			model += defineAspect(link, level + 1);
+			String idA = ModelStructure.getElementId(link.getAspect()); 
+			isId = idA.equals(id);
+			if (isId) model+= EL + idA + EL;
+			model += defineAspect(link, isId? -1:level + 1);
+			if (isId) model+= EL + idA + EL;
 		}
 		for ( ESubSpeciesLink link : species.getMicroSpeciesLinks() ) {
 			model += defineSpecies(link.getMicro(), level + 1, id);
@@ -476,58 +480,69 @@ public class ModelGenerator {
 			sp += "\t";
 		}
 		result += sp + "aspect " + asp.getName() + " {" + EL;
-		for ( ELayerAspect lay : asp.getLayers() ) {
-			String code = sp + "\t" + "draw ";
-			String val = lay.getShapeType();
-			if ( val == null ) {
-				continue;
+		if (asp.isDefineGamlCode()) {
+			String code = asp.getGamlCode();
+			if ( code != null && !code.isEmpty() ) {
+				for ( String line : code.split(EL) ) {
+					result += sp + (level == -1 ? "":"\t") + line + EL;
+				}
 			}
-			if ( val.equals("polyline") || val.equals("polygon") ) {
-				code += val + "(" + lay.getPoints() + ")";
-			} else if ( val.equals("circle") || val.equals("sphere") ) {
-				code += val + "(" + lay.getRadius() + ")";
-			} else if ( val.equals("square") || val.equals("cube") || val.equals("pyramid") ) {
-				code += val + "(" + lay.getSize() + ")";
-			} else if ( val.equals("rectangle") || val.equals("hexagon") ) {
-				code += val + "({" + lay.getWidth() + "," + lay.getHeigth() + "})";
-			} else if ( val.equals("expression") ) {
-				code += lay.getExpression();
-			} else if ( val.equals("image") ) {
-				code +=
-					"file(\"" + lay.getPath() + "\")" +
-						(lay.getImageSize() != null && !lay.getImageSize().isEmpty() ? "" : " size:" + lay.getSize());
-			} else if ( val.equals("text") ) {
-				code +=
-					"\"" + lay.getText() + "\"" +
-						(lay.getTextSize() != null && !lay.getTextSize().isEmpty() ? "" : " size:" + lay.getSize());
+		} else {
+				
+			
+			for ( ELayerAspect lay : asp.getLayers() ) {
+				String code = sp + (level >= 0 ? "\t":"")+ "draw ";
+				String val = lay.getShapeType();
+				if ( val == null ) {
+					continue;
+				}
+				if ( val.equals("polyline") || val.equals("polygon") ) {
+					code += val + "(" + lay.getPoints() + ")";
+				} else if ( val.equals("circle") || val.equals("sphere") ) {
+					code += val + "(" + lay.getRadius() + ")";
+				} else if ( val.equals("square") || val.equals("cube") || val.equals("pyramid") ) {
+					code += val + "(" + lay.getSize() + ")";
+				} else if ( val.equals("rectangle") || val.equals("hexagon") ) {
+					code += val + "({" + lay.getWidth() + "," + lay.getHeigth() + "})";
+				} else if ( val.equals("expression") ) {
+					code += lay.getExpression();
+				} else if ( val.equals("image") ) {
+					code +=
+						"file(\"" + lay.getPath() + "\")" +
+							(lay.getImageSize() != null && !lay.getImageSize().isEmpty() ? "" : " size:" + lay.getSize());
+				} else if ( val.equals("text") ) {
+					code +=
+						"\"" + lay.getText() + "\"" +
+							(lay.getTextSize() != null && !lay.getTextSize().isEmpty() ? "" : " size:" + lay.getSize());
+				}
+				if ( lay.getIsColorCst() ) {
+					code += " color: rgb(" + lay.getColorRBG().toString().replace("[", "").replace("]", "") + ")";
+				} else if ( lay.getColor() != null && !lay.getColor().isEmpty() ) {
+					code += " color: " + lay.getColor();
+				}
+				if ( lay.getEmpty() != null && !lay.getEmpty().isEmpty() && !lay.getEmpty().equals("false") ) {
+					code += " empty: " + lay.getEmpty();
+				}
+				if ( lay.getRotate() != null && !lay.getRotate().isEmpty() && !lay.getRotate().equals("0.0") ) {
+					code += " rotate: " + lay.getRotate();
+				}
+				if ( lay.getAt() != null && !lay.getAt().isEmpty() ) {
+					code += " at: " + lay.getAt();
+				}
+				if ( lay.getDepth() != null && !lay.getDepth().isEmpty() && !lay.getDepth().equals("0.0") ) {
+					code += " depth: " + lay.getDepth();
+				}
+				if ( lay.getTexture() != null && !lay.getTexture().isEmpty() && !lay.getTexture().equals("[]") ) {
+					code += " texture: " + lay.getTexture();
+				}
+				result += code + ";" + EL;
 			}
-			if ( lay.getIsColorCst() ) {
-				code += " color: rgb(" + lay.getColorRBG().toString().replace("[", "").replace("]", "") + ")";
-			} else if ( lay.getColor() != null && !lay.getColor().isEmpty() ) {
-				code += " color: " + lay.getColor();
-			}
-			if ( lay.getEmpty() != null && !lay.getEmpty().isEmpty() && !lay.getEmpty().equals("false") ) {
-				code += " empty: " + lay.getEmpty();
-			}
-			if ( lay.getRotate() != null && !lay.getRotate().isEmpty() && !lay.getRotate().equals("0.0") ) {
-				code += " rotate: " + lay.getRotate();
-			}
-			if ( lay.getAt() != null && !lay.getAt().isEmpty() ) {
-				code += " at: " + lay.getAt();
-			}
-			if ( lay.getDepth() != null && !lay.getDepth().isEmpty() && !lay.getDepth().equals("0.0") ) {
-				code += " depth: " + lay.getDepth();
-			}
-			if ( lay.getTexture() != null && !lay.getTexture().isEmpty() && !lay.getTexture().equals("[]") ) {
-				code += " texture: " + lay.getTexture();
-			}
-			result += code + ";" + EL;
 		}
 		result += EL + sp + "}" + EL;
 		return result;
 	}
 
-	static String defineExperiment(final EExperiment exp) {
+	static String defineExperiment(final EExperiment exp, final String id) {
 		String model = "";
 		if ( exp == null ) { return model; }
 		if ( exp instanceof EBatchExperiment ) {
@@ -543,7 +558,12 @@ public class ModelGenerator {
 				model += defineMonitor(mon);
 			}
 			for ( EDisplayLink link : exp.getDisplayLinks() ) {
+				String idA = ModelStructure.getElementId(link.getDisplay()); 
+				boolean isId = idA.equals(id);
+				if (isId) model+= EL + idA + EL;
 				model += defineDisplay(link);
+				if (isId) model+= EL + idA + EL;
+				
 			}
 			model += EL + "\t}" + EL + "}" + EL;
 		}
@@ -597,119 +617,129 @@ public class ModelGenerator {
 		for (EFacet facet : disp.getFacets()) {
 			if ((facet.getValue().replace(" ", "")).isEmpty()) continue;
 			model += " "+ facet.getName()+":" + facet.getValue();
-		}
-
-		model += " {";
-		for ( ELayer lay : disp.getLayers() ) {
-			if ( lay.getType() == null ) {
-				continue;
-			}
-			model += "\n\t\t\t";
-			if ( lay.getType().equals("species") ) {
-				model +=
-					lay.getType() +
-						" " +
-						lay.getSpecies() +
-						(lay.getAspect() == null || lay.getAspect().isEmpty() || lay.getAspect().equals("default") ? ""
-							: " aspect: " + lay.getAspect());
-			} else if ( lay.getType().equals("grid") ) {
-				model += lay.getType() + " " + lay.getGrid();
-				if ( lay.getIsColorCst() == null || lay.getIsColorCst() ) {
-					if ( lay.getColorRBG().size() == 3 ) {
-						if ( lay.isShowLines() ) {
-							model +=
-								" lines:rgb(" + lay.getColorRBG().get(0) + "," + lay.getColorRBG().get(1) + "," +
-									lay.getColorRBG().get(2) + ")";
-						}
-					}
-				} else {
-					if ( lay.getColor() != null && !lay.getColor().equals("rgb(255,255,255)") &&
-						!lay.getColor().isEmpty() ) {
-						model += " lines:" + lay.getColor();
-					}
-				}
-			} else if ( lay.getType().equals("agents") ) {
-				model +=
-					lay.getType() + " \"" + lay.getName() + "\" value:" + lay.getAgents() +
-						(lay.getAspect() == null || lay.getAspect().isEmpty() ? "" : " aspect: " + lay.getAspect());
-			} else if ( lay.getType().equals("image") ) {
-				model +=
-					lay.getType() + "\"" + lay.getFile() + "\"" +
-						(lay.getSize().isEmpty() ? "" : " size: " + lay.getSize());
-				if ( lay.getIsColorCst() == null || lay.getIsColorCst() ) {
-					if ( lay.getColorRBG().size() == 3 ) {
-						if ( !lay.getColorRBG().get(0).equals("255") || !lay.getColorRBG().get(1).equals("255") ||
-							!lay.getColorRBG().get(2).equals("255") ) {
-							model +=
-								" color:rgb(" + lay.getColorRBG().get(0) + "," + lay.getColorRBG().get(1) + "," +
-									lay.getColorRBG().get(2) + ")";
-						}
-					}
-				} else {
-					if ( lay.getColor() != null && !lay.getColor().equals("rgb(255,255,255)") &&
-						!lay.getColor().isEmpty() ) {
-						model += " color:" + lay.getColor();
-					}
-				}
-			} else if ( lay.getType().equals("text") ) {
-				model +=
-					lay.getType() + "\"" + lay.getText() + "\"" +
-						(lay.getSize().isEmpty() ? "" : " size: " + lay.getSize());
-				if ( lay.getIsColorCst() == null || lay.getIsColorCst() ) {
-					if ( lay.getColorRBG().size() == 3 ) {
-						if ( !lay.getColorRBG().get(0).equals("255") || !lay.getColorRBG().get(1).equals("255") ||
-							!lay.getColorRBG().get(2).equals("255") ) {
-							model +=
-								" color:rgb(" + lay.getColorRBG().get(0) + "," + lay.getColorRBG().get(1) + "," +
-									lay.getColorRBG().get(2) + ")";
-						}
-					}
-				} else {
-					if ( lay.getColor() != null && !lay.getColor().equals("rgb(255,255,255)") &&
-						!lay.getColor().isEmpty() ) {
-						model += " color:" + lay.getColor();
-					}
-				}
-			} else if ( lay.getType().equals("chart") ) {
-				String background = "";
-				if ( lay.getIsColorCst() == null || lay.getIsColorCst() ) {
-					if ( lay.getColorRBG().size() == 3 &&
-						(!lay.getColorRBG().get(0).equals("255") || !lay.getColorRBG().get(1).equals("255") || !lay
-							.getColorRBG().get(2).equals("255")) ) {
-						background =
-							" background:rgb(" + lay.getColorRBG().get(0) + "," + lay.getColorRBG().get(1) + "," +
-								lay.getColorRBG().get(2) + ")";
-					}
-				} else {
-					if ( lay.getColor() != null && !lay.getColor().equals("rgb(255,255,255)") &&
-						!lay.getColor().isEmpty() ) {
-						background = " background:" + lay.getColor();
-					}
-				}
-				model += lay.getType() + " \"" + lay.getName() + "\" type:" + lay.getChart_type() + background;
-			}
 			
-			for (EFacet facet : lay.getFacets()) {
-				if ((facet.getValue().replace(" ", "")).isEmpty()) continue;
-				model += " "+ facet.getName()+":" + facet.getValue();
-			}
-			if ( lay.getType().equals("chart") ) {
-				model +=  "{" + EL;
-				if ( lay.getChartlayers() != null && !lay.getChartlayers().isEmpty() ) {
-					for ( EChartLayer cl : lay.getChartlayers() ) {
-						model +=
-							"\t\t\t\tdata \"" + cl.getName() + "\" style:" + cl.getStyle() + " value:" +
-								(cl.getValue() == null || cl.getValue().isEmpty() ? "0.0" : cl.getValue()) +
-								(cl.getColor() == null || cl.getColor().isEmpty() ? "" : " color:" + cl.getColor()) +
-								";" + EL;
-					}
-				}
-				model += "\t\t\t}" + EL;
-			} else {
-				model += ";" + EL;
-			}
 		}
 
+		model += " {" + EL ;
+		if (disp.isDefineGamlCode()) {
+			String code = disp.getGamlCode();
+			if ( code != null && !code.isEmpty() ) {
+				for ( String line : code.split(EL) ) {
+					model += line + EL;
+				}
+			}
+		} else {
+				
+			for ( ELayer lay : disp.getLayers() ) {
+				if ( lay.getType() == null ) {
+					continue;
+				}
+				model += "\n\t\t\t";
+				if ( lay.getType().equals("species") ) {
+					model +=
+						lay.getType() +
+							" " +
+							lay.getSpecies() +
+							(lay.getAspect() == null || lay.getAspect().isEmpty() || lay.getAspect().equals("default") ? ""
+								: " aspect: " + lay.getAspect());
+				} else if ( lay.getType().equals("grid") ) {
+					model += lay.getType() + " " + lay.getGrid();
+					if ( lay.getIsColorCst() == null || lay.getIsColorCst() ) {
+						if ( lay.getColorRBG().size() == 3 ) {
+							if ( lay.isShowLines() ) {
+								model +=
+									" lines:rgb(" + lay.getColorRBG().get(0) + "," + lay.getColorRBG().get(1) + "," +
+										lay.getColorRBG().get(2) + ")";
+							}
+						}
+					} else {
+						if ( lay.getColor() != null && !lay.getColor().equals("rgb(255,255,255)") &&
+							!lay.getColor().isEmpty() ) {
+							model += " lines:" + lay.getColor();
+						}
+					}
+				} else if ( lay.getType().equals("agents") ) {
+					model +=
+						lay.getType() + " \"" + lay.getName() + "\" value:" + lay.getAgents() +
+							(lay.getAspect() == null || lay.getAspect().isEmpty() ? "" : " aspect: " + lay.getAspect());
+				} else if ( lay.getType().equals("image") ) {
+					model +=
+						lay.getType() + "\"" + lay.getFile() + "\"" +
+							(lay.getSize().isEmpty() ? "" : " size: " + lay.getSize());
+					if ( lay.getIsColorCst() == null || lay.getIsColorCst() ) {
+						if ( lay.getColorRBG().size() == 3 ) {
+							if ( !lay.getColorRBG().get(0).equals("255") || !lay.getColorRBG().get(1).equals("255") ||
+								!lay.getColorRBG().get(2).equals("255") ) {
+								model +=
+									" color:rgb(" + lay.getColorRBG().get(0) + "," + lay.getColorRBG().get(1) + "," +
+										lay.getColorRBG().get(2) + ")";
+							}
+						}
+					} else {
+						if ( lay.getColor() != null && !lay.getColor().equals("rgb(255,255,255)") &&
+							!lay.getColor().isEmpty() ) {
+							model += " color:" + lay.getColor();
+						}
+					}
+				} else if ( lay.getType().equals("text") ) {
+					model +=
+						lay.getType() + "\"" + lay.getText() + "\"" +
+							(lay.getSize().isEmpty() ? "" : " size: " + lay.getSize());
+					if ( lay.getIsColorCst() == null || lay.getIsColorCst() ) {
+						if ( lay.getColorRBG().size() == 3 ) {
+							if ( !lay.getColorRBG().get(0).equals("255") || !lay.getColorRBG().get(1).equals("255") ||
+								!lay.getColorRBG().get(2).equals("255") ) {
+								model +=
+									" color:rgb(" + lay.getColorRBG().get(0) + "," + lay.getColorRBG().get(1) + "," +
+										lay.getColorRBG().get(2) + ")";
+							}
+						}
+					} else {
+						if ( lay.getColor() != null && !lay.getColor().equals("rgb(255,255,255)") &&
+							!lay.getColor().isEmpty() ) {
+							model += " color:" + lay.getColor();
+						}
+					}
+				} else if ( lay.getType().equals("chart") ) {
+					String background = "";
+					if ( lay.getIsColorCst() == null || lay.getIsColorCst() ) {
+						if ( lay.getColorRBG().size() == 3 &&
+							(!lay.getColorRBG().get(0).equals("255") || !lay.getColorRBG().get(1).equals("255") || !lay
+								.getColorRBG().get(2).equals("255")) ) {
+							background =
+								" background:rgb(" + lay.getColorRBG().get(0) + "," + lay.getColorRBG().get(1) + "," +
+									lay.getColorRBG().get(2) + ")";
+						}
+					} else {
+						if ( lay.getColor() != null && !lay.getColor().equals("rgb(255,255,255)") &&
+							!lay.getColor().isEmpty() ) {
+							background = " background:" + lay.getColor();
+						}
+					}
+					model += lay.getType() + " \"" + lay.getName() + "\" type:" + lay.getChart_type() + background;
+				}
+				
+				for (EFacet facet : lay.getFacets()) {
+					if ((facet.getValue().replace(" ", "")).isEmpty()) continue;
+					model += " "+ facet.getName()+":" + facet.getValue();
+				}
+				if ( lay.getType().equals("chart") ) {
+					model +=  "{" + EL;
+					if ( lay.getChartlayers() != null && !lay.getChartlayers().isEmpty() ) {
+						for ( EChartLayer cl : lay.getChartlayers() ) {
+							model +=
+								"\t\t\t\tdata \"" + cl.getName() + "\" style:" + cl.getStyle() + " value:" +
+									(cl.getValue() == null || cl.getValue().isEmpty() ? "0.0" : cl.getValue()) +
+									(cl.getColor() == null || cl.getColor().isEmpty() ? "" : " color:" + cl.getColor()) +
+									";" + EL;
+						}
+					}
+					model += "\t\t\t}" + EL;
+				} else {
+					model += ";" + EL;
+				}
+			}
+		}
 		model += "\t\t}";
 		return model;
 	}
@@ -826,7 +856,12 @@ public class ModelGenerator {
 			}
 			
 			for ( EAspectLink link : worldAgent.getAspectLinks() ) {
-				model += defineAspect(link, level);
+				
+				String idT = ModelStructure.getElementId(link.getAspect()); 
+				boolean isId = idT.equals(id);
+				if (isId) model+= EL + idT + EL;
+				model += defineAspect(link, isId? -1:level);
+				if (isId) model+= EL + idT + EL;
 			}
 			String idT = ModelStructure.getElementId(worldAgent); 
 			boolean isId = idT.equals(id);
@@ -843,7 +878,7 @@ public class ModelGenerator {
 			model += EL;
 
 			for ( EExperimentLink link : worldAgent.getExperimentLinks() ) {
-				model += defineExperiment(link.getExperiment());
+				model += defineExperiment(link.getExperiment(),id);
 			}
 
 		}

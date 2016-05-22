@@ -71,6 +71,7 @@ public class CreateDisplayLinkFeature extends AbstractCreateConnectionFeature {
 		    	cpt++;
 		    }
 	    EDisplay newDisplay = gama.GamaFactory.eINSTANCE.createEDisplay();
+	    newDisplay.setDefineGamlCode(false);
 	    newDisplay.setError("");
 	    newDisplay.setHasError(false);
 		this.getDiagram().eResource().getContents().add(newDisplay);

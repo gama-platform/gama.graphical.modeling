@@ -166,7 +166,7 @@ public class CustomDeleteFeature extends DefaultDeleteFeature{
 				deleteBusinessObject(o);
 			}
 		}
-		if (bo instanceof EAspect) deleteBusinessObject(((EAspect) bo).getAspectLinks());
+		if (bo instanceof EAspect) deleteBusinessObject(((EAspect) bo).getAspectLinks().get(0));
 		else if (bo instanceof EDisplay) deleteBusinessObject(((EDisplay) bo).getDisplayLink());
 		else if (bo instanceof EReflex) deleteBusinessObject(((EReflex) bo).getReflexLinks().get(0));
 		else if (bo instanceof EAction) deleteBusinessObject(((EAction) bo).getActionLinks().get(0));

@@ -18,6 +18,7 @@ public class GamaImageProvider extends AbstractImageProvider {
     public static final String IMG_DISPLAYLINK= PREFIX + "displaylink";
     public static final String IMG_INHERITINGLINK= PREFIX + "inheritinglink";
     public static final String IMG_EQUATION= PREFIX + "equationlink";
+    public static final String IMG_PERCEIPT= PREFIX + "perceiptlink";
  
     
     @Override
@@ -33,5 +34,6 @@ public class GamaImageProvider extends AbstractImageProvider {
         addImageFilePath(IMG_DISPLAYLINK, "icons/_output.png");
         addImageFilePath(IMG_INHERITINGLINK, "icons/inheritinglink.png");
         addImageFilePath(IMG_EQUATION, "icons/_equation.png");
+        addImageFilePath(IMG_PERCEIPT, "icons/_perceipt.png");
     }
 }

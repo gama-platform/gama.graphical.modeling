@@ -21,12 +21,15 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -75,6 +78,8 @@ public abstract class EditFrame extends ApplicationWindow {
 	Shell shell;
 	EmbeddedEditorModelAccess modelXText;
 	EmbeddedEditor editor;
+	Button radioGaml;
+	Button radioEdit;
 
 	Map<String,Composite> facetsEditor;
 
@@ -191,11 +196,13 @@ public abstract class EditFrame extends ApplicationWindow {
 			items[i] = values.get(i);
 		textFacet.setItems(items);
 		textFacet.setText(values.get(0));
+		
 			
 		textFacet.setToolTipText(doc);
 		String val = facetValue(facetName);
 		if (val != null && ! val.isEmpty()) textFacet.setText(val);
 		GridData gridData2 = new GridData();
+		gridData2.heightHint = 20;
 		gridData2.horizontalAlignment = SWT.FILL;
 		gridData2.grabExcessHorizontalSpace = true;
 		textFacet.setLayoutData(gridData2);
@@ -252,7 +259,61 @@ public abstract class EditFrame extends ApplicationWindow {
 
 	}
 	
-	protected void groupGamlCode(final Composite container, final String title) {
+	protected void groupRadioGamlCode(final Composite container, final String title) {
+		Group group = new Group(container, SWT.NONE);
+
+		group.setLayout(new FillLayout(SWT.HORIZONTAL));
+		CLabel lblName = new CLabel(group, SWT.NONE);
+		lblName.setText("Define "+ title + " through GAML code: ");
+		
+		GridData gridData = new GridData();
+		group.setLayoutData(gridData);
+		group.setLayout(new GridLayout(3, false));
+		radioGaml = new Button(group, SWT.RADIO);
+		radioGaml.setText("Yes");
+		radioGaml.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				removeOther();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		radioEdit = new Button(group, SWT.RADIO); 
+		radioEdit.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				removeGaml();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		radioEdit.setText("No");
+	
+	}
+	
+	public static void recursiveSetEnabled(Control control, boolean enabled) {
+	    if (control instanceof Composite)
+	    {
+	        Composite comp = (Composite) control;
+	        for (Control c : comp.getChildren())
+	            recursiveSetEnabled(c, enabled);
+	    }
+	    if (enabled) control.setForeground(new Color(control.getDisplay(), 0,0,0));
+	    else control.setForeground(new Color(control.getDisplay(), 200,200,200));
+	    control.setEnabled(enabled);
+	}
+
+	
+	public void removeGaml(){}
+
+	public void removeOther(){}
+	
+	protected Group groupGamlCode(final Composite container, final String title) {
 		Group group = new Group(container, SWT.NONE);
 
 		group.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -281,7 +342,7 @@ public abstract class EditFrame extends ApplicationWindow {
 		
 		
 		modelXText = editor.createPartialEditor(struct.getPrefix(), struct.getText(), struct.getSuffix(),true);
-		
+		return group;
 	}
 	
 	

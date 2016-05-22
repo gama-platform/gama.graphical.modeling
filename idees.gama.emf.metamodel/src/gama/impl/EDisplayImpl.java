@@ -37,6 +37,8 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  *   <li>{@link gama.impl.EDisplayImpl#getLayers <em>Layers</em>}</li>
  *   <li>{@link gama.impl.EDisplayImpl#getDisplayLink <em>Display Link</em>}</li>
  *   <li>{@link gama.impl.EDisplayImpl#getLayerList <em>Layer List</em>}</li>
+ *   <li>{@link gama.impl.EDisplayImpl#getGamlCode <em>Gaml Code</em>}</li>
+ *   <li>{@link gama.impl.EDisplayImpl#isDefineGamlCode <em>Define Gaml Code</em>}</li>
  * </ul>
  *
  * @generated
@@ -71,6 +73,46 @@ public class EDisplayImpl extends EGamaObjectImpl implements EDisplay {
 	 * @ordered
 	 */
 	protected EList<String> layerList;
+
+	/**
+	 * The default value of the '{@link #getGamlCode() <em>Gaml Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getGamlCode()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String GAML_CODE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getGamlCode() <em>Gaml Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getGamlCode()
+	 * @generated
+	 * @ordered
+	 */
+	protected String gamlCode = GAML_CODE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDefineGamlCode() <em>Define Gaml Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDefineGamlCode()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DEFINE_GAML_CODE_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDefineGamlCode() <em>Define Gaml Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDefineGamlCode()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean defineGamlCode = DEFINE_GAML_CODE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -158,6 +200,48 @@ public class EDisplayImpl extends EGamaObjectImpl implements EDisplay {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getGamlCode() {
+		return gamlCode;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setGamlCode(String newGamlCode) {
+		String oldGamlCode = gamlCode;
+		gamlCode = newGamlCode;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, GamaPackage.EDISPLAY__GAML_CODE, oldGamlCode, gamlCode));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isDefineGamlCode() {
+		return defineGamlCode;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDefineGamlCode(boolean newDefineGamlCode) {
+		boolean oldDefineGamlCode = defineGamlCode;
+		defineGamlCode = newDefineGamlCode;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, GamaPackage.EDISPLAY__DEFINE_GAML_CODE, oldDefineGamlCode, defineGamlCode));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -168,6 +252,10 @@ public class EDisplayImpl extends EGamaObjectImpl implements EDisplay {
 				return basicGetDisplayLink();
 			case GamaPackage.EDISPLAY__LAYER_LIST:
 				return getLayerList();
+			case GamaPackage.EDISPLAY__GAML_CODE:
+				return getGamlCode();
+			case GamaPackage.EDISPLAY__DEFINE_GAML_CODE:
+				return isDefineGamlCode();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -192,6 +280,12 @@ public class EDisplayImpl extends EGamaObjectImpl implements EDisplay {
 				getLayerList().clear();
 				getLayerList().addAll((Collection<? extends String>)newValue);
 				return;
+			case GamaPackage.EDISPLAY__GAML_CODE:
+				setGamlCode((String)newValue);
+				return;
+			case GamaPackage.EDISPLAY__DEFINE_GAML_CODE:
+				setDefineGamlCode((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -213,6 +307,12 @@ public class EDisplayImpl extends EGamaObjectImpl implements EDisplay {
 			case GamaPackage.EDISPLAY__LAYER_LIST:
 				getLayerList().clear();
 				return;
+			case GamaPackage.EDISPLAY__GAML_CODE:
+				setGamlCode(GAML_CODE_EDEFAULT);
+				return;
+			case GamaPackage.EDISPLAY__DEFINE_GAML_CODE:
+				setDefineGamlCode(DEFINE_GAML_CODE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -231,6 +331,10 @@ public class EDisplayImpl extends EGamaObjectImpl implements EDisplay {
 				return displayLink != null;
 			case GamaPackage.EDISPLAY__LAYER_LIST:
 				return layerList != null && !layerList.isEmpty();
+			case GamaPackage.EDISPLAY__GAML_CODE:
+				return GAML_CODE_EDEFAULT == null ? gamlCode != null : !GAML_CODE_EDEFAULT.equals(gamlCode);
+			case GamaPackage.EDISPLAY__DEFINE_GAML_CODE:
+				return defineGamlCode != DEFINE_GAML_CODE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -247,6 +351,10 @@ public class EDisplayImpl extends EGamaObjectImpl implements EDisplay {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (layerList: ");
 		result.append(layerList);
+		result.append(", gamlCode: ");
+		result.append(gamlCode);
+		result.append(", defineGamlCode: ");
+		result.append(defineGamlCode);
 		result.append(')');
 		return result.toString();
 	}

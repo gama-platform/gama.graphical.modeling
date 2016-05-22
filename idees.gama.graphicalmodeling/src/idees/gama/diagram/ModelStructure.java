@@ -5,6 +5,8 @@ import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 
 import gama.EAction;
+import gama.EAspect;
+import gama.EDisplay;
 import gama.EEquation;
 import gama.EPerceive;
 import gama.EPlan;
@@ -51,7 +53,7 @@ public class ModelStructure {
 					suffix = mds[2];
 					return;
 				}
-				prefix = mds[0] + text.substring(0, str+1) +"\n//reflex";
+				prefix = mds[0] + text.substring(0, str+1) +"\n//generated";
 				int end = text.lastIndexOf("}");
 				if (end >= text.length()) end = text.length() - 1;
 				suffix = (end < 0) ? "" :text.substring(end) + mds[2];
@@ -77,21 +79,27 @@ public class ModelStructure {
 			return "equation:"+ equation.getEquationLinks().get(0).getSpecies().getName() + ":"+ equation.getName(); 
 		}else if (newElement instanceof EState) {
 			EState reflex = (EState) newElement;
-			return "reflex:"+ reflex.getStateLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
+			return "state:"+ reflex.getStateLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
 		}else if (newElement instanceof ETask) {
 			ETask reflex = (ETask) newElement;
-			return "reflex:"+ reflex.getTaskLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
+			return "task:"+ reflex.getTaskLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
 		}else if (newElement instanceof EPlan) {
 			EPlan reflex = (EPlan) newElement;
-			return "reflex:"+ reflex.getPlanLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
+			return "plan:"+ reflex.getPlanLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
 		}else if (newElement instanceof EPerceive) {
 			EPerceive reflex = (EPerceive) newElement;
-			return "reflex:"+ reflex.getPerceiveLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
+			return "perceive:"+ reflex.getPerceiveLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
 		}else if (newElement instanceof ERule) {
 			ERule reflex = (ERule) newElement;
-			return "reflex:"+ reflex.getRuleLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
+			return "rule:"+ reflex.getRuleLinks().get(0).getSpecies().getName() + ":"+ reflex.getName(); 
+		}else if (newElement instanceof EAspect) {
+			EAspect aspect = (EAspect) newElement;
+			return "aspect:"+ aspect.getAspectLinks().get(0).getSpecies().getName() + ":"+ aspect.getName(); 
+		}else if (newElement instanceof EDisplay) {
+			EDisplay display = (EDisplay) newElement;
+			return "display:"+ display.getDisplayLink().getExperiment().getName() + ":"+ display.getName(); 
 		}
-		return null;
+		return "";
 	}
 
 

@@ -14,7 +14,6 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
@@ -22,12 +21,13 @@ import org.eclipse.swt.widgets.*;
 
 public class EditAspectFrame extends EditFrame {
 
-	StyledText gamlCode;
 	Table layerViewer;
 	EditAspectFrame frame;
 	List<ELayerAspect> layers;
 	Diagram diagram;
 	final Map<ELayerAspect, EditLayerAspectFrame> layerFrames;
+	Group gpLay;
+	Group gpC ;
 
 	/**
 	 * Create the application window.
@@ -40,9 +40,10 @@ public class EditAspectFrame extends EditFrame {
 		layers = new ArrayList<ELayerAspect>();
 		layers.addAll(aspect.getLayers());
 		this.diagram = diagram;
+		
 	}
 
-	/**
+		/**
 	 * Create contents of the application window.
 	 * @param parent
 	 */
@@ -53,16 +54,40 @@ public class EditAspectFrame extends EditFrame {
 		// ****** CANVAS NAME *********
 		groupName(container);
 
+		groupRadioGamlCode(container, "aspect");
 		// ****** CANVAS LAYERS *********
-		groupLayers(container);
-
-		// ****** CANVAS OK/CANCEL *********
-		// groupOkCancel(container);
-
+		gpLay = groupLayers(container);
+		gpC = groupGamlCode(container, "GAML code");
+		
+		EAspect asp = (EAspect) eobject;
+		if (asp.isDefineGamlCode()) {
+			radioGaml.setSelection(true);
+			removeOther();
+		} else {
+			radioEdit.setSelection(true);
+			removeGaml();
+		}
+		
 		return container;
 	}
+	public void removeGaml(){
+		recursiveSetEnabled(gpLay, true);
+		recursiveSetEnabled(gpC, false);
+		this.layerViewer.setVisible(true);
+		this.editor.getViewer().getControl().setVisible(false);
+		
+	}
 
-	protected void groupLayers(final Composite container) {
+	public void removeOther(){
+		recursiveSetEnabled(gpLay, false);
+		recursiveSetEnabled(gpC, true);
+		this.layerViewer.setVisible(false);
+		this.editor.getViewer().getControl().setVisible(true);
+	}
+	
+	
+	
+	protected Group groupLayers(final Composite container) {
 		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
 		List<String> vals = new ArrayList<String>();
 		diagramEditor.buildLocation(eobject, vals);
@@ -252,6 +277,7 @@ public class EditAspectFrame extends EditFrame {
 				}
 			}
 		});
+		return group;
 	}
 
 	/**
@@ -294,7 +320,9 @@ public class EditAspectFrame extends EditFrame {
 				@Override
 				public void doExecute() {
 					eobject.setName(textName.getText());
-
+					EAspect asp = (EAspect) eobject;
+					asp.setGamlCode(modelXText.getEditablePart());
+					asp.setDefineGamlCode(radioGaml.getSelection());
 				}
 			});
 		}

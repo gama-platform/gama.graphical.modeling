@@ -614,13 +614,22 @@ public interface GamaPackage extends EPackage {
 	int EASPECT__LAYERS = EGAMA_OBJECT_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Define Gaml Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EASPECT__DEFINE_GAML_CODE = EGAMA_OBJECT_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>EAspect</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EASPECT_FEATURE_COUNT = EGAMA_OBJECT_FEATURE_COUNT + 3;
+	int EASPECT_FEATURE_COUNT = EGAMA_OBJECT_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link gama.impl.EReflexImpl <em>EReflex</em>}' class.
@@ -1984,13 +1993,31 @@ public interface GamaPackage extends EPackage {
 	int EDISPLAY__LAYER_LIST = EGAMA_OBJECT_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Gaml Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDISPLAY__GAML_CODE = EGAMA_OBJECT_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Define Gaml Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDISPLAY__DEFINE_GAML_CODE = EGAMA_OBJECT_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>EDisplay</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EDISPLAY_FEATURE_COUNT = EGAMA_OBJECT_FEATURE_COUNT + 3;
+	int EDISPLAY_FEATURE_COUNT = EGAMA_OBJECT_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link gama.impl.EVariableImpl <em>EVariable</em>}' class.
@@ -4921,6 +4948,17 @@ public interface GamaPackage extends EPackage {
 	EReference getEAspect_Layers();
 
 	/**
+	 * Returns the meta object for the attribute '{@link gama.EAspect#isDefineGamlCode <em>Define Gaml Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Define Gaml Code</em>'.
+	 * @see gama.EAspect#isDefineGamlCode()
+	 * @see #getEAspect()
+	 * @generated
+	 */
+	EAttribute getEAspect_DefineGamlCode();
+
+	/**
 	 * Returns the meta object for class '{@link gama.EReflex <em>EReflex</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5271,6 +5309,28 @@ public interface GamaPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getEDisplay_LayerList();
+
+	/**
+	 * Returns the meta object for the attribute '{@link gama.EDisplay#getGamlCode <em>Gaml Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Gaml Code</em>'.
+	 * @see gama.EDisplay#getGamlCode()
+	 * @see #getEDisplay()
+	 * @generated
+	 */
+	EAttribute getEDisplay_GamlCode();
+
+	/**
+	 * Returns the meta object for the attribute '{@link gama.EDisplay#isDefineGamlCode <em>Define Gaml Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Define Gaml Code</em>'.
+	 * @see gama.EDisplay#isDefineGamlCode()
+	 * @see #getEDisplay()
+	 * @generated
+	 */
+	EAttribute getEDisplay_DefineGamlCode();
 
 	/**
 	 * Returns the meta object for class '{@link gama.EVariable <em>EVariable</em>}'.
@@ -6848,6 +6908,14 @@ public interface GamaPackage extends EPackage {
 		EReference EASPECT__LAYERS = eINSTANCE.getEAspect_Layers();
 
 		/**
+		 * The meta object literal for the '<em><b>Define Gaml Code</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EASPECT__DEFINE_GAML_CODE = eINSTANCE.getEAspect_DefineGamlCode();
+
+		/**
 		 * The meta object literal for the '{@link gama.impl.EReflexImpl <em>EReflex</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -7132,6 +7200,22 @@ public interface GamaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute EDISPLAY__LAYER_LIST = eINSTANCE.getEDisplay_LayerList();
+
+		/**
+		 * The meta object literal for the '<em><b>Gaml Code</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EDISPLAY__GAML_CODE = eINSTANCE.getEDisplay_GamlCode();
+
+		/**
+		 * The meta object literal for the '<em><b>Define Gaml Code</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EDISPLAY__DEFINE_GAML_CODE = eINSTANCE.getEDisplay_DefineGamlCode();
 
 		/**
 		 * The meta object literal for the '{@link gama.impl.EVariableImpl <em>EVariable</em>}' class.

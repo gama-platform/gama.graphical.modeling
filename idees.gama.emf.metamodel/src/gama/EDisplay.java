@@ -20,6 +20,8 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link gama.EDisplay#getLayers <em>Layers</em>}</li>
  *   <li>{@link gama.EDisplay#getDisplayLink <em>Display Link</em>}</li>
  *   <li>{@link gama.EDisplay#getLayerList <em>Layer List</em>}</li>
+ *   <li>{@link gama.EDisplay#getGamlCode <em>Gaml Code</em>}</li>
+ *   <li>{@link gama.EDisplay#isDefineGamlCode <em>Define Gaml Code</em>}</li>
  * </ul>
  *
  * @see gama.GamaPackage#getEDisplay()
@@ -84,5 +86,57 @@ public interface EDisplay extends EGamaObject {
 	 * @generated
 	 */
 	EList<String> getLayerList();
+
+	/**
+	 * Returns the value of the '<em><b>Gaml Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Gaml Code</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Gaml Code</em>' attribute.
+	 * @see #setGamlCode(String)
+	 * @see gama.GamaPackage#getEDisplay_GamlCode()
+	 * @model derived="true"
+	 * @generated
+	 */
+	String getGamlCode();
+
+	/**
+	 * Sets the value of the '{@link gama.EDisplay#getGamlCode <em>Gaml Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Gaml Code</em>' attribute.
+	 * @see #getGamlCode()
+	 * @generated
+	 */
+	void setGamlCode(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Define Gaml Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Define Gaml Code</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Define Gaml Code</em>' attribute.
+	 * @see #setDefineGamlCode(boolean)
+	 * @see gama.GamaPackage#getEDisplay_DefineGamlCode()
+	 * @model
+	 * @generated
+	 */
+	boolean isDefineGamlCode();
+
+	/**
+	 * Sets the value of the '{@link gama.EDisplay#isDefineGamlCode <em>Define Gaml Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Define Gaml Code</em>' attribute.
+	 * @see #isDefineGamlCode()
+	 * @generated
+	 */
+	void setDefineGamlCode(boolean value);
 
 } // EDisplay

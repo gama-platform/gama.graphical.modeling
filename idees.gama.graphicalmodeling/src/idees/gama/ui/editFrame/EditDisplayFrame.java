@@ -1,27 +1,44 @@
 package idees.gama.ui.editFrame;
 
-import gama.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.graphiti.mm.pictograms.Shape;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
+
+import gama.EDisplay;
+import gama.EGamaObject;
+import gama.EGrid;
+import gama.ELayer;
+import gama.ESpecies;
 import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
-import java.util.*;
-import java.util.List;
-import java.util.regex.Pattern;
 import msi.gama.util.TOrderedHashMap;
-import msi.gaml.compilation.AbstractGamlAdditions;
-
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.transaction.*;
-import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.mm.pictograms.*;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
 
 public class EditDisplayFrame extends EditFrame {
 
@@ -30,7 +47,9 @@ public class EditDisplayFrame extends EditFrame {
 
 	List<ESpecies> species;
 	List<ESpecies> grids;
-	
+	Group gpLay;
+	Group gpC ;
+
 	Diagram diagram;
 	final Map<ELayer, EditLayerFrame> layerFrames;
 
@@ -100,17 +119,47 @@ public class EditDisplayFrame extends EditFrame {
 		groupName(container);
 
 	
-		groupFacets(container, "display",2);
+		groupFacets(container, "display",3);
 				
 		// ****** CANVAS LAYERS *********
-		groupLayers(container);
+		
+
+		groupRadioGamlCode(container, "aspect");
+		// ****** CANVAS LAYERS *********
+		gpLay = groupLayers(container);
+		gpC = groupGamlCode(container, "GAML code");
+		
+		EDisplay asp = (EDisplay) eobject;
+		if (asp.isDefineGamlCode()) {
+			radioGaml.setSelection(true);
+			removeOther();
+		} else {
+			radioEdit.setSelection(true);
+			removeGaml();
+		}
+		
 
 		loadData();
 
 		return container;
 	}
+	public void removeGaml(){
+		recursiveSetEnabled(gpLay, true);
+		recursiveSetEnabled(gpC, false);
+		this.layerViewer.setVisible(true);
+		this.editor.getViewer().getControl().setVisible(false);
+		
+	}
 
-	protected void groupLayers(final Composite container) {
+	public void removeOther(){
+		recursiveSetEnabled(gpLay, false);
+		recursiveSetEnabled(gpC, true);
+		this.layerViewer.setVisible(false);
+		this.editor.getViewer().getControl().setVisible(true);
+	}
+	
+	
+	protected Group groupLayers(final Composite container) {
 
 		// ****** CANVAS LAYERS *********
 		// ****** CANVAS LAYERS *********
@@ -282,6 +331,7 @@ public class EditDisplayFrame extends EditFrame {
 				}
 			}
 		});
+		return group;
 	}
 
 	public void updateLayerId() {
@@ -311,7 +361,7 @@ public class EditDisplayFrame extends EditFrame {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(743, 645);
+		return new Point(900, 750);
 	}
 
 	public Table getLayerViewer() {
@@ -335,11 +385,16 @@ public class EditDisplayFrame extends EditFrame {
 					if (name == null) {
 						eobject.setName(textName.getText());
 						modifyOtherProperties();
+						EDisplay asp = (EDisplay) eobject;
+						asp.setGamlCode(modelXText.getEditablePart());
+						asp.setDefineGamlCode(radioGaml.getSelection());
 					}
 					else if ( name.equals("name") ) {
 						eobject.setName(textName.getText());
 					} else {
-						// modifyLayerOrder();
+						EDisplay asp = (EDisplay) eobject;
+						asp.setGamlCode(modelXText.getEditablePart());
+						asp.setDefineGamlCode(radioGaml.getSelection());
 						modifyOtherProperties();
 					}
 				}

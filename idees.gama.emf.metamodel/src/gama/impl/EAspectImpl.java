@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  *   <li>{@link gama.impl.EAspectImpl#getGamlCode <em>Gaml Code</em>}</li>
  *   <li>{@link gama.impl.EAspectImpl#getAspectLinks <em>Aspect Links</em>}</li>
  *   <li>{@link gama.impl.EAspectImpl#getLayers <em>Layers</em>}</li>
+ *   <li>{@link gama.impl.EAspectImpl#isDefineGamlCode <em>Define Gaml Code</em>}</li>
  * </ul>
  *
  * @generated
@@ -78,6 +79,26 @@ public class EAspectImpl extends EGamaObjectImpl implements EAspect {
 	 * @ordered
 	 */
 	protected EList<ELayerAspect> layers;
+
+	/**
+	 * The default value of the '{@link #isDefineGamlCode() <em>Define Gaml Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDefineGamlCode()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DEFINE_GAML_CODE_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDefineGamlCode() <em>Define Gaml Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDefineGamlCode()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean defineGamlCode = DEFINE_GAML_CODE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -148,6 +169,27 @@ public class EAspectImpl extends EGamaObjectImpl implements EAspect {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isDefineGamlCode() {
+		return defineGamlCode;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDefineGamlCode(boolean newDefineGamlCode) {
+		boolean oldDefineGamlCode = defineGamlCode;
+		defineGamlCode = newDefineGamlCode;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, GamaPackage.EASPECT__DEFINE_GAML_CODE, oldDefineGamlCode, defineGamlCode));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -157,6 +199,8 @@ public class EAspectImpl extends EGamaObjectImpl implements EAspect {
 				return getAspectLinks();
 			case GamaPackage.EASPECT__LAYERS:
 				return getLayers();
+			case GamaPackage.EASPECT__DEFINE_GAML_CODE:
+				return isDefineGamlCode();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -181,6 +225,9 @@ public class EAspectImpl extends EGamaObjectImpl implements EAspect {
 				getLayers().clear();
 				getLayers().addAll((Collection<? extends ELayerAspect>)newValue);
 				return;
+			case GamaPackage.EASPECT__DEFINE_GAML_CODE:
+				setDefineGamlCode((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -202,6 +249,9 @@ public class EAspectImpl extends EGamaObjectImpl implements EAspect {
 			case GamaPackage.EASPECT__LAYERS:
 				getLayers().clear();
 				return;
+			case GamaPackage.EASPECT__DEFINE_GAML_CODE:
+				setDefineGamlCode(DEFINE_GAML_CODE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -220,6 +270,8 @@ public class EAspectImpl extends EGamaObjectImpl implements EAspect {
 				return aspectLinks != null && !aspectLinks.isEmpty();
 			case GamaPackage.EASPECT__LAYERS:
 				return layers != null && !layers.isEmpty();
+			case GamaPackage.EASPECT__DEFINE_GAML_CODE:
+				return defineGamlCode != DEFINE_GAML_CODE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -236,6 +288,8 @@ public class EAspectImpl extends EGamaObjectImpl implements EAspect {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (gamlCode: ");
 		result.append(gamlCode);
+		result.append(", defineGamlCode: ");
+		result.append(defineGamlCode);
 		result.append(')');
 		return result.toString();
 	}
