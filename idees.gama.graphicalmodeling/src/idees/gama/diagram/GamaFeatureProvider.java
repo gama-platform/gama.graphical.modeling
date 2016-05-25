@@ -47,6 +47,7 @@ import gama.EActionLink;
 import gama.EAspect;
 import gama.EAspectLink;
 import gama.EBatchExperiment;
+import gama.EContinuousTopology;
 import gama.EDisplay;
 import gama.EDisplayLink;
 import gama.EEquation;
@@ -56,6 +57,7 @@ import gama.EExperimentLink;
 import gama.EFacet;
 import gama.EGUIExperiment;
 import gama.EGamaObject;
+import gama.EGraphLink;
 import gama.EGrid;
 import gama.EInheritLink;
 import gama.EPerceive;
@@ -72,6 +74,7 @@ import gama.EStateLink;
 import gama.ESubSpeciesLink;
 import gama.ETask;
 import gama.ETaskLink;
+import gama.ETopology;
 import gama.EVariable;
 import gama.EWorldAgent;
 import idees.gama.features.add.AddActionFeature;
@@ -130,9 +133,22 @@ import idees.gama.features.others.UpdateEGamaObjectFeature;
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.kernel.experiment.IExperimentPlan;
 import msi.gama.kernel.model.IModel;
+import msi.gama.outputs.AbstractOutputManager;
+import msi.gama.outputs.ExperimentOutputManager;
 import msi.gama.outputs.IOutput;
+import msi.gama.outputs.LayeredDisplayOutput;
+import msi.gama.outputs.SimulationOutputManager;
+import msi.gaml.architecture.finite_state_machine.FsmStateStatement;
 import msi.gaml.architecture.reflex.ReflexStatement;
+import msi.gaml.architecture.simplebdi.PerceiveStatement;
+import msi.gaml.architecture.simplebdi.RuleStatement;
+import msi.gaml.architecture.simplebdi.SimpleBdiPlanStatement;
+import msi.gaml.architecture.weighted_tasks.WeightedTaskStatement;
+import msi.gaml.compilation.AbstractGamlAdditions;
+import msi.gaml.descriptions.IDescription;
 import msi.gaml.descriptions.SpeciesDescription;
+import msi.gaml.descriptions.SymbolProto;
+import msi.gaml.factories.DescriptionFactory;
 import msi.gaml.skills.ISkill;
 import msi.gaml.species.ISpecies;
 import msi.gaml.statements.ActionStatement;
@@ -140,27 +156,28 @@ import msi.gaml.statements.AspectStatement;
 import msi.gaml.statements.IExecutable;
 import msi.gaml.statements.IStatement;
 import msi.gaml.variables.IVariable;
+import ummisco.gaml.extensions.maths.ode.statements.SystemOfEquationsStatement;
 
 public class GamaFeatureProvider extends DefaultFeatureProvider {
 
 	private String typeOfModel;
 	private IModel gamaModel;
 	private final GamaFeatureProvider fp;
-	private final List<String> built_in_species = Arrays.asList("osm_node", "osm_building", "osm_road", "graph_edge",
+	private final List<String> built_in_species = Arrays.asList();/*"osm_node", "osm_building", "osm_road", "graph_edge",
 		"graph_node", "AgentDB", "Physical3DWorld", "cluster_builder", "experimentator", "agent",
-		"multicriteria_analyzer", "base_node", "base_edge", "world", "node", "edge");
-	private final List<String> built_in_variables = Arrays.asList("fatal", "duration", "machine_time", "step",
-		"model_path", "total_duration", "seed", "average_duration", "warnings", "cycle", "time", "rng", "project_path",
-		"workspace_path", "graph_edge", "graph_node", "AgentDB", "Physical3DWorld", "cluster_builder",
-		"experimentator", "agent", "multicriteria_analyzer", "base_node", "base_edge", "shape", "location", "agents",
-		"peers", "members", "name", "population", "host");
-	private final List<String> built_in_actions = Arrays.asList("goto", "move", "wander", "follow", "wander_3D",
-		"_init_", "_step_", "error", "pause", "die", "write", "tell", "debug", "percieved_area", "halt",
-		"neighbourhood_exclusive");
+		"multicriteria_analyzer", "base_node", "base_edge", "world", "node", "edge");*/
+	private final List<String> built_in_variables = Arrays.asList("name","peers", "host", "members", "agents", "rng_usage", "starting_date", "current_date", 
+			"paused", "rng", "seed","average_duration","total_duration","duration", "time", "cycle", "machine_time");
+	private final List<String> built_in_actions ;
 
 	public GamaFeatureProvider(final IDiagramTypeProvider dtp) {
 		super(dtp);
 		fp = this;
+		
+		built_in_actions = new ArrayList<String>();
+		for (IDescription desc : AbstractGamlAdditions.getAllActions()) {
+			built_in_actions.add(desc.getName());
+		}
 	}
 
 	@Override
@@ -330,6 +347,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 	public void addVariable(final IVariable var, final ESpecies target, final List<String> listSpecies) {
 		if ( built_in_variables.contains(var.getName()) || built_in_species.contains(var.getName()) ||
 			listSpecies.contains(var.getName()) ) { return; }
+		
 		EVariable eVar = gama.GamaFactory.eINSTANCE.createEVariable();
 		eVar.setType(var.getType().toString());
 		eVar.setName(var.getName());
@@ -358,11 +376,24 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		final Diagram diagram, final List<String> listSpecies) {
 		ESpecies target =  species.isGrid() ? gama.GamaFactory.eINSTANCE.createEGrid(): gama.GamaFactory.eINSTANCE.createESpecies();
 		diagram.eResource().getContents().add(target);
-		Collection<ISkill> skills = ((SpeciesDescription) species.getDescription()).getSkills().values();
-		 for (ISkill sk : skills) {
-			 target.getSkills().add(sk.toString());
+		
+		Collection<String> skills = ((SpeciesDescription) species.getDescription()).getSkillsNames();
+		 for (String sk : skills) {
+			 if (!"reflex".equals(sk) && !"grid".equals(sk) && !AbstractGamlAdditions.ARCHITECTURES.contains(sk)) target.getSkills().add(sk.toString());
 		 }
 		target.setName(species.getName());
+		
+		for (Object facetN : species.getDescription().getFacets()._set) {
+			if (! (facetN instanceof String)) continue;
+			String name = (String) facetN;
+			SymbolProto proto= DescriptionFactory.getStatementProto("species");
+			if (proto.getFacet(name).internal) continue;
+			EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+			facet.setName(name);
+			facet.setOwner(target);
+			target.getFacets().add(facet);
+			facet.setValue(species.getFacet(name).serialize(false));
+		}
 		
 		for ( IVariable var : species.getVars() ) {
 			addVariable(var, target, listSpecies);
@@ -385,11 +416,14 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		addIfPossible(addContext);
 		eReference.setMacro(source);
 		eReference.setMicro(target);
+		eReference.setSource(source);
+		eReference.setTarget(target);
+		
 		source.getMicroSpeciesLinks().add(eReference);
 		target.getMacroSpeciesLinks().add(eReference);
 		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 		diagramEditor.addEOject(target);
-
+		
 		for ( ActionStatement action : species.getActions() ) {
 			if ( !built_in_actions.contains(action.getName()) ) {
 				createAction(target, targetE, action, diagram);
@@ -412,6 +446,18 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 					}
 					target.setInit(gmlCode);
 				}
+			} else if ( stat instanceof FsmStateStatement ) {
+				createState(target, targetE, (FsmStateStatement) stat, diagram);
+			} else if ( stat instanceof WeightedTaskStatement ) {
+				createTask(target, targetE, (WeightedTaskStatement) stat, diagram);
+			}else if ( stat instanceof SimpleBdiPlanStatement ) {
+				createPlan(target, targetE, (SimpleBdiPlanStatement) stat, diagram);
+			} else if ( stat instanceof PerceiveStatement ) {
+				createPerception(target, targetE, (PerceiveStatement) stat, diagram);
+			}else if ( stat instanceof RuleStatement ) {
+				createRule(target, targetE, (RuleStatement) stat, diagram);
+			}else if ( stat instanceof SystemOfEquationsStatement ) {
+				createEquation(target, targetE, (SystemOfEquationsStatement) stat, diagram);
 			}
 			// System.out.println("stat : " + stat);
 			// if (stat instanceof ReflexStatement)
@@ -453,17 +499,20 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		addIfPossible(addContext);
 		eReference.setSpecies(source);
 		eReference.setExperiment(target);
+		eReference.setSource(source);
+		eReference.setTarget(target);
+		
 		source.getExperimentLinks().add(eReference);
 		target.setExperimentLink(eReference);
 		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 		diagramEditor.addEOject(target);
-		/*if ( xp != null && xp.isGui() && xp.getSimulationOutputs() != null ) {
-			for ( IOutput output : ((AbstractOutputManager) xp.getSimulationOutputs()).getOutputs().values() ) {
+		if ( xp != null && xp.isGui() && xp.getExperimentOutputs() != null ) {
+			for ( IOutput output : ((SimulationOutputManager) xp.getOriginalSimulationOutputs()).getOutputs().values() ) {
 				if ( output instanceof LayeredDisplayOutput ) {
 					createDisplay((EGUIExperiment) target, targetE, output, diagram);
 				}
 			}
-		}*/
+		}
 
 		return target;
 	}
@@ -499,6 +548,9 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		addIfPossible(addContext);
 		eReference.setSpecies(source);
 		eReference.setAction(target);
+		eReference.setSource(source);
+		eReference.setTarget(target);
+		
 		source.getActionLinks().add(eReference);
 		target.getActionLinks().add(eReference);
 		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
@@ -532,11 +584,30 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		addIfPossible(addContext);
 		eReference.setExperiment(source);
 		eReference.setDisplay(target);
+		eReference.setSource(source);
+		eReference.setTarget(target);
+		
 		source.getDisplayLinks().add(eReference);
 		target.setDisplayLink(eReference);
 		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 		diagramEditor.addEOject(target);
-
+		target.setDefineGamlCode(true);
+		
+		for (Object facetN : display.getDescription().getFacets()._set) {
+			if (! (facetN instanceof String)) continue;
+			String name = (String) facetN;
+			SymbolProto proto= DescriptionFactory.getStatementProto("display");
+			if (proto.getFacet(name).internal) continue;
+			EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+			facet.setName(name);
+			facet.setOwner(target);
+			target.getFacets().add(facet);
+			facet.setValue(display.getFacet(name).serialize(false));
+		}
+		String gmlCode = display.serialize(false);
+		gmlCode = gmlCode.substring(gmlCode.indexOf("{")+1);
+		gmlCode = gmlCode.substring(0,gmlCode.lastIndexOf("}"));
+		target.setGamlCode(gmlCode);
 		return target;
 	}
 
@@ -565,13 +636,357 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		addIfPossible(addContext);
 		eReference.setSpecies(source);
 		eReference.setAspect(target);
+		eReference.setSource(source);
+		eReference.setTarget(target);
+		
 		source.getAspectLinks().add(eReference);
 		target.getAspectLinks().add(eReference);
 		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 		diagramEditor.addEOject(target);
-
+		target.setDefineGamlCode(true);
+		
+		for (Object facetN : aspect.getDescription().getFacets()._set) {
+			if (! (facetN instanceof String)) continue;
+			String name = (String) facetN;
+			SymbolProto proto= DescriptionFactory.getStatementProto("aspect");
+			if (proto.getFacet(name).internal) continue;
+			EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+			facet.setName(name);
+			facet.setOwner(target);
+			target.getFacets().add(facet);
+			facet.setValue(aspect.getFacet(name).serialize(false));
+		}
+		String gmlCode = aspect.serialize(false);
+		gmlCode = gmlCode.substring(gmlCode.indexOf("{")+1);
+		gmlCode = gmlCode.substring(0,gmlCode.lastIndexOf("}"));
+		target.setGamlCode(gmlCode);
 		return target;
 	}
+	
+	public EEquation createEquation(final ESpecies source, final PictogramElement sourceE, final SystemOfEquationsStatement equation,
+			final Diagram diagram) {
+			if ( equation == null ) { return null; }
+			EEquation target = gama.GamaFactory.eINSTANCE.createEEquation();
+			diagram.eResource().getContents().add(target);
+			target.setName(equation.getName());
+
+			CreateContext ac = new CreateContext();
+
+			ac.setLocation(0, 0);
+
+			ac.setSize(0, 0);
+			ac.setTargetContainer(diagram);
+
+			PictogramElement targetE = addIfPossible(new AddContext(ac, target));
+
+			EEquationLink eReference = gama.GamaFactory.eINSTANCE.createEEquationLink();
+			diagram.eResource().getContents().add(eReference);
+
+			// add connection for business object
+			AddConnectionContext addContext = new AddConnectionContext(getAnchor(sourceE), getAnchor(targetE));
+			addContext.setNewObject(eReference);
+			addIfPossible(addContext);
+			eReference.setSpecies(source);
+			eReference.setEquation(target);
+			eReference.setSource(source);
+			eReference.setTarget(target);
+			source.getEquationLinks().add(eReference);
+			target.getEquationLinks().add(eReference);
+			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
+			diagramEditor.addEOject(target);
+			
+			for (Object facetN : equation.getDescription().getFacets()._set) {
+				if (! (facetN instanceof String)) continue;
+				String name = (String) facetN;
+				SymbolProto proto= DescriptionFactory.getStatementProto("equation");
+				if (proto.getFacet(name).internal) continue;
+				EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+				facet.setName(name);
+				facet.setOwner(target);
+				target.getFacets().add(facet);
+				facet.setValue(equation.getFacet(name).serialize(false));
+			}
+			String gmlCode = equation.serialize(false);
+			gmlCode = gmlCode.substring(gmlCode.indexOf("{")+1);
+			gmlCode = gmlCode.substring(0,gmlCode.lastIndexOf("}"));
+			target.setGamlCode(gmlCode);
+			return target;
+		}
+	
+	public EState createState(final ESpecies source, final PictogramElement sourceE, final FsmStateStatement state,
+			final Diagram diagram) {
+			if ( state == null ) { return null; }
+			EState target = gama.GamaFactory.eINSTANCE.createEState();
+			diagram.eResource().getContents().add(target);
+			target.setName(state.getName());
+
+			CreateContext ac = new CreateContext();
+
+			ac.setLocation(0, 0);
+
+			ac.setSize(0, 0);
+			ac.setTargetContainer(diagram);
+
+			PictogramElement targetE = addIfPossible(new AddContext(ac, target));
+
+			EStateLink eReference = gama.GamaFactory.eINSTANCE.createEStateLink();
+			diagram.eResource().getContents().add(eReference);
+
+			// add connection for business object
+			AddConnectionContext addContext = new AddConnectionContext(getAnchor(sourceE), getAnchor(targetE));
+			addContext.setNewObject(eReference);
+			addIfPossible(addContext);
+			eReference.setSpecies(source);
+			eReference.setState(target);
+			eReference.setSource(source);
+			eReference.setTarget(target);
+			
+			source.getStateLinks().add(eReference);
+			target.getStateLinks().add(eReference);
+			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
+			diagramEditor.addEOject(target);
+			
+			for (Object facetN : state.getDescription().getFacets()._set) {
+				if (! (facetN instanceof String)) continue;
+				String name = (String) facetN;
+				SymbolProto proto= DescriptionFactory.getStatementProto("state");
+				if (proto.getFacet(name).internal) continue;
+				EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+				facet.setName(name);
+				facet.setOwner(target);
+				target.getFacets().add(facet);
+				facet.setValue(state.getFacet(name).serialize(false));
+			}
+			String gmlCode = "";
+			if ( state.getCommands() != null ) {
+				for ( IStatement st : state.getCommands() ) {
+					if ( st == null ) {
+						continue;
+					}
+					gmlCode += st.serialize(false);
+				}
+			}
+			target.setGamlCode(gmlCode);
+			return target;
+		}
+	
+	public ETask createTask(final ESpecies source, final PictogramElement sourceE, final WeightedTaskStatement task,
+			final Diagram diagram) {
+			if ( task == null ) { return null; }
+			ETask target = gama.GamaFactory.eINSTANCE.createETask();
+			diagram.eResource().getContents().add(target);
+			target.setName(task.getName());
+
+			CreateContext ac = new CreateContext();
+
+			ac.setLocation(0, 0);
+
+			ac.setSize(0, 0);
+			ac.setTargetContainer(diagram);
+
+			PictogramElement targetE = addIfPossible(new AddContext(ac, target));
+
+			ETaskLink eReference = gama.GamaFactory.eINSTANCE.createETaskLink();
+			diagram.eResource().getContents().add(eReference);
+
+			// add connection for business object
+			AddConnectionContext addContext = new AddConnectionContext(getAnchor(sourceE), getAnchor(targetE));
+			addContext.setNewObject(eReference);
+			addIfPossible(addContext);
+			eReference.setSpecies(source);
+			eReference.setTask(target);
+			eReference.setSource(source);
+			eReference.setTarget(target);
+			
+			source.getTaskLinks().add(eReference);
+			target.getTaskLinks().add(eReference);
+			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
+			diagramEditor.addEOject(target);
+			
+			for (Object facetN : task.getDescription().getFacets()._set) {
+				if (! (facetN instanceof String)) continue;
+				String name = (String) facetN;
+				SymbolProto proto= DescriptionFactory.getStatementProto("task");
+				if (proto.getFacet(name).internal) continue;
+				EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+				facet.setName(name);
+				facet.setOwner(target);
+				target.getFacets().add(facet);
+				facet.setValue(task.getFacet(name).serialize(false));
+			}
+			String gmlCode = "";
+			if ( task.getCommands() != null ) {
+				for ( IStatement st : task.getCommands() ) {
+					if ( st == null ) {
+						continue;
+					}
+					gmlCode += st.serialize(false);
+				}
+			}
+			target.setGamlCode(gmlCode);
+			return target;
+		}
+	
+	public EPlan createPlan(final ESpecies source, final PictogramElement sourceE, final SimpleBdiPlanStatement plan,
+			final Diagram diagram) {
+			if ( plan == null ) { return null; }
+			EPlan target = gama.GamaFactory.eINSTANCE.createEPlan();
+			diagram.eResource().getContents().add(target);
+			target.setName(plan.getName());
+
+			CreateContext ac = new CreateContext();
+
+			ac.setLocation(0, 0);
+
+			ac.setSize(0, 0);
+			ac.setTargetContainer(diagram);
+
+			PictogramElement targetE = addIfPossible(new AddContext(ac, target));
+
+			EPlanLink eReference = gama.GamaFactory.eINSTANCE.createEPlanLink();
+			diagram.eResource().getContents().add(eReference);
+
+			// add connection for business object
+			AddConnectionContext addContext = new AddConnectionContext(getAnchor(sourceE), getAnchor(targetE));
+			addContext.setNewObject(eReference);
+			addIfPossible(addContext);
+			eReference.setSpecies(source);
+			eReference.setPlan(target);
+			eReference.setSource(source);
+			eReference.setTarget(target);
+			
+			source.getPlanLinks().add(eReference);
+			target.getPlanLinks().add(eReference);
+			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
+			diagramEditor.addEOject(target);
+			
+			for (Object facetN : plan.getDescription().getFacets()._set) {
+				if (! (facetN instanceof String)) continue;
+				String name = (String) facetN;
+				SymbolProto proto= DescriptionFactory.getStatementProto("plan");
+				if (proto.getFacet(name).internal) continue;
+				EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+				facet.setName(name);
+				facet.setOwner(target);
+				target.getFacets().add(facet);
+				facet.setValue(plan.getFacet(name).serialize(false));
+			}
+			String gmlCode = "";
+			if ( plan.getCommands() != null ) {
+				for ( IStatement st : plan.getCommands() ) {
+					if ( st == null ) {
+						continue;
+					}
+					gmlCode += st.serialize(false);
+				}
+			}
+			target.setGamlCode(gmlCode);
+			return target;
+		}
+	
+	public EPerceive createPerception(final ESpecies source, final PictogramElement sourceE, final PerceiveStatement perception,
+			final Diagram diagram) {
+			if ( perception == null ) { return null; }
+			EPerceive target = gama.GamaFactory.eINSTANCE.createEPerceive();
+			diagram.eResource().getContents().add(target);
+			target.setName(perception.getName());
+
+			CreateContext ac = new CreateContext();
+
+			ac.setLocation(0, 0);
+
+			ac.setSize(0, 0);
+			ac.setTargetContainer(diagram);
+
+			PictogramElement targetE = addIfPossible(new AddContext(ac, target));
+
+			EPerceiveLink eReference = gama.GamaFactory.eINSTANCE.createEPerceiveLink();
+			diagram.eResource().getContents().add(eReference);
+
+			// add connection for business object
+			AddConnectionContext addContext = new AddConnectionContext(getAnchor(sourceE), getAnchor(targetE));
+			addContext.setNewObject(eReference);
+			addIfPossible(addContext);
+			eReference.setSpecies(source);
+			eReference.setPerceive(target);
+			eReference.setSource(source);
+			eReference.setTarget(target);
+			
+			source.getPerceiveLinks().add(eReference);
+			target.getPerceiveLinks().add(eReference);
+			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
+			diagramEditor.addEOject(target);
+			
+			for (Object facetN : perception.getDescription().getFacets()._set) {
+				if (! (facetN instanceof String)) continue;
+				String name = (String) facetN;
+				SymbolProto proto= DescriptionFactory.getStatementProto("perceive");
+				if (proto.getFacet(name).internal) continue;
+				EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+				facet.setName(name);
+				facet.setOwner(target);
+				target.getFacets().add(facet);
+				facet.setValue(perception.getFacet(name).serialize(false));
+			}
+			String gmlCode = "";
+			if ( perception.getCommands() != null ) {
+				for ( IStatement st : perception.getCommands() ) {
+					if ( st == null ) {
+						continue;
+					}
+					gmlCode += st.serialize(false);
+				}
+			}
+			target.setGamlCode(gmlCode);
+			return target;
+		}
+	
+	public ERule createRule(final ESpecies source, final PictogramElement sourceE, final RuleStatement rule,
+			final Diagram diagram) {
+			if ( rule == null ) { return null; }
+			ERule target = gama.GamaFactory.eINSTANCE.createERule();
+			diagram.eResource().getContents().add(target);
+			target.setName(rule.getName());
+
+			CreateContext ac = new CreateContext();
+
+			ac.setLocation(0, 0);
+
+			ac.setSize(0, 0);
+			ac.setTargetContainer(diagram);
+
+			PictogramElement targetE = addIfPossible(new AddContext(ac, target));
+
+			ERuleLink eReference = gama.GamaFactory.eINSTANCE.createERuleLink();
+			diagram.eResource().getContents().add(eReference);
+
+			// add connection for business object
+			AddConnectionContext addContext = new AddConnectionContext(getAnchor(sourceE), getAnchor(targetE));
+			addContext.setNewObject(eReference);
+			addIfPossible(addContext);
+			eReference.setSpecies(source);
+			eReference.setRule(target);
+			eReference.setSource(source);
+			eReference.setTarget(target);
+			
+			source.getRuleLinks().add(eReference);
+			target.getRuleLinks().add(eReference);
+			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
+			diagramEditor.addEOject(target);
+			
+			for (Object facetN : rule.getDescription().getFacets()._set) {
+				if (! (facetN instanceof String)) continue;
+				String name = (String) facetN;
+				SymbolProto proto= DescriptionFactory.getStatementProto("rule");
+				if (proto.getFacet(name).internal) continue;
+				EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+				facet.setName(name);
+				facet.setOwner(target);
+				target.getFacets().add(facet);
+				facet.setValue(rule.getFacet(name).serialize(false));
+			}
+			return target;
+		}
 
 	public EReflex createReflex(final ESpecies source, final PictogramElement sourceE, final ReflexStatement reflex,
 		final Diagram diagram) {
@@ -579,18 +994,13 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		EReflex target = gama.GamaFactory.eINSTANCE.createEReflex();
 		diagram.eResource().getContents().add(target);
 		target.setName(reflex.getName());
-		String gmlCode = "";
-
-		if ( reflex.getCommands() != null ) {
-			for ( IStatement st : reflex.getCommands() ) {
-				if ( st == null ) {
-					continue;
-				}
-				gmlCode += st.serialize(false);
-			}
-		}
+		String gmlCode = reflex.serialize(false);
+		gmlCode = gmlCode.substring(gmlCode.indexOf("{")+1);
+		gmlCode = gmlCode.substring(0,gmlCode.lastIndexOf("}"));
+		target.setGamlCode(gmlCode);
 		if ( reflex.hasFacet(IKeyword.WHEN) ) {
 			EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+			facet.setOwner(target);
 			target.getFacets().add(facet);
 			facet.setName(IKeyword.WHEN);
 			facet.setValue(reflex.getFacet(IKeyword.WHEN).serialize(false));
@@ -615,6 +1025,9 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		addIfPossible(addContext);
 		eReference.setSpecies(source);
 		eReference.setReflex(target);
+		eReference.setSource(source);
+		eReference.setTarget(target);
+		
 		source.getReflexLinks().add(eReference);
 		target.getReflexLinks().add(eReference);
 		GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
