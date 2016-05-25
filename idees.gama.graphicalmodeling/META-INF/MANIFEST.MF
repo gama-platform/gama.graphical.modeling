@@ -37,4 +37,6 @@ Export-Package: idees.gama.diagram,
  idees.gama.ui.image,
  idees.gama.ui.wizards
 Bundle-ActivationPolicy: lazy
-Import-Package: com.google.inject
+Import-Package: com.google.inject,
+ msi.gaml.architecture.simplebdi,
+ ummisco.gaml.extensions.maths.ode.statements
