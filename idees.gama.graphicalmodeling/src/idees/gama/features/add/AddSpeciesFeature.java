@@ -27,7 +27,7 @@ import idees.gama.ui.image.GamaImageProvider;
 
 public class AddSpeciesFeature extends AbstractAddShapeFeature {
 
-	public static final int INIT_WIDTH = 170;
+	public static final int INIT_WIDTH = 220;
 	public static final int INIT_HEIGHT = 100;
 
 	private static final List<Integer> CONTINUOUS_BACKGROUND = Arrays.asList(255, 255, 150);
@@ -60,7 +60,7 @@ public class AddSpeciesFeature extends AbstractAddShapeFeature {
 		// check whether the context has a size (e.g. from a create feature)
 		// otherwise define a default size for the shape
 		int width = context.getWidth() <= 0 ? INIT_WIDTH : context.getWidth();
-		int height = context.getHeight() <= 0 ? INIT_HEIGHT : context.getHeight();
+		int height = context.getHeight() <= 0 ? Math.max(INIT_HEIGHT,addedClass.getVariables().size() * 15 + 40): context.getHeight();
 		IGaService gaService = Graphiti.getGaService();
 
 		{
@@ -122,9 +122,6 @@ public class AddSpeciesFeature extends AbstractAddShapeFeature {
 			// create and set text graphics algorithm
 			String variables = "";
 			for ( EVariable var : addedClass.getVariables() ) {
-				if ( var.getName().equals("shape") || var.getName().equals("location") ) {
-					continue;
-				}
 				variables += (var.getType().isEmpty() ? "var" : var.getType()) + " " + var.getName() + "\n";
 			}
 			Text text2 = gaService.createDefaultText(getDiagram(), shape2, variables);
@@ -132,7 +129,7 @@ public class AddSpeciesFeature extends AbstractAddShapeFeature {
 			text2.setHorizontalAlignment(Orientation.ALIGNMENT_LEFT);
 			text2.setVerticalAlignment(Orientation.ALIGNMENT_TOP);
 			text2.setFont(gaService.manageFont(getDiagram(), "Arial", 12, false, false));
-			gaService.setLocationAndSize(text2, 5, 25, text2.getWidth(), 18 + addedClass.getVariables().size() * 18);
+			gaService.setLocationAndSize(text2, 5, 25, text2.getWidth(), 15 + addedClass.getVariables().size() * 15);
 
 			// create link and wire it
 			link(shape2, addedClass);

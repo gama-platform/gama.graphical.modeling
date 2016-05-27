@@ -11,6 +11,12 @@ import org.eclipse.draw2d.graph.Edge;
 import org.eclipse.draw2d.graph.EdgeList;
 import org.eclipse.draw2d.graph.Node;
 import org.eclipse.draw2d.graph.NodeList;
+import org.eclipse.elk.alg.graphiti.GraphitiDiagramLayoutConnector;
+import org.eclipse.elk.core.options.CoreOptions;
+import org.eclipse.elk.core.options.Direction;
+import org.eclipse.elk.core.service.DiagramLayoutEngine;
+import org.eclipse.elk.core.service.LayoutMapping;
+import org.eclipse.elk.graph.properties.MapPropertyHolder;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.context.ICustomContext;
@@ -20,6 +26,11 @@ import org.eclipse.graphiti.mm.pictograms.AnchorContainer;
 import org.eclipse.graphiti.mm.pictograms.Connection;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.graphiti.mm.pictograms.Shape;
+import org.eclipse.ui.PlatformUI;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 
 public class LayoutDiagramFeature  extends AbstractCustomFeature {
 
@@ -54,58 +65,17 @@ public class LayoutDiagramFeature  extends AbstractCustomFeature {
 	}
 	
 	public static void execute( Diagram d) {
-		final CompoundDirectedGraph graph = mapDiagramToGraph(d);
-		graph.setDefaultPadding(new Insets(PADDING));
-		new CompoundDirectedGraphLayout().visit(graph);
-		mapGraphCoordinatesToDiagram(graph);
+		final Injector injector = Guice.createInjector( new GamaGraphIndicatorModuleGuice());
+		GraphitiDiagramLayoutConnector connector = injector.getInstance(GraphitiDiagramLayoutConnector.class);
+		
+		DiagramLayoutEngine.Parameters param  = new DiagramLayoutEngine.Parameters();
+		param.getGlobalSettings().setProperty(CoreOptions.ALGORITHM, "de.cau.cs.kieler.klay.force");
+		param.getGlobalSettings().setProperty(CoreOptions.ZOOM_TO_FIT,true);
+		param.getGlobalSettings().setProperty(CoreOptions.SPACING_NODE, 250.0f);
+		LayoutMapping layout = DiagramLayoutEngine.invokeLayout(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart(),d,param);
+		
+		connector.applyLayout(layout, param.getGlobalSettings());
+		
 	}
-
-
-	private  static Diagram mapGraphCoordinatesToDiagram(CompoundDirectedGraph graph) {
-		NodeList myNodes = new NodeList();
-		myNodes.addAll(graph.nodes);
-		myNodes.addAll(graph.subgraphs);
-		for (Object object : myNodes) {
-			Node node = (Node) object;
-			Shape shape = (Shape) node.data;
-			shape.getGraphicsAlgorithm().setX(node.x);
-			shape.getGraphicsAlgorithm().setY(node.y);
-			shape.getGraphicsAlgorithm().setWidth(node.width);
-			shape.getGraphicsAlgorithm().setHeight(node.height);
-		}
-		return null;
-	}
-
-
-	private static CompoundDirectedGraph mapDiagramToGraph(Diagram d) {
-		Map<AnchorContainer, Node> shapeToNode = new HashMap<AnchorContainer, Node>();
-		CompoundDirectedGraph dg = new CompoundDirectedGraph();
-		EdgeList edgeList = new EdgeList();
-		NodeList nodeList = new NodeList();
-		EList<Shape> children = d.getChildren();
-		for (Shape shape : children) {
-			Node node = new Node();
-			GraphicsAlgorithm ga = shape.getGraphicsAlgorithm();
-			node.x = ga.getX();
-			node.y = ga.getY();
-			node.width = ga.getWidth();
-			node.height = ga.getHeight();
-			node.data = shape;
-			shapeToNode.put(shape, node);
-			nodeList.add(node);
-		}
-		EList<Connection> connections = d.getConnections();
-		for (Connection connection : connections) {
-			AnchorContainer source = connection.getStart().getParent();
-			AnchorContainer target = connection.getEnd().getParent();
-			Edge edge = new Edge(shapeToNode.get(source), shapeToNode.get(target));
-			edge.data = connection;
-			edgeList.add(edge);
-		}
-		dg.nodes = nodeList;
-		dg.edges = edgeList;
-		return dg;
-	}
-
 
 }

@@ -3,6 +3,7 @@ package idees.gama.features.others;
 import gama.EGamaObject;
 import gama.ESpecies;
 import gama.EVariable;
+import idees.gama.features.add.ColorDisplay;
 
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.features.IReason;
@@ -10,6 +11,7 @@ import org.eclipse.graphiti.features.context.IUpdateContext;
 import org.eclipse.graphiti.features.impl.AbstractUpdateFeature;
 import org.eclipse.graphiti.features.impl.Reason;
 import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
 import org.eclipse.graphiti.mm.pictograms.ContainerShape;
 import org.eclipse.graphiti.mm.pictograms.PictogramElement;
 import org.eclipse.graphiti.mm.pictograms.Shape;
@@ -126,11 +128,12 @@ public class UpdateEGamaObjectFeature extends AbstractUpdateFeature {
             for (Shape shape : cs.getChildren()) {
             	 if (shape.getGraphicsAlgorithm() instanceof Text) {
                     Text text = (Text) shape.getGraphicsAlgorithm();
+                  	
                  	if (text.getY() != 25)
                     	text.setValue(businessName);
                     else  {
                     	text.setValue(varNames);
-                    	Graphiti.getGaService().setLocationAndSize(text, 5, 25, text.getWidth(), 18 + cpt * 18);
+                    	Graphiti.getGaService().setLocationAndSize(text, 5, 25, text.getWidth(), 15 + cpt * 15);
                     }
                  	
                 } 
