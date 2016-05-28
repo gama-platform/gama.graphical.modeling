@@ -2,6 +2,7 @@ package idees.gama.ui.editFrame;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -164,7 +165,7 @@ public abstract class EditFrame extends ApplicationWindow {
 			facets = globalFacets;
 		}else if ("species".equals(gamlName)) {
 			facets = speciesFacets;
-		} else facets = new ArrayList<String>(proto.getPossibleFacets().keySet());
+		} else  {facets =new ArrayList<String>(proto.getPossibleFacets().keySet()); Collections.sort(facets);}
 		for (String facet : facets) {
 			FacetProto pt =  proto.getFacet(facet);
 			if( pt.deprecated != null) continue;

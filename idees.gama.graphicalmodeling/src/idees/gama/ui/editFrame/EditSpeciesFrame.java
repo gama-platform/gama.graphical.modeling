@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -33,7 +32,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -42,31 +40,16 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
-import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
-import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
 
-import com.google.inject.Injector;
-
-import gama.EAction;
-import gama.EContinuousTopology;
-import gama.EGraphTopologyEdge;
-import gama.EGraphTopologyNode;
 import gama.EGrid;
-import gama.EGridTopology;
 import gama.EReflexLink;
 import gama.ESpecies;
 import gama.EVariable;
 import gama.EWorldAgent;
-import idees.gama.diagram.GAMARessourceProvider;
 import idees.gama.diagram.GamaDiagramEditor;
-import idees.gama.diagram.ModelStructure;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditSpeciesFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gama.lang.gaml.ui.internal.GamlActivator;
-import msi.gama.lang.utils.EGaml;
 import msi.gaml.compilation.AbstractGamlAdditions;
 
 public class EditSpeciesFrame extends EditFrame {
@@ -104,7 +87,7 @@ public class EditSpeciesFrame extends EditFrame {
 		skillsStrs.addAll(AbstractGamlAdditions.getAllSkills());
 		skillsStrs.removeAll(AbstractGamlAdditions.ARCHITECTURES);
 		skillsStrs.remove("grid");
-		
+		Collections.sort(skillsStrs);
 		comboValues = new Hashtable();
 		List<String> values = new ArrayList(AbstractGamlAdditions.ARCHITECTURES);
 		values.remove("reflex");
@@ -134,9 +117,18 @@ public class EditSpeciesFrame extends EditFrame {
 				}
 			}
 		}
-
+		defineTypes(speciesList);
+		
+	}
+	
+	public void defineTypes(List<ESpecies> speciesList ) {
+		types.add("int");types.add("float");types.add("string");types.add("bool"); types.add("rgb");types.add("point");types.add("geometry");
+		System.out.println("AbstractGamlAdditions.VARTYPE2KEYWORDS: " + AbstractGamlAdditions.VARTYPE2KEYWORDS);
 		for ( Collection varType : AbstractGamlAdditions.VARTYPE2KEYWORDS.values() ) {
-			types.addAll(varType);
+			for (Object ty : varType) {
+				if (!types.contains(ty)) types.add((String) ty);
+			}
+			
 		}
 		for ( ESpecies sp : speciesList ) {
 			types.add(sp.getName());
