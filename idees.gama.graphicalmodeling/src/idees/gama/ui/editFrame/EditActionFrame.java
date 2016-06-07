@@ -48,14 +48,23 @@ public class EditActionFrame extends EditFrame {
 		final EGamaObject action, final String name, final List<ESpecies> speciesList) {
 		super(diagram, fp, eaf, action, name == null ? "Action definition" : name);
 
+		types.add("int");types.add("float");types.add("string");types.add("bool"); types.add("rgb");types.add("point");types.add("geometry");
+		System.out.println("AbstractGamlAdditions.VARTYPE2KEYWORDS: " + AbstractGamlAdditions.VARTYPE2KEYWORDS);
 		for ( Collection varType : AbstractGamlAdditions.VARTYPE2KEYWORDS.values() ) {
-			types.addAll(varType);
+			for (Object ty : varType) {
+				if (!types.contains(ty) && !ty.toString().endsWith("_file")) types.add((String) ty);
+			}
+			
 		}
 		for ( ESpecies sp : speciesList ) {
 			types.add(sp.getName());
 		}
 		types.remove("unknown");
 		types.remove("world");
+		List<String> tt = new ArrayList<String>(types);
+		for ( String ty : tt ) {
+			types.add("list<" + ty + ">");
+		}
 	}
 
 	public EditActionFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature eaf,

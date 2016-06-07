@@ -126,7 +126,7 @@ public class EditSpeciesFrame extends EditFrame {
 		System.out.println("AbstractGamlAdditions.VARTYPE2KEYWORDS: " + AbstractGamlAdditions.VARTYPE2KEYWORDS);
 		for ( Collection varType : AbstractGamlAdditions.VARTYPE2KEYWORDS.values() ) {
 			for (Object ty : varType) {
-				if (!types.contains(ty)) types.add((String) ty);
+				if (!types.contains(ty) && !ty.toString().endsWith("_file")) types.add((String) ty);
 			}
 			
 		}
