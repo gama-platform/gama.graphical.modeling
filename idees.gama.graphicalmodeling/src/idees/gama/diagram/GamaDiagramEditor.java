@@ -2,7 +2,6 @@ package idees.gama.diagram;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Hashtable;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,6 @@ import gama.EReflex;
 import gama.ESpecies;
 import gama.EVariable;
 import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gama.gui.swt.IGamaColors;
 import msi.gama.kernel.model.IModel;
 import msi.gama.lang.gaml.gaml.Model;
 import msi.gama.lang.gaml.gaml.Statement;
@@ -76,6 +74,7 @@ import msi.gaml.descriptions.OperatorProto;
 import msi.gaml.descriptions.SymbolProto;
 import msi.gaml.factories.DescriptionFactory;
 import msi.gaml.species.ISpecies;
+import ummisco.gama.ui.resources.IGamaColors;
 
 public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderListener {
 

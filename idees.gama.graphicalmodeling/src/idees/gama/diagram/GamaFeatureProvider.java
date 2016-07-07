@@ -149,7 +149,6 @@ import msi.gaml.descriptions.IDescription;
 import msi.gaml.descriptions.SpeciesDescription;
 import msi.gaml.descriptions.SymbolProto;
 import msi.gaml.factories.DescriptionFactory;
-import msi.gaml.skills.ISkill;
 import msi.gaml.species.ISpecies;
 import msi.gaml.statements.ActionStatement;
 import msi.gaml.statements.AspectStatement;
