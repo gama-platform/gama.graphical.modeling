@@ -145,10 +145,15 @@ import msi.gaml.architecture.simplebdi.RuleStatement;
 import msi.gaml.architecture.simplebdi.SimpleBdiPlanStatement;
 import msi.gaml.architecture.weighted_tasks.WeightedTaskStatement;
 import msi.gaml.compilation.AbstractGamlAdditions;
+import msi.gaml.compilation.ISymbol;
 import msi.gaml.descriptions.IDescription;
+import msi.gaml.descriptions.IExpressionDescription;
 import msi.gaml.descriptions.SpeciesDescription;
 import msi.gaml.descriptions.SymbolProto;
+import msi.gaml.descriptions.IDescription.FacetVisitor;
+import msi.gaml.expressions.IExpression;
 import msi.gaml.factories.DescriptionFactory;
+import msi.gaml.operators.Cast;
 import msi.gaml.species.ISpecies;
 import msi.gaml.statements.ActionStatement;
 import msi.gaml.statements.AspectStatement;
@@ -382,7 +387,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		 }
 		target.setName(species.getName());
 		
-		for (Object facetN : species.getDescription().getFacets()._set) {
+		for (Object facetN : getFacets(species)) {
 			if (! (facetN instanceof String)) continue;
 			String name = (String) facetN;
 			SymbolProto proto= DescriptionFactory.getStatementProto("species");
@@ -592,7 +597,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		diagramEditor.addEOject(target);
 		target.setDefineGamlCode(true);
 		
-		for (Object facetN : display.getDescription().getFacets()._set) {
+		for (Object facetN : getFacets(display)) {
 			if (! (facetN instanceof String)) continue;
 			String name = (String) facetN;
 			SymbolProto proto= DescriptionFactory.getStatementProto("display");
@@ -644,7 +649,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		diagramEditor.addEOject(target);
 		target.setDefineGamlCode(true);
 		
-		for (Object facetN : aspect.getDescription().getFacets()._set) {
+		for (Object facetN : getFacets(aspect)) {
 			if (! (facetN instanceof String)) continue;
 			String name = (String) facetN;
 			SymbolProto proto= DescriptionFactory.getStatementProto("aspect");
@@ -694,7 +699,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 			diagramEditor.addEOject(target);
 			
-			for (Object facetN : equation.getDescription().getFacets()._set) {
+			for (Object facetN : getFacets(equation)) {
 				if (! (facetN instanceof String)) continue;
 				String name = (String) facetN;
 				SymbolProto proto= DescriptionFactory.getStatementProto("equation");
@@ -745,7 +750,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 			diagramEditor.addEOject(target);
 			
-			for (Object facetN : state.getDescription().getFacets()._set) {
+			for (Object facetN :getFacets(state)) {
 				if (! (facetN instanceof String)) continue;
 				String name = (String) facetN;
 				SymbolProto proto= DescriptionFactory.getStatementProto("state");
@@ -802,7 +807,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 			diagramEditor.addEOject(target);
 			
-			for (Object facetN : task.getDescription().getFacets()._set) {
+			for (Object facetN : getFacets(task)) {
 				if (! (facetN instanceof String)) continue;
 				String name = (String) facetN;
 				SymbolProto proto= DescriptionFactory.getStatementProto("task");
@@ -859,7 +864,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 			diagramEditor.addEOject(target);
 			
-			for (Object facetN : plan.getDescription().getFacets()._set) {
+			for (Object facetN : getFacets(plan)) {
 				if (! (facetN instanceof String)) continue;
 				String name = (String) facetN;
 				SymbolProto proto= DescriptionFactory.getStatementProto("plan");
@@ -916,7 +921,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 			diagramEditor.addEOject(target);
 			
-			for (Object facetN : perception.getDescription().getFacets()._set) {
+			for (Object facetN : getFacets(perception)) {
 				if (! (facetN instanceof String)) continue;
 				String name = (String) facetN;
 				SymbolProto proto= DescriptionFactory.getStatementProto("perceive");
@@ -973,7 +978,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			GamaDiagramEditor diagramEditor = (GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 			diagramEditor.addEOject(target);
 			
-			for (Object facetN : rule.getDescription().getFacets()._set) {
+			for (Object facetN : getFacets(rule)) {
 				if (! (facetN instanceof String)) continue;
 				String name = (String) facetN;
 				SymbolProto proto= DescriptionFactory.getStatementProto("rule");
@@ -1166,6 +1171,25 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 
 	public void setGamaModel(final IModel gamaModel) {
 		this.gamaModel = gamaModel;
+	}
+	
+	public List<String> getFacets(final ISymbol statement){
+		List<String> facets = new ArrayList<String>();
+		statement.getDescription().visitFacets(new FacetVisitor() {
+
+			@Override
+			public boolean visit(final String name, final IExpressionDescription ed) {
+				if (name.equals(IKeyword.NAME)) {
+					final String n = statement.getFacet(IKeyword.NAME).literalValue();
+					if (n.startsWith("internal_"))
+						return true;
+				}
+				facets.add(name);
+				return true;
+			}
+
+		});
+		return facets;
 	}
 
 }
