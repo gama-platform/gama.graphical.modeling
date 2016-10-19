@@ -1,17 +1,20 @@
 package idees.gama.ui.editFrame;
 
-import idees.gama.diagram.GamaDiagramEditor;
-import idees.gama.features.modelgeneration.ModelGenerator;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
-import msi.gama.util.TOrderedHashMap;
+import java.util.Map;
+
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ToolTip;
+
+import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.modelgeneration.ModelGenerator;
+import msi.gama.util.TOrderedHashMap;
 
 public class ValidateText extends StyledText {
 
@@ -41,9 +44,10 @@ public class ValidateText extends StyledText {
 
 	String addToLoc;
 
+	@SuppressWarnings("unused")
 	public ValidateText(final Composite parent, final int style, final Diagram diagram, final IFeatureProvider fp,
-		final EditFrame frame, final GamaDiagramEditor editor, final String name, final List<String> uselessName,
-		final String addToLoc) {
+			final EditFrame frame, final GamaDiagramEditor editor, final String name, final List<String> uselessName,
+			final String addToLoc) {
 		super(parent, style);
 		this.diagram = diagram;
 		new UndoRedoStyledText(this);
@@ -62,7 +66,7 @@ public class ValidateText extends StyledText {
 		loc = new ArrayList<String>();
 		editor.buildLocation(frame.eobject, loc);
 		// System.out.println("loc: " + loc);
-		if ( addToLoc != null && !addToLoc.isEmpty() ) {
+		if (addToLoc != null && !addToLoc.isEmpty()) {
 			loc.add(addToLoc);
 			// loc.add(0, "world");
 		}
@@ -77,72 +81,44 @@ public class ValidateText extends StyledText {
 		this.frame = frame;
 		this.editor = editor;
 
-		addModifyListener(new ModifyListener() {
+		addModifyListener(event -> applyModification());
 
-			@Override
-			public void modifyText(final ModifyEvent event) {
-				applyModification();
+		addListener(SWT.MouseHover, event -> tip.getDisplay().timerExec(TOOLTIP_SHOW_DELAY, () -> {
+			if (!isValid) {
+				tip.setVisible(true);
+			} else {
+				tip.setVisible(false);
 			}
-		});
+		}));
 
-		addListener(SWT.MouseHover, new Listener() {
-
-			@Override
-			public void handleEvent(final Event event) {
-				tip.getDisplay().timerExec(TOOLTIP_SHOW_DELAY, new Runnable() {
-
-					@Override
-					public void run() {
-						if ( !isValid ) {
-							tip.setVisible(true);
-						} else {
-							tip.setVisible(false);
-						}
-					}
-				});
-			}
-		});
-
-		addListener(SWT.MouseExit, new Listener() {
-
-			@Override
-			public void handleEvent(final Event event) {
-				tip.getDisplay().timerExec(TOOLTIP_HIDE_DELAY, new Runnable() {
-
-					@Override
-					public void run() {
-						tip.setVisible(false);
-					}
-				});
-			}
-		});
+		addListener(SWT.MouseExit,
+				event -> tip.getDisplay().timerExec(TOOLTIP_HIDE_DELAY, () -> tip.setVisible(false)));
 	}
 
 	public void updateColor() {
-		if ( nameLoc.equals("name") ) {
-			isValid =
-				!getText().isEmpty() && !getText().contains(" ") && !getText().contains(";") &&
-					!getText().contains("{") && !getText().contains("}") && !getText().contains("\t");
+		if (nameLoc.equals("name")) {
+			isValid = !getText().isEmpty() && !getText().contains(" ") && !getText().contains(";")
+					&& !getText().contains("{") && !getText().contains("}") && !getText().contains("\t");
 		} else {
 			isValid = !ModelGenerator.hasSyntaxError(fp, getText(), true, isString);
 		}
-		if ( isValid ) {
-			Map<String, String> locs = editor.getSyntaxErrorsLoc().get(loc);
-			if ( locs != null ) {
+		if (isValid) {
+			final Map<String, String> locs = editor.getSyntaxErrorsLoc().get(loc);
+			if (locs != null) {
 				locs.remove(nameLoc);
 			}
-			if ( nameFeature && nameLoc.equals("name") ) {
+			if (nameFeature && nameLoc.equals("name")) {
 				addToLoc = getText();
-				List<String> oldLoc = new ArrayList<String>();
+				final List<String> oldLoc = new ArrayList<String>();
 				oldLoc.addAll(loc);
 				loc.clear();
 				editor.buildLocation(frame.eobject, loc);
-				if ( addToLoc != null && !addToLoc.isEmpty() && !loc.get(loc.size() - 1).equals(addToLoc) ) {
+				if (addToLoc != null && !addToLoc.isEmpty() && !loc.get(loc.size() - 1).equals(addToLoc)) {
 					loc.add(addToLoc);
 				}
 
-			for ( ValidateText vst : linkedVts ) {
-					if ( vst != null ) {
+				for (final ValidateText vst : linkedVts) {
+					if (vst != null) {
 						vst.updateLoc(loc);
 					}
 				}
@@ -151,7 +127,7 @@ public class ValidateText extends StyledText {
 				editor.initIdsEObjects();
 
 			}
-			if ( allErrors ) {
+			if (allErrors) {
 				error = editor.containErrors(loc, "", uselessName);
 			} else {
 				error = editor.containErrors(loc, nameLoc, uselessName);
@@ -159,65 +135,65 @@ public class ValidateText extends StyledText {
 
 		} else {
 			error = "Syntax errors detected ";
-			List<String> wStr = new ArrayList<String>();
+			final List<String> wStr = new ArrayList<String>();
 			wStr.add("world");
 			editor.getSyntaxErrorsLoc().remove(wStr);
 			Map<String, String> locs = editor.getSyntaxErrorsLoc().get(loc);
 
-			if ( locs == null ) {
+			if (locs == null) {
 				locs = new TOrderedHashMap<String, String>();
 			}
 			locs.put(nameLoc, "Syntax errors detected ");
 			// .out.println("loc: " + loc);
 			editor.getSyntaxErrorsLoc().put(loc, locs);
 		}
-		if ( error != null ) {
+		if (error != null) {
 			tip.setMessage(error);
 			isValid = error.equals("");
 		}
 		setBackground(isValid ? colValid : colNotValid);
-		if ( isValid ) {
+		if (isValid) {
 			tip.setVisible(false);
 		}
 		editor.updateEObjectErrors();
 	}
 
 	public void applyModification() {
-		// System.out.println("Loc: " + loc + "nameLoc: " + nameLoc + " saveData:" + saveData);
+		// System.out.println("Loc: " + loc + "nameLoc: " + nameLoc + "
+		// saveData:" + saveData);
 
-		if ( saveData ) {
+		if (saveData) {
 			frame.save(nameLoc);
 		}
 		// System.out.println("isString");
 		frame.getShell().forceFocus();
-		if ( nameLoc.equals("name") ) {
-			isValid =
-				!getText().isEmpty() && !getText().contains(" ") && !getText().contains(";") &&
-					!getText().contains("{") && !getText().contains("}") && !getText().contains("\t");
+		if (nameLoc.equals("name")) {
+			isValid = !getText().isEmpty() && !getText().contains(" ") && !getText().contains(";")
+					&& !getText().contains("{") && !getText().contains("}") && !getText().contains("\t");
 		} else {
 			isValid = !ModelGenerator.hasSyntaxError(fp, getText(), true, isString);
 		}
-		if ( isValid ) {
+		if (isValid) {
 			ModelGenerator.modelValidation(fp, diagram);
-			Map<String, String> locs = editor.getSyntaxErrorsLoc().get(loc);
-			if ( locs != null ) {
+			final Map<String, String> locs = editor.getSyntaxErrorsLoc().get(loc);
+			if (locs != null) {
 				locs.remove(nameLoc);
 			}
-			if ( nameFeature && nameLoc.equals("name") ) {
+			if (nameFeature && nameLoc.equals("name")) {
 				addToLoc = getText();
-				List<String> oldLoc = new ArrayList<String>();
+				final List<String> oldLoc = new ArrayList<String>();
 				oldLoc.addAll(loc);
 				// System.out.println("oldLoc: " + oldLoc);
 				loc.clear();
 				// editor.buildLocation(frame.eobject, loc);
 				editor.buildLocation(frame.eobject, loc);
-				if ( addToLoc != null && !addToLoc.isEmpty() && !loc.get(loc.size() - 1).equals(addToLoc) ) {
+				if (addToLoc != null && !addToLoc.isEmpty() && !loc.get(loc.size() - 1).equals(addToLoc)) {
 					loc.add(addToLoc);
 				}
 
 				// System.out.println("newLoc: " + loc);
-				for ( ValidateText vst : linkedVts ) {
-					if ( vst != null ) {
+				for (final ValidateText vst : linkedVts) {
+					if (vst != null) {
 						vst.updateLoc(loc);
 					}
 				}
@@ -226,7 +202,7 @@ public class ValidateText extends StyledText {
 				editor.initIdsEObjects();
 
 			}
-			if ( allErrors ) {
+			if (allErrors) {
 				error = editor.containErrors(loc, "", uselessName);
 			} else {
 				error = editor.containErrors(loc, nameLoc, uselessName);
@@ -234,16 +210,16 @@ public class ValidateText extends StyledText {
 
 		} else {
 			error = "Syntax errors detected ";
-			if ( editor.isWasOK() ) {
+			if (editor.isWasOK()) {
 				ModelGenerator.modelValidation(fp, diagram);
 			}
 
-			List<String> wStr = new ArrayList<String>();
+			final List<String> wStr = new ArrayList<String>();
 			wStr.add("world");
 			editor.getSyntaxErrorsLoc().remove(wStr);
 			Map<String, String> locs = editor.getSyntaxErrorsLoc().get(loc);
 
-			if ( locs == null ) {
+			if (locs == null) {
 				locs = new TOrderedHashMap<String, String>();
 			}
 			locs.put(nameLoc, "Syntax errors detected ");
@@ -251,15 +227,14 @@ public class ValidateText extends StyledText {
 			editor.getSyntaxErrorsLoc().put(loc, locs);
 		}
 		/*
-		 * System.out.println("location:" + loc);
-		 * System.out.println("name:" + nameLoc);
-		 * System.out.println("isValid: " + isValid);
-		 */if ( error != null ) {
+		 * System.out.println("location:" + loc); System.out.println("name:" +
+		 * nameLoc); System.out.println("isValid: " + isValid);
+		 */if (error != null) {
 			tip.setMessage(error);
 			isValid = error.equals("");
 		}
 		setBackground(isValid ? colValid : colNotValid);
-		if ( isValid ) {
+		if (isValid) {
 			tip.setVisible(false);
 		}
 		setFocus();
@@ -285,7 +260,6 @@ public class ValidateText extends StyledText {
 		loc.addAll(nwLoc);
 	}
 
-	
 	public List<ValidateText> getLinkedVts() {
 		return linkedVts;
 	}

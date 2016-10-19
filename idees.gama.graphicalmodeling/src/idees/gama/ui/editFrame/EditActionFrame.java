@@ -1,37 +1,45 @@
 package idees.gama.ui.editFrame;
 
-import gama.*;
-import idees.gama.diagram.GAMARessourceProvider;
-import idees.gama.diagram.GamaDiagramEditor;
-import idees.gama.diagram.ModelStructure;
-import idees.gama.features.ExampleUtil;
-import idees.gama.features.edit.EditFeature;
-import idees.gama.features.modelgeneration.ModelGenerator;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
-import msi.gama.lang.gaml.ui.internal.GamlActivator;
-import msi.gama.lang.utils.EGaml;
-import msi.gaml.compilation.AbstractGamlAdditions;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.transaction.*;
+import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
-import org.eclipse.jface.text.ITextListener;
-import org.eclipse.jface.text.TextEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.*;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
-import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
-import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
-import com.google.inject.Injector;
+import gama.EAction;
+import gama.EGamaObject;
+import gama.ESpecies;
+import gama.EVariable;
+import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
+import idees.gama.features.edit.EditFeature;
+import idees.gama.features.modelgeneration.ModelGenerator;
+import msi.gaml.compilation.AbstractGamlAdditions;
 
 public class EditActionFrame extends EditFrame {
 
@@ -45,40 +53,46 @@ public class EditActionFrame extends EditFrame {
 	 * Create the application window.
 	 */
 	public EditActionFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature eaf,
-		final EGamaObject action, final String name, final List<ESpecies> speciesList) {
+			final EGamaObject action, final String name, final List<ESpecies> speciesList) {
 		super(diagram, fp, eaf, action, name == null ? "Action definition" : name);
 
-		types.add("int");types.add("float");types.add("string");types.add("bool"); types.add("rgb");types.add("point");types.add("geometry");
+		types.add("int");
+		types.add("float");
+		types.add("string");
+		types.add("bool");
+		types.add("rgb");
+		types.add("point");
+		types.add("geometry");
 		System.out.println("AbstractGamlAdditions.VARTYPE2KEYWORDS: " + AbstractGamlAdditions.VARTYPE2KEYWORDS);
-		for ( Collection varType : AbstractGamlAdditions.VARTYPE2KEYWORDS.values() ) {
-			for (Object ty : varType) {
-				if (!types.contains(ty) && !ty.toString().endsWith("_file")) types.add((String) ty);
-			}
-			
+		for (final String ty : AbstractGamlAdditions.VARTYPE2KEYWORDS.values()) {
+			if (!types.contains(ty) && !ty.toString().endsWith("_file"))
+				types.add(ty);
+
 		}
-		for ( ESpecies sp : speciesList ) {
+		for (final ESpecies sp : speciesList) {
 			types.add(sp.getName());
 		}
 		types.remove("unknown");
 		types.remove("world");
-		List<String> tt = new ArrayList<String>(types);
-		for ( String ty : tt ) {
+		final List<String> tt = new ArrayList<String>(types);
+		for (final String ty : tt) {
 			types.add("list<" + ty + ">");
 		}
 	}
 
 	public EditActionFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature eaf,
-		final EGamaObject action, final String name) {
+			final EGamaObject action, final String name) {
 		super(diagram, fp, eaf, action, name == null ? "Action definition" : name);
 	}
 
 	/**
 	 * Create contents of the application window.
+	 * 
 	 * @param parent
 	 */
 	@Override
 	protected Control createContents(final Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
+		final Composite container = new Composite(parent, SWT.NONE);
 		container.setLayout(new GridLayout(1, false));
 		titleFont = new Font(this.getShell().getDisplay(), "Arial", 10, SWT.BOLD);
 
@@ -91,26 +105,25 @@ public class EditActionFrame extends EditFrame {
 
 		// ****** CANVAS GAMLCODE *********
 		groupGamlCode(container, "Gaml code");
-		
 
 		return container;
 	}
 
 	protected void groupReturnType(final Composite container) {
-		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
+		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
 
 		// ****** CANVAS RETURN TYPE *********
-		Group group = new Group(container, SWT.NONE);
+		final Group group = new Group(container, SWT.NONE);
 		// group.setBounds(10, 50, 720, 50);
 		// Group group = new Group(container, SWT.NONE);
-		GridData gridData = new GridData();
+		final GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		group.setLayoutData(gridData);
 
 		group.setLayout(new GridLayout(2, false));
 
-		CLabel lblName = new CLabel(group, SWT.NONE);
+		final CLabel lblName = new CLabel(group, SWT.NONE);
 		lblName.setText("Return type:");
 
 		// group.setLayout( new FillLayout(SWT.HORIZONTAL));
@@ -118,31 +131,24 @@ public class EditActionFrame extends EditFrame {
 
 		returnType = new CCombo(group, SWT.READ_ONLY);
 		returnType.add("returns nothing");
-		GridData gridData2 = new GridData();
+		final GridData gridData2 = new GridData();
 		gridData2.horizontalAlignment = SWT.FILL;
 		gridData2.grabExcessHorizontalSpace = true;
 		returnType.setLayoutData(gridData2);
 
-		for ( int i = 0, n = types.size(); i < n; i++ ) {
+		for (int i = 0, n = types.size(); i < n; i++) {
 			returnType.add(types.get(i));
 		}
-		EAction action = (EAction) eobject;
-		if ( action.getReturnType() == null || action.getReturnType().isEmpty() ) {
+		final EAction action = (EAction) eobject;
+		if (action.getReturnType() == null || action.getReturnType().isEmpty()) {
 			returnType.setText("returns nothing");
 		} else {
 			returnType.setText(action.getReturnType());
 		}
-		
-		returnType.addModifyListener(new ModifyListener() {
 
-			@Override
-			public void modifyText(final ModifyEvent event) {
-				save("returnType");
-			}});
-		
+		returnType.addModifyListener(event -> save("returnType"));
 
 	}
-
 
 	/**
 	 * Return the initial size of the window.
@@ -154,30 +160,31 @@ public class EditActionFrame extends EditFrame {
 
 	@Override
 	protected void save(final String name) {
-		TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eobject);
-		if ( domain != null ) {
+		final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eobject);
+		if (domain != null) {
 			domain.getCommandStack().execute(new RecordingCommand(domain) {
 
 				@Override
 				public void doExecute() {
 					if (name == null) {
 						eobject.setName(textName.getText());
-						EAction action = (EAction) eobject;
-						if ( modelXText != null ) {
+						final EAction action = (EAction) eobject;
+						if (modelXText != null) {
 							((EAction) eobject).setGamlCode(modelXText.getEditablePart());
 						}
-						action.setReturnType(returnType.getText().equals("returns nothing") ? "" : returnType.getText());
+						action.setReturnType(
+								returnType.getText().equals("returns nothing") ? "" : returnType.getText());
 						modifyArguments();
 						updateEditor();
-					}
-					else if ( name.equals("name") ) {
+					} else if (name.equals("name")) {
 						eobject.setName(textName.getText());
 					} else {
-						EAction action = (EAction) eobject;
-						if ( modelXText != null ) {
+						final EAction action = (EAction) eobject;
+						if (modelXText != null) {
 							((EAction) eobject).setGamlCode(modelXText.getEditablePart());
 						}
-						action.setReturnType(returnType.getText().equals("returns nothing") ? "" : returnType.getText());
+						action.setReturnType(
+								returnType.getText().equals("returns nothing") ? "" : returnType.getText());
 						modifyArguments();
 						updateEditor();
 					}
@@ -190,23 +197,23 @@ public class EditActionFrame extends EditFrame {
 	}
 
 	private void modifyArguments() {
-		EAction action = (EAction) eobject;
-		List<EVariable> vars = new ArrayList<EVariable>();
+		final EAction action = (EAction) eobject;
+		final List<EVariable> vars = new ArrayList<EVariable>();
 		vars.addAll(action.getVariables());
 		action.getVariables().clear();
-		for ( EVariable var : vars ) {
-			GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp)); 
+		for (final EVariable var : vars) {
+			final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
 			diagramEditor.removeEOject(var);
 			EcoreUtil.delete(var, true);
 
 		}
-		for ( final TableItem item : table_vars.getItems() ) {
+		for (final TableItem item : table_vars.getItems()) {
 			final EVariable var = gama.GamaFactory.eINSTANCE.createEVariable();
 			var.setName(item.getText(0));
 			var.setType(item.getText(1));
 			var.setInit(item.getText(2));
 			action.getVariables().add(var);
-			GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
+			final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
 			diagramEditor.addEOject(var);
 
 		}
@@ -219,26 +226,17 @@ public class EditActionFrame extends EditFrame {
 		tableVars.setHeaderVisible(true);
 		tableVars.setLinesVisible(true);
 
-		tableVars.addListener(SWT.MeasureItem, new Listener() {
+		tableVars.addListener(SWT.MeasureItem, event -> event.height = 20);
 
-			@Override
-			public void handleEvent(final Event event) {
-				event.height = 20;
-				// TableItem item = (TableItem) event.item;
-				// System.out.println("item.getBackground(): " + item.getBackground());
-				// event.gc.setBackground(item.getBackground());
-			}
-		});
-
-		TableColumn tblclmnName = new TableColumn(tableVars, SWT.NONE);
+		final TableColumn tblclmnName = new TableColumn(tableVars, SWT.NONE);
 		tblclmnName.setWidth(100);
 		tblclmnName.setText("Name");
 
-		TableColumn tblclmnType = new TableColumn(tableVars, SWT.NONE);
+		final TableColumn tblclmnType = new TableColumn(tableVars, SWT.NONE);
 		tblclmnType.setWidth(100);
 		tblclmnType.setText("Type");
 
-		TableColumn tblclmnInitValue = new TableColumn(tableVars, SWT.NONE);
+		final TableColumn tblclmnInitValue = new TableColumn(tableVars, SWT.NONE);
 		tblclmnInitValue.setWidth(100);
 		tblclmnInitValue.setText("default value");
 
@@ -247,30 +245,31 @@ public class EditActionFrame extends EditFrame {
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
 
-		// Use a mouse listener, not a selection listener, since we're interested
+		// Use a mouse listener, not a selection listener, since we're
+		// interested
 		// in the selected column as well as row
 		tableVars.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseDown(final MouseEvent event) {
 				// Dispose any existing editor
-				Control old = editor.getEditor();
-				if ( old != null ) {
+				final Control old = editor.getEditor();
+				if (old != null) {
 					old.dispose();
 				}
 
 				// Determine where the mouse was clicked
-				Point pt = new Point(event.x, event.y);
+				final Point pt = new Point(event.x, event.y);
 
 				// Determine which row was selected
 				final TableItem item = tableVars.getItem(pt);
 
-				if ( item != null ) {
+				if (item != null) {
 					// Determine which column was selected
 					int column = -1;
-					for ( int i = 0, n = tableVars.getColumnCount(); i < n; i++ ) {
-						Rectangle rect = item.getBounds(i);
-						if ( rect.contains(pt) ) {
+					for (int i = 0, n = tableVars.getColumnCount(); i < n; i++) {
+						final Rectangle rect = item.getBounds(i);
+						if (rect.contains(pt)) {
 							// This is the selected column
 							column = i;
 							break;
@@ -278,10 +277,10 @@ public class EditActionFrame extends EditFrame {
 					}
 
 					// Column 2 holds dropdowns
-					if ( column == 1 ) {
+					if (column == 1) {
 						// Create the dropdown and add data to it
 						final CCombo combo = new CCombo(tableVars, SWT.READ_ONLY);
-						for ( int i = 0, n = types.size(); i < n; i++ ) {
+						for (int i = 0, n = types.size(); i < n; i++) {
 							combo.add(types.get(i));
 						}
 
@@ -289,15 +288,18 @@ public class EditActionFrame extends EditFrame {
 						combo.select(combo.indexOf(item.getText(column)));
 
 						// Compute the width for the editor
-						// Also, compute the column width, so that the dropdown fits
-						// editor.minimumWidth = combo.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+						// Also, compute the column width, so that the dropdown
+						// fits
+						// editor.minimumWidth = combo.computeSize(SWT.DEFAULT,
+						// SWT.DEFAULT).x;
 						// table.getColumn(column).setWidth(editor.minimumWidth);
 
 						// Set the focus on the dropdown and set into the editor
 						combo.setFocus();
 						editor.setEditor(combo, item, column);
 
-						// Add a listener to set the selected item back into the cell
+						// Add a listener to set the selected item back into the
+						// cell
 						final int col = column;
 						combo.addSelectionListener(new SelectionAdapter() {
 
@@ -305,31 +307,31 @@ public class EditActionFrame extends EditFrame {
 							public void widgetSelected(final SelectionEvent event) {
 								item.setText(col, combo.getText());
 								save("arguments");
-								// They selected an item; end the editing session
+								// They selected an item; end the editing
+								// session
 								combo.dispose();
 							}
 						});
-					} else if ( column != 1 ) {
+					} else if (column != 1) {
 						// Create the Text object for our editor
-						final GamaDiagramEditor diagramEditor =
-							((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
-						List<String> uselessName = new ArrayList<String>();
+						final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
+						final List<String> uselessName = new ArrayList<String>();
 
 						String name = "name";
 						switch (column) {
-							case 2:
-								name = "";
-								uselessName.add("name");
-								break;
+						case 2:
+							name = "";
+							uselessName.add("name");
+							break;
 						}
 
-						final ValidateText text =
-							new ValidateText(tableVars, SWT.BORDER, diagram, fp, frame, diagramEditor, name,
-								uselessName, item.getText(0));
+						final ValidateText text = new ValidateText(tableVars, SWT.BORDER, diagram, fp, frame,
+								diagramEditor, name, uselessName, item.getText(0));
 						// text.setAllErrors(true);
 
 						// Listener[] lis = text.getListeners(SWT.Modify);
-						// for (Listener li : lis) {text.removeModifyListener((ModifyListener) li);}
+						// for (Listener li : lis)
+						// {text.removeModifyListener((ModifyListener) li);}
 						item.setBackground(column, text.getBackground());
 
 						// final Text text = new Text(tableVars, SWT.NONE);
@@ -352,37 +354,34 @@ public class EditActionFrame extends EditFrame {
 						// Add a handler to transfer the text back to the cell
 						// any time it's modified
 						final int col = column;
-						text.addModifyListener(new ModifyListener() {
+						text.addModifyListener(event1 -> {
+							// Set the text of the editor's control back into
+							// the cell
+							item.setText(col, text.getText());
+							save("variables");
+							text.applyModification();
 
-							@Override
-							public void modifyText(final ModifyEvent event) {
-								// Set the text of the editor's control back into the cell
-								item.setText(col, text.getText());
-								save("variables");
-								text.applyModification();
-
-								item.setBackground(col, text.getBackground());
-								for ( int i = 2; i < table_vars.getColumnCount(); i++ ) {
-									if ( i == col ) {
-										continue;
-									}
-									String name = "name";
-									switch (i) {
-										case 2:
-											name = "";
-											break;
-									}
-									String error = diagramEditor.containErrors(text.getLoc(), name, null);
-									// System.out.println("error = " + error);
-									String textI = item.getText(i);
-									if ( error != null && !error.isEmpty() ) {
-										item.setBackground(i, new Color(text.getDisplay(), 255, 100, 100));
-									} else if ( !textI.contains(";") && !textI.contains("{") && !textI.contains("}") ) {
-										item.setBackground(i, new Color(text.getDisplay(), 100, 255, 100));
-									}
+							item.setBackground(col, text.getBackground());
+							for (int i = 2; i < table_vars.getColumnCount(); i++) {
+								if (i == col) {
+									continue;
 								}
-
+								String name1 = "name";
+								switch (i) {
+								case 2:
+									name1 = "";
+									break;
+								}
+								final String error = diagramEditor.containErrors(text.getLoc(), name1, null);
+								// System.out.println("error = " + error);
+								final String textI = item.getText(i);
+								if (error != null && !error.isEmpty()) {
+									item.setBackground(i, new Color(text.getDisplay(), 255, 100, 100));
+								} else if (!textI.contains(";") && !textI.contains("{") && !textI.contains("}")) {
+									item.setBackground(i, new Color(text.getDisplay(), 100, 255, 100));
+								}
 							}
+
 						});
 					}
 				} else {
@@ -394,8 +393,8 @@ public class EditActionFrame extends EditFrame {
 	}
 
 	void initTable() {
-		for ( EVariable var : ((EAction) eobject).getVariables() ) {
-			TableItem ti = new TableItem(table_vars, SWT.NONE);
+		for (final EVariable var : ((EAction) eobject).getVariables()) {
+			final TableItem ti = new TableItem(table_vars, SWT.NONE);
 			ti.setText(new String[] { var.getName(), var.getType(), var.getInit() });
 			cpt++;
 		}
@@ -404,7 +403,7 @@ public class EditActionFrame extends EditFrame {
 	public void groupVar(final Composite container) {
 		// ****** CANVAS VARIABLES *********
 
-		Group group = new Group(container, SWT.NONE);
+		final Group group = new Group(container, SWT.NONE);
 		group.setBounds(10, 30, 720, 140);
 		// group.setLayout( new FillLayout(SWT.HORIZONTAL));
 		group.setText("arguments");
@@ -416,16 +415,16 @@ public class EditActionFrame extends EditFrame {
 
 		initTable();
 
-		CLabel lblVariables = new CLabel(group, SWT.NONE);
+		final CLabel lblVariables = new CLabel(group, SWT.NONE);
 		lblVariables.setBounds(10, 5, 100, 20);
 		lblVariables.setText("Arguments");
 		lblVariables.setFont(titleFont);
-		Button btnAddVariable = new Button(group, SWT.NONE);
+		final Button btnAddVariable = new Button(group, SWT.NONE);
 		btnAddVariable.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				TableItem ti = new TableItem(table_vars, SWT.NONE);
+				final TableItem ti = new TableItem(table_vars, SWT.NONE);
 				final String name = "arg" + cpt;
 				ti.setText(new String[] { name, "int", "" });
 				ti.setBackground(new Color(frame.getShell().getDisplay(), 100, 255, 100));
@@ -436,12 +435,12 @@ public class EditActionFrame extends EditFrame {
 		btnAddVariable.setBounds(62, 158, 120, 28);
 		btnAddVariable.setText("Add argument");
 
-		Button btnDeleteVariable = new Button(group, SWT.NONE);
+		final Button btnDeleteVariable = new Button(group, SWT.NONE);
 		btnDeleteVariable.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				int[] indices = table_vars.getSelectionIndices();
+				final int[] indices = table_vars.getSelectionIndices();
 				table_vars.remove(indices);
 				table_vars.redraw();
 				save("variables");
