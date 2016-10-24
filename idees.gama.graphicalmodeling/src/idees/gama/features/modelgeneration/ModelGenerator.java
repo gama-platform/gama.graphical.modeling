@@ -98,10 +98,11 @@ public class ModelGenerator {
 			// diagram));
 			return model;
 		} catch (final GamaRuntimeException e1) {
-			return null;
+			e1.printStackTrace();
 		} catch (final Exception e) {
-			return null;
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	public static String getPath(final IFeatureProvider fp, final Diagram diagram) {
@@ -220,10 +221,11 @@ public class ModelGenerator {
 			}
 			return errors;
 		} catch (final GamaRuntimeException e1) {
-			return null;
+			e1.printStackTrace();
 		} catch (final Exception e) {
-			return null;
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	static String defineSpecies(final ESpecies species, final int level, final String id) {
