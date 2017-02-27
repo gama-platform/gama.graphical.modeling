@@ -127,7 +127,6 @@ public class EditSpeciesFrame extends EditFrame {
 		types.add("rgb");
 		types.add("point");
 		types.add("geometry");
-		System.out.println("AbstractGamlAdditions.VARTYPE2KEYWORDS: " + AbstractGamlAdditions.VARTYPE2KEYWORDS);
 		for (final String ty : AbstractGamlAdditions.VARTYPE2KEYWORDS.values()) {
 			if (!types.contains(ty) && !ty.toString().endsWith("_file"))
 				types.add(ty);
@@ -182,9 +181,9 @@ public class EditSpeciesFrame extends EditFrame {
 
 		// Set the minimum size
 		if (eobject instanceof EGrid)
-			sc.setMinSize(container.computeSize(730, 980));
+			sc.setMinSize(container.computeSize(730, 1080));
 		else
-			sc.setMinSize(container.computeSize(730, 700));
+			sc.setMinSize(container.computeSize(730, 800));
 		// Expand both horizontally and vertically
 		sc.setExpandHorizontal(true);
 		sc.setExpandVertical(true);
@@ -606,7 +605,7 @@ public class EditSpeciesFrame extends EditFrame {
 
 		reflexViewer.setBounds(5, 30, 700, 45);
 		final CLabel lblReflexOrder = new CLabel(group, SWT.NONE);
-		lblReflexOrder.setBounds(5, 5, 100, 20);
+		lblReflexOrder.setBounds(5, 5, 200, 20);
 		lblReflexOrder.setText("Reflex order");
 		lblReflexOrder.setFont(titleFont);
 

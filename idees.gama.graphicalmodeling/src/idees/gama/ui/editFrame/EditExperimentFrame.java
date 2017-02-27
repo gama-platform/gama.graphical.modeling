@@ -108,7 +108,7 @@ public class EditExperimentFrame extends EditFrame {
 		initTableParam();
 
 		final CLabel lblVariables = new CLabel(canvasParameter, SWT.NONE);
-		lblVariables.setBounds(10, 5, 100, 20);
+		lblVariables.setBounds(10, 5, 200, 20);
 		lblVariables.setText("Parameters");
 		final Button btnAddVariable = new Button(canvasParameter, SWT.NONE);
 		btnAddVariable.addSelectionListener(new SelectionAdapter() {

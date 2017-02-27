@@ -407,6 +407,10 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		}
 
 		for (final IVariable var : species.getVars()) {
+			if (var.getName().equals("shape") && !var.getDescription().hasFacet("init")) continue;
+			if (var.getName().equals("location") && !var.getDescription().hasFacet("init")) continue;
+			if (var.getName().equals("color") && !var.getDescription().hasFacet("init")) continue;
+			
 			addVariable(var, target, listSpecies);
 		}
 
@@ -1112,6 +1116,10 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		final List<String> listSpecies = new ArrayList<String>();
 		listSpecies.addAll(gamaModel.getMicroSpeciesNames());
 		for (final IVariable var : gamaModel.getVars()) {
+			if (var.getName().equals("experiment") || var.getName().equals("world") || var.getName().equals("location")) continue;
+			if (var.getName().equals("shape") && !var.getDescription().hasFacet("init")) continue;
+			if (var.getName().equals("step") && !var.getDescription().hasFacet("init")) continue;
+			if (var.getName().equals("color") && !var.getDescription().hasFacet("init")) continue;
 			addVariable(var, eWorld, listSpecies);
 		}
 		for (final ActionStatement action : gamaModel.getActions()) {
@@ -1122,7 +1130,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		for (final IStatement stat : gamaModel.getBehaviors()) {
 			if (stat instanceof ReflexStatement) {
 				if (stat.getName() != null && !stat.getName().isEmpty()
-						&& !stat.getName().startsWith("internal_init")) {
+						&& !stat.getName().startsWith("_internal_init")) {
 					createReflex(eWorld, worldPE, (ReflexStatement) stat, diagram);
 				} else {
 					String gmlCode = "";

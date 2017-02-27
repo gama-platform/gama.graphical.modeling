@@ -359,7 +359,7 @@ public class EditDisplayFrame extends EditFrame {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(900, 750);
+		return new Point(1000, 750);
 	}
 
 	public Table getLayerViewer() {
