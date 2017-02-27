@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -77,7 +78,8 @@ public class ModelGenerator {
 		diagramEditor.initIdsEObjects();
 		final XtextResourceSet rs = new SynchronizedXtextResourceSet();
 		rs.setClasspathURIContext(ModelGenerator.class);
-		final URI uri = URI.createPlatformResourceURI("toto/" + diagramEditor.getTitle() + ".gaml", true);
+		URI du = diagramEditor.getDiagramEditorInput().getUri();
+		final URI uri = URI.createURI((du.trimFragment()).toString().replace(".gadl",".gaml"), true);
 		final GamlResource resource = (GamlResource) rs.createResource(uri);
 		final String gamlModel = ModelGenerator.generateModel(fp, diagram, null);
 		final InputStream is = new ByteArrayInputStream(gamlModel.getBytes());
@@ -90,7 +92,7 @@ public class ModelGenerator {
 		try {
 			final Set<GamlResource> resources = new HashSet<GamlResource>();
 			resources.add(resource);
-			final IModel model = GamlModelBuilder.compile(resource.getURI(), new ArrayList<GamlCompilationError>());
+			final IModel model = GamlModelBuilder.compile(resource, new ArrayList<GamlCompilationError>());
 			((ModelDescription) model.getDescription()).setModelFilePath(getPath(fp, diagram));
 
 			// ((ModelDescription)
@@ -188,7 +190,8 @@ public class ModelGenerator {
 
 		final XtextResourceSet rs = new SynchronizedXtextResourceSet();
 		rs.setClasspathURIContext(ModelGenerator.class);
-		final URI uri = URI.createPlatformResourceURI("toto/" + diagramEditor.getTitle() + ".gaml", true);
+		URI du = diagramEditor.getDiagramEditorInput().getUri();
+		final URI uri = URI.createURI((du.trimFragment()).toString().replace(".gadl",".gaml"), true);
 		final GamlResource resource = (GamlResource) rs.createResource(uri);
 		final String gamlModel = ModelGenerator.generateModel(fp, diagram, null);
 		if (gamlModel.equals(""))
@@ -201,16 +204,19 @@ public class ModelGenerator {
 			e1.printStackTrace();
 		}
 		try {
+			
+			resource.validate();
+			
 			// GamlJavaValidator validator =
 			// EGaml.getInstance(GamlJavaValidator.class);
 			final List<GamlCompilationError> errors = new ArrayList<GamlCompilationError>();
 
-			final IModel model = GamlModelBuilder.compile(resource.getURI(), errors);
-			if (model == null) {
-				for (final GamlCompilationError error : errors) {
-					if (error.isError()) {
-						errors.add(error);
-					}
+			//final IModel model = GamlModelBuilder.compile(resource, errors);
+			Iterator<GamlCompilationError> it = resource.getValidationContext().getInternalErrors().iterator();
+			while (it.hasNext()) {
+				GamlCompilationError error = it.next();
+				if (error.isError()) {
+					errors.add(error);
 				}
 			}
 			diagramEditor.getErrorsLoc().clear();

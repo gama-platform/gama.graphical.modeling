@@ -348,7 +348,7 @@ public abstract class EditFrame extends ApplicationWindow {
 		final Injector injector = GamlActivator.getInstance().getInjector("msi.gama.lang.gaml.Gaml");
 
 		rp = injector.getInstance(GAMARessourceProvider.class);
-		rp.setName(((GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp)).getTitle(), fp, diagram);
+		rp.setName(((GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp)), fp, diagram);
 		final EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
 
 		editor = factory.newEditor(rp).showErrorAndWarningAnnotations().withParent(group);
