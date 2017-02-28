@@ -129,7 +129,7 @@ public class AddGridFeature extends AbstractAddShapeFeature {
 			text2.setHorizontalAlignment(Orientation.ALIGNMENT_LEFT);
 			text2.setVerticalAlignment(Orientation.ALIGNMENT_TOP);
 			text2.setFont(gaService.manageFont(getDiagram(), "Arial", 12, false, false));
-			gaService.setLocationAndSize(text2, 5, 25, text2.getWidth(), 15 + addedClass.getVariables().size() * 15);
+			gaService.setLocationAndSize(text2, 5, 25, text2.getWidth(), 25 + addedClass.getVariables().size() * 20);
 
 			// create link and wire it
 			link(shape2, addedClass);

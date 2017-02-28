@@ -129,11 +129,11 @@ public class UpdateEGamaObjectFeature extends AbstractUpdateFeature {
 				if (shape.getGraphicsAlgorithm() instanceof Text) {
 					final Text text = (Text) shape.getGraphicsAlgorithm();
 
-					if (text.getY() != 25)
+					if (text.getY() < 25)
 						text.setValue(businessName);
 					else {
 						text.setValue(varNames);
-						Graphiti.getGaService().setLocationAndSize(text, 5, 25, text.getWidth(), 15 + cpt * 15);
+						Graphiti.getGaService().setLocationAndSize(text, 5, 25, text.getWidth(), 25 + cpt * 20);
 					}
 
 				}
