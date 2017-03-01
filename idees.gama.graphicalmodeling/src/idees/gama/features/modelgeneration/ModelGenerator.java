@@ -250,8 +250,8 @@ public class ModelGenerator {
 			model += "species " + species.getName();
 		}
 
-		for (final EInheritLink link : species.getInheritingLinks()) {
-			model += " parent:" + link.getParent();
+		if (species.getInheritsFrom() != null) {
+			model += " parent:" + species.getInheritsFrom().getName();
 		}
 
 		if (species.getSkills() != null && !species.getSkills().isEmpty()) {
