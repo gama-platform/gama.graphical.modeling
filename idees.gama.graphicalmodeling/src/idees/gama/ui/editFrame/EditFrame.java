@@ -107,6 +107,8 @@ public abstract class EditFrame extends ApplicationWindow {
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
 		addStatusLine();
+		ModelGenerator.modelValidation(fp, diagram);
+		
 
 	}
 

@@ -38,7 +38,6 @@ import gama.EFacet;
 import gama.EGamaLink;
 import gama.EGamaObject;
 import gama.EGrid;
-import gama.EInheritLink;
 import gama.ELayer;
 import gama.ELayerAspect;
 import gama.EMonitor;
@@ -142,35 +141,31 @@ public class ModelGenerator {
 
 	public static boolean hasSyntaxError(final IFeatureProvider fp, final String expression, final boolean isExpression,
 			final boolean isString) {
-		if (expression.isEmpty()) {
+		if (expression.replace(" ", "").isEmpty()) {
 			return false;
 		}
-		// GamaDiagramEditor diagramEditor =
-		// ((GamaDiagramEditor)fp.getDiagramTypeProvider().getDiagramEditor());
-		// System.out.println("isString: " + isString);
+		URI du = ((GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp)).getDiagramEditorInput().getUri();
+		
+		final URI uri = URI.createURI((du.trimFragment()).toString().replace(".gadl",".gaml"), true);
+		
 		final XtextResourceSet rs = new SynchronizedXtextResourceSet();
 		rs.setClasspathURIContext(ModelGenerator.class);
-		final URI uri = URI.createPlatformResourceURI("toto/toto.gaml", true);
-		final GamlResource resource = (GamlResource) rs.createResource(uri);
-		final String gamlModel = "model toto2733663525\nglobal{init{" + (isExpression ? "var toto <-" : "")
+		final String gamlModel = "model toto2733663525\nglobal{init{" + (isExpression ? "string _toto_t <-" : "")
 				+ (isString ? "\"" : "") + expression + (isString ? "\"" : "") + (isExpression ? ";" : "") + "}}";
 		final InputStream is = new ByteArrayInputStream(gamlModel.getBytes());
-		// System.out.println("gamlModel: " + gamlModel);
+		final GamlResource resource = (GamlResource) rs.createResource(uri);
+		
 		try {
 			resource.load(is, null);
 		} catch (final IOException e1) {
 			e1.printStackTrace();
 		}
 		try {
-			final List<GamlCompilationError> errors = new ArrayList<>();
-			final IModel model = GamlModelBuilder.compile(resource.getURI(), errors);
-			for (final GamlCompilationError error : errors) {
-				// System.out.println("error : " + error);
-
+			resource.validate();
+			Iterator<GamlCompilationError> it = resource.getValidationContext().getInternalErrors().iterator();
+			while (it.hasNext()) {
+				GamlCompilationError error = it.next();
 				if (error.isError() && error.toString().equals("Syntax errors detected ")) {
-					// System.out.println("has syntax error");
-
-					// diagramEditor.updateToolbar(false);
 					return true;
 				}
 			}
@@ -183,7 +178,7 @@ public class ModelGenerator {
 	}
 
 	public static List<GamlCompilationError> modelValidation(final IFeatureProvider fp,
-			final Diagram diagram/* ,ValidateStyledText vst */) {
+			final Diagram diagram) {
 
 		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
 		diagramEditor.initIdsEObjects();
@@ -204,14 +199,8 @@ public class ModelGenerator {
 			e1.printStackTrace();
 		}
 		try {
-			
 			resource.validate();
-			
-			// GamlJavaValidator validator =
-			// EGaml.getInstance(GamlJavaValidator.class);
 			final List<GamlCompilationError> errors = new ArrayList<GamlCompilationError>();
-
-			//final IModel model = GamlModelBuilder.compile(resource, errors);
 			Iterator<GamlCompilationError> it = resource.getValidationContext().getInternalErrors().iterator();
 			while (it.hasNext()) {
 				GamlCompilationError error = it.next();
@@ -260,6 +249,7 @@ public class ModelGenerator {
 		for (final EFacet facet : species.getFacets()) {
 			if (facet.getValue().replace(" ", "").isEmpty())
 				continue;
+			if (facet.getName().equals("name")) continue;
 			model += " " + facet.getName() + ":" + facet.getValue();
 		}
 		model += " {" + EL;
@@ -441,7 +431,7 @@ public class ModelGenerator {
 		if (code != null && !code.isEmpty()) {
 			for (final String line : code.split("\n")) {
 				if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
-				result += sp + (level == -1 ? "" : "\t") + line + EL;
+				result += sp + (level == -1 ? "" : "\t") + line;
 			}
 		}
 		result += sp + "}" + EL;
@@ -463,7 +453,7 @@ public class ModelGenerator {
 		if (code != null && !code.isEmpty()) {
 			for (final String line : code.split("\n")) {
 				if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
-				result += sp + (level == -1 ? "" : "\t") + line + EL;
+				result += sp + (level == -1 ? "" : "\t") + line;
 			}
 		}
 		result += sp + "}" + EL;
@@ -518,7 +508,7 @@ public class ModelGenerator {
 		if (code != null && !code.isEmpty()) {
 			for (final String line : code.split("\n")) {
 				if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
-				result += sp + (level == -1 ? "" : "\t") + line + EL;
+				result += sp + (level == -1 ? "" : "\t") + line;
 			}
 		}
 
@@ -542,7 +532,7 @@ public class ModelGenerator {
 			if (code != null && !code.isEmpty()) {
 				for (final String line : code.split("\n")) {
 					if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
-					result += sp + (level == -1 ? "" : "\t") + line + EL;
+					result += sp + (level == -1 ? "" : "\t") + line;
 				}
 			}
 		} else {
@@ -693,7 +683,7 @@ public class ModelGenerator {
 			if (code != null && !code.isEmpty()) {
 				for (final String line : code.split("\n")) {
 					if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
-					model += line + EL;
+					model += line;
 				}
 			}
 		} else {

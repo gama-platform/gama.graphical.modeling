@@ -699,6 +699,7 @@ public class EditSpeciesFrame extends EditFrame {
 		}
 
 		ef.hasDoneChanges = true;
+		System.out.println("save");
 		ModelGenerator.modelValidation(fp, diagram);
 	}
 
