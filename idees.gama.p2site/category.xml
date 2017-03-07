@@ -3,6 +3,9 @@
    <description name="Graphical Modeling Update Site">
       Site containing updates to the GAMA Graphical Modeling tools for GAMA (see http://gama-platform.org)
    </description>
-   <feature url="features/idees.gama.feature.graphical_modeling_0.0.0.jar" id="idees.gama.feature.graphical_modeling" version="0.0.0" /> 
-   </site>
-	
+   <feature url="features/idees.gama.feature.graphical_modeling_0.0.0.jar" id="idees.gama.feature.graphical_modeling" version="0.0.0" >
+   		<category name="gama.core"/>
+   </feature>
+
+	<category-def name="gama.core" label="Core plugins of Graphical Modeling"/>
+</site>

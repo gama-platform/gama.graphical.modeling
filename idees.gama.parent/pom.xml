@@ -43,6 +43,11 @@
 			<layout>p2</layout>
 		</repository>
 		<repository>
+			<id>eclipse-xtext</id>
+			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
 			<id>gama</id>
 			<name>GAMA Snapshots</name>
 			<url>http://vps226121.ovh.net/updates/</url>
