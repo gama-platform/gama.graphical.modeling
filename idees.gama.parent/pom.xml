@@ -9,20 +9,6 @@
 
 
 
-	<distributionManagement>
-		<repository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>p2Repo</id>
-			<url>scp://51.255.46.42/./var/www/gama_graphicalmodelling_updates</url>
-		</repository>
-		<snapshotRepository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>p2Repo</id>
-			<url>scp://51.255.46.42/./var/www/gama_graphicalmodelling_updates</url>
-		</snapshotRepository>
-	</distributionManagement>
-
-
 	<modules>
 		<module>../idees.gama.graphicalmodeling</module>
 		<module>../idees.gama.emf.metamodel</module>
@@ -34,19 +20,7 @@
 		<tycho.version>0.25.0</tycho.version>
 		<project.version>1.7.0-SNAPSHOT</project.version>
 	</properties>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>buchen-maven-repo</id>
-			<url>http://buchen.github.io/maven-repo</url>
-			<layout>default</layout>
-		</pluginRepository>
-		<pluginRepository>
-			<id>pentaho-releases</id>
-			<url>http://repository.pentaho.org/artifactory/repo/</url>
-			<layout>default</layout>
-		</pluginRepository>
 
-	</pluginRepositories>
 	<profiles>
 		<!-- This profile is used to upload the repo -->
 		<profile>
@@ -158,17 +132,6 @@
 			<id>eclipse-xtext</id>
 			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
 			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>p2Repo-snapshots</id>
-			<name>GAMA p2Repo</name>
-			<url>http://51.255.46.42/updates/repo/plugin/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
 		</repository>
 
 	</repositories>
