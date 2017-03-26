@@ -1,3 +1,3 @@
 cd idees.gama.parent &&
-mvn -U --update-snapshots clean install &&
+mvn -X clean install &&
 cd -
