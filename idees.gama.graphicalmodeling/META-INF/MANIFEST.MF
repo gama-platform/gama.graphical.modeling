@@ -4,7 +4,7 @@ Bundle-Name: GraphicalModeling
 Bundle-SymbolicName: idees.gama.graphicalmodeling;singleton:=true
 Bundle-Version: 1.7.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: msi.gama.core,
+Require-Bundle: msi.gama.core;visibility:=reexport,
  idees.gama.emf.metamodel,
  org.eclipse.ui.ide,
  org.eclipse.xtext.ui,
