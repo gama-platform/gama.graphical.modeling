@@ -1,3 +1,3 @@
 cd idees.gama.parent &&
-mvn -X clean install &&
+mvn clean install &&
 cd -
