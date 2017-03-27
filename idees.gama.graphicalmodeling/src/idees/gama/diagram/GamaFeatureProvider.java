@@ -1006,8 +1006,10 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		}
 		final ERule target = gama.GamaFactory.eINSTANCE.createERule();
 		diagram.eResource().getContents().add(target);
-		target.setName(rule.getName());
-
+		String[] nR = rule.getName() == null ? null : rule.getName().split(" ");
+		if (nR.length == 1)
+			target.setName(rule.getName());
+		else target.setName(nR[nR.length-1]);
 		final CreateContext ac = new CreateContext();
 
 		ac.setLocation(0, 0);
