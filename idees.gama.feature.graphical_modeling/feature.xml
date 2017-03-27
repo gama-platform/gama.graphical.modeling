@@ -2,7 +2,7 @@
 <feature
       id="idees.gama.feature.graphical_modeling"
       label="Graphical_modeling"
-      version="1.0.0.qualifier"
+      version="1.7.0.qualifier"
       provider-name="IDEES">
 
    <description url="http://www.example.com/description">
@@ -30,6 +30,19 @@
 
    <plugin
          id="idees.gama.graphicalmodeling"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+ 	<plugin
+         id="org.eclipse.xtext.xbase.lib"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.xtend.lib.macro"
          download-size="0"
          install-size="0"
          version="0.0.0"

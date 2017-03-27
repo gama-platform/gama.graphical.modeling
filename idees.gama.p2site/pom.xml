@@ -5,71 +5,107 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>idees.gama</groupId>
-		<artifactId>ummisco.gaml.extensions.parent</artifactId>
+		<artifactId>idees.gama.parent</artifactId>
 		<version>1.7.0-SNAPSHOT</version>
-		<relativePath>../ummisco.gaml.extensions.parent/</relativePath>
+		<relativePath>../idees.gama.parent/</relativePath>
 	</parent>
 	<artifactId>ummisco.gaml.extensions.p2site</artifactId>
 	<packaging>eclipse-repository</packaging>
 
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>p2Repo</id>
+			<url>scpexe://51.255.46.42/./var/www/gama_updates/graphical_modeling</url>
+		</repository>
+		<snapshotRepository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>p2Repo</id>
+			<url>scpexe://51.255.46.42/./var/www/gama_updates/graphical_modeling</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+
+	<profiles>
+		<!-- This profile is used to upload the repo -->
+		<profile>
+			<id>p2Repo</id>
+			<properties>
+				<!-- Properties relative to the distant host where to upload the repo -->
+				<ftp.url>scp://51.255.46.42</ftp.url>
+				<ftp.toDir>./var/www/gama_updates/graphical_modeling</ftp.toDir>
+				<!-- Relative path to the repo being uploaded -->
+				<repo.path>${project.build.directory}/repository/</repo.path>
+			</properties>
+
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-deploy-plugin</artifactId>
+						<version>2.5</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.maven.wagon</groupId>
+								<artifactId>wagon-ssh</artifactId>
+								<version>2.12</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+					<!-- Upload the repo to the server -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>wagon-maven-plugin</artifactId>
+						<version>1.0</version>
+						<executions>
+							<execution>
+								<id>p2Repo</id>
+								<phase>install</phase>
+								<goals>
+									<goal>upload</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<requireFilesSize>
+											<maxsize>50000</maxsize>
+											<minsize>90</minsize>
+										</requireFilesSize>
+									</rules>
+									<removeAll>true</removeAll>
+									<fromDir>${repo.path}</fromDir>
+									<includes>**</includes>
+									<toDir>${ftp.toDir}</toDir>
+									<url>${ftp.url}</url>
+									<serverId>p2Repo</serverId>
+									<!-- Points to your settings.xml where the connection settings are 
+										stored as shown below -->
+									<!-- <server> -->
+									<!-- <id>p2Repo</id> -->
+									<!-- <username>username</username> -->
+									<!-- <password>password</password> -->
+									<!-- </server> -->
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 	<build>
 
-	 <extensions>
-	     <extension>
-	      <groupId>org.apache.maven.wagon</groupId>
-	       <artifactId>wagon-ssh</artifactId>
-	       <version>2.10</version>
-	    </extension>
-	  </extensions>	
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>2.12</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>2.12</version>
+			</extension>
+		</extensions>
 	</build>
 
-	 <profiles>
-	  <!-- This profile is used to upload the repo -->
-	  <profile>
-	   <id>uploadRepo</id>
-	   <properties>
-	    <!-- Properties relative to the
-	    distant host where to upload the repo -->
-	    <ftp.url>sftp://vps226121.ovh.net</ftp.url>
-	    <ftp.toDir>/var/www/gama_graphicalmodelling_updates</ftp.toDir>
-	    <!-- Relative path to the repo being uploaded -->
-	    <repo.path>${project.build.directory}/repository/</repo.path>
-	   </properties>
-
-	   <build>
-	    <plugins>
-	     <!-- Upload the repo to the server -->
-	     <plugin>
-	      <groupId>org.codehaus.mojo</groupId>
-	      <artifactId>wagon-maven-plugin</artifactId>
-	      <version>1.0</version>
-	      <executions>
-	       <execution>
-		<id>upload-repo</id>
-		<phase>install</phase>
-		<goals>
-		 <goal>upload</goal>
-		</goals>
-		<configuration>
-		 <fromDir>${repo.path}</fromDir>
-		 <includes>**</includes>
-		 <toDir>${ftp.toDir}</toDir>
-		 <url>${ftp.url}</url>
-		 <serverId>gama-sftp</serverId>
-		 <!-- Points to your settings.xml
-		 where the connection settings are
-		  stored as shown below -->
-		 <!-- <server> -->
-		 <!-- <id>p2Repo</id> -->
-		 <!-- <username>username</username> -->
-		 <!-- <password>password</password> -->
-		 <!-- </server> -->
-		</configuration>
-	       </execution>
-	      </executions>
-	     </plugin>
-	    </plugins>
-	   </build>
-	  </profile>
-	 </profiles>
 </project>
