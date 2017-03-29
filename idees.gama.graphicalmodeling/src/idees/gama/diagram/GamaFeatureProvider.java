@@ -448,7 +448,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		for (final IStatement stat : species.getBehaviors()) {
 			if (stat instanceof ReflexStatement) {
 				if (stat.getName() != null && !stat.getName().isEmpty()
-						&& !stat.getName().startsWith("internal_init")) {
+						&& !stat.getName().startsWith("_internal_init")) {
 					createReflex(target, targetE, (ReflexStatement) stat, diagram);
 				} else {
 					String gmlCode = "";
@@ -633,8 +633,10 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setValue(display.getFacet(name).serialize(false));
 		}
 		String gmlCode = display.serialize(false);
-		gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
-		gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
+		if (gmlCode.contains("{")) {
+			gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
+			gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
+		} else gmlCode = "";
 		target.setGamlCode(gmlCode);
 		return target;
 	}
@@ -690,8 +692,10 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setValue(aspect.getFacet(name).serialize(false));
 		}
 		String gmlCode = aspect.serialize(false);
-		gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
-		gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
+		if (gmlCode.contains("{")) {
+			gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
+			gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
+		} else gmlCode = "";
 		target.setGamlCode(gmlCode);
 		return target;
 	}
@@ -745,8 +749,10 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setValue(equation.getFacet(name).serialize(false));
 		}
 		String gmlCode = equation.serialize(false);
-		gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
-		gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
+		if (gmlCode.contains("{")) {
+			gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
+			gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
+		} else gmlCode = "";
 		target.setGamlCode(gmlCode);
 		return target;
 	}
@@ -1062,8 +1068,10 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		diagram.eResource().getContents().add(target);
 		target.setName(reflex.getName());
 		String gmlCode = reflex.serialize(false);
-		gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
-		gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
+		if (gmlCode.contains("{")) {
+			gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
+			gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
+		} else gmlCode = "";
 		target.setGamlCode(gmlCode);
 		if (reflex.hasFacet(IKeyword.WHEN)) {
 			final EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
