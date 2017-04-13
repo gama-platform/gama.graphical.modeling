@@ -413,9 +413,9 @@ public class EditDisplayFrame extends EditFrame {
 	}
 
 	public boolean testBasicOk(final ELayer lay, final List<String> speciesStr) {
-		return (lay.getType() == null || lay.getType().equals("species") && speciesStr.contains(lay.getSpecies())) &&
+		return (lay.getType() == null || lay.getType().equals("species") && speciesStr.contains(lay.getSpecies()));// &&
 
-				!ModelGenerator.hasSyntaxError(fp, lay.getName(), true);
+//				!ModelGenerator.hasSyntaxError(fp, lay.getName(), true);
 	}
 
 	public boolean hasError(final ELayer elayer) {
