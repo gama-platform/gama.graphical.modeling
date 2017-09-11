@@ -113,29 +113,27 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 	}
 
 	@Override
-	public void validationEnded(final Collection<? extends IDescription> experiments, final ValidationContext status) {
+	public void validationEnded(final Iterable<? extends IDescription> experiments, final ValidationContext status) {
 		updateExperiments(experiments, status.hasErrors());
 		toRefresh = true;
 	}
 
 	/*
-	 * public void validationEnded(Set<String> experiments, boolean withErrors)
-	 * {
+	 * public void validationEnded(Set<String> experiments, boolean withErrors) {
 	 * 
 	 * }
 	 */
 
-	private void updateExperiments(final Collection<? extends IDescription> experiments, final boolean withErrors) {
-		if (withErrors == true && wasOK == false) {
-			return;
-		}
+	private <T extends IDescription> void updateExperiments(final Iterable<T> experiments, final boolean withErrors) {
+		if (withErrors == true && wasOK == false) { return; }
 		final Set<String> oldNames = new LinkedHashSet<String>(completeNamesOfExperiments);
-		if (inited && wasOK && !withErrors && oldNames.equals(experiments)) {
-			return;
-		}
+		if (inited && wasOK && !withErrors && oldNames.equals(experiments)) { return; }
+		final Collection<T> exps = new ArrayList<>();
+		for (final T desc : experiments)
+			exps.add(desc);
 		inited = true;
 		wasOK = !withErrors;
-		completeNamesOfExperiments = experiments.stream().map(each -> each.getName()).collect(Collectors.toList());
+		completeNamesOfExperiments = exps.stream().map(each -> each.getName()).collect(Collectors.toList());
 		buildAbbreviations();
 		updateToolbar(wasOK);
 	}
@@ -163,9 +161,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 	public void updateToolbar(final boolean ok) {
 
 		Display.getDefault().asyncExec(() -> {
-			if (toolbar == null || toolbar.isDisposed()) {
-				return;
-			}
+			if (toolbar == null || toolbar.isDisposed()) { return; }
 			for (final Button b : buttons) {
 				if (b.isVisible()) {
 					hideButton(b);
@@ -192,9 +188,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 	}
 
 	private void enableButton(final int index, final String text) {
-		if (text == null) {
-			return;
-		}
+		if (text == null) { return; }
 		((GridData) buttons[index].getLayoutData()).exclude = false;
 		buttons[index].setVisible(true);
 		buttons[index].setText(text);
@@ -286,8 +280,8 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 			diagram = getDiagram();
 			final String xp = ((Button) evt.getSource()).getText();
 			if (diagram != null && !diagram.getChildren().isEmpty()) {
-				final IModel model = ModelGenerator.modelGeneration(getDiagramTypeProvider().getFeatureProvider(),
-						diagram);
+				final IModel model =
+						ModelGenerator.modelGeneration(getDiagramTypeProvider().getFeatureProvider(), diagram);
 				if (model != null) {
 					GAMA.runGuiExperiment(xp, model);
 				}
@@ -351,10 +345,9 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		return errors;
 	}
 
-	public void setErrors(
-			final List<GamlCompilationError> errors/*
-													 * , ValidateStyledText vst
-													 */) {
+	public void setErrors(final List<GamlCompilationError> errors/*
+																	 * , ValidateStyledText vst
+																	 */) {
 		this.errors = errors;
 
 		for (final GamlCompilationError error : errors) {
@@ -445,10 +438,8 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 			} else if (toto instanceof BlockImpl) {
 				final BlockImpl vv = (BlockImpl) toto;
 				/*
-				 * System.out.println("block:" + vv ); System.out.println(
-				 * "block getFunction:" + vv.getFunction() );
-				 * System.out.println("block getStatements:" +
-				 * vv.getStatements() );
+				 * System.out.println("block:" + vv ); System.out.println( "block getFunction:" + vv.getFunction() );
+				 * System.out.println("block getStatements:" + vv.getStatements() );
 				 */
 				if (vv.getStatements() != null) {
 					for (final Statement st : vv.getStatements()) {
@@ -488,10 +479,8 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 				// System.out.println("var getRef:" + vv.getRef() );
 
 				/*
-				 * } else if (toto instanceof S_DefinitionImpl) {
-				 * S_DefinitionImpl vv = (S_DefinitionImpl) toto;
-				 * ids.add(0,vv.getName()); if (fist_obj == null) { fist_obj =
-				 * vv.getName(); }
+				 * } else if (toto instanceof S_DefinitionImpl) { S_DefinitionImpl vv = (S_DefinitionImpl) toto;
+				 * ids.add(0,vv.getName()); if (fist_obj == null) { fist_obj = vv.getName(); }
 				 */
 			} else if (toto instanceof EGamaObject) {
 				final EGamaObject vv = (EGamaObject) toto;
@@ -545,9 +534,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		// System.out.println("location: " + location + " name: " + name);
 
 		// System.out.println("errorsLoc: " + errorsLoc);
-		if (errorsLoc == null || errorsLoc.isEmpty() || !errorsLoc.containsKey(location)) {
-			return "";
-		}
+		if (errorsLoc == null || errorsLoc.isEmpty() || !errorsLoc.containsKey(location)) { return ""; }
 
 		if (noName) {
 			final Map<String, String> er = errorsLoc.get(location);
@@ -704,8 +691,8 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		// System.out.println("initIdsEObjects");
 		if (diagram != null && !diagram.getChildren().isEmpty() && idsEObjects.isEmpty()) {
 			for (final Shape obj : getDiagram().getChildren()) {
-				final Object bo = getDiagramTypeProvider().getFeatureProvider()
-						.getBusinessObjectForPictogramElement(obj);
+				final Object bo =
+						getDiagramTypeProvider().getFeatureProvider().getBusinessObjectForPictogramElement(obj);
 				// System.out.println("obj : " + bo);
 				if (bo instanceof EObject) {
 					addEOject((EObject) bo);
