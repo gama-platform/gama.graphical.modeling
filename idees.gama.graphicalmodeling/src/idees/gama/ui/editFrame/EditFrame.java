@@ -108,7 +108,6 @@ public abstract class EditFrame extends ApplicationWindow {
 		addMenuBar();
 		addStatusLine();
 		ModelGenerator.modelValidation(fp, diagram);
-		
 
 	}
 
@@ -229,8 +228,7 @@ public abstract class EditFrame extends ApplicationWindow {
 			}
 
 			@Override
-			public void widgetDefaultSelected(final SelectionEvent e) {
-			}
+			public void widgetDefaultSelected(final SelectionEvent e) {}
 		});
 
 	}
@@ -257,8 +255,8 @@ public abstract class EditFrame extends ApplicationWindow {
 			nm = "name";
 		}
 
-		final ValidateText textFacet = new ValidateText(group, SWT.BORDER, diagram, fp, this, diagramEditor, nm,
-				uselessName, null);
+		final ValidateText textFacet =
+				new ValidateText(group, SWT.BORDER, diagram, fp, this, diagramEditor, nm, uselessName, null);
 		textFacet.setToolTipText(doc);
 		final String val = facetValue(facetName);
 		if (val != null)
@@ -296,8 +294,7 @@ public abstract class EditFrame extends ApplicationWindow {
 			}
 
 			@Override
-			public void widgetDefaultSelected(final SelectionEvent e) {
-			}
+			public void widgetDefaultSelected(final SelectionEvent e) {}
 		});
 		radioEdit = new Button(group, SWT.RADIO);
 		radioEdit.addSelectionListener(new SelectionListener() {
@@ -307,8 +304,7 @@ public abstract class EditFrame extends ApplicationWindow {
 			}
 
 			@Override
-			public void widgetDefaultSelected(final SelectionEvent e) {
-			}
+			public void widgetDefaultSelected(final SelectionEvent e) {}
 		});
 		radioEdit.setText("No");
 
@@ -327,11 +323,9 @@ public abstract class EditFrame extends ApplicationWindow {
 		control.setEnabled(enabled);
 	}
 
-	public void removeGaml() {
-	}
+	public void removeGaml() {}
 
-	public void removeOther() {
-	}
+	public void removeOther() {}
 
 	protected Group groupGamlCode(final Composite container, final String title) {
 		final Group group = new Group(container, SWT.NONE);
@@ -350,7 +344,7 @@ public abstract class EditFrame extends ApplicationWindow {
 		final Injector injector = GamlActivator.getInstance().getInjector("msi.gama.lang.gaml.Gaml");
 
 		rp = injector.getInstance(GAMARessourceProvider.class);
-		rp.setName(((GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp)), fp, diagram);
+		rp.setName(ExampleUtil.getDiagramEditor(fp), fp, diagram);
 		final EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
 
 		editor = factory.newEditor(rp).showErrorAndWarningAnnotations().withParent(group);
@@ -492,9 +486,7 @@ public abstract class EditFrame extends ApplicationWindow {
 
 	public String facetValue(final String facetName) {
 		for (final EFacet facet : eobject.getFacets()) {
-			if (facet.getName().equals(facetName)) {
-				return facet.getValue();
-			}
+			if (facet.getName().equals(facetName)) { return facet.getValue(); }
 		}
 		return null;
 	}
