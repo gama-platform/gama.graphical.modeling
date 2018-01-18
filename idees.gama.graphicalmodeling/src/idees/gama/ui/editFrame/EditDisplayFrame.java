@@ -117,7 +117,7 @@ public class EditDisplayFrame extends EditFrame {
 		// ****** CANVAS NAME *********
 		groupName(container);
 
-		groupFacets(container, "display", 3);
+		groupFacets(container, "display", 4);
 
 		// ****** CANVAS LAYERS *********
 
@@ -359,7 +359,7 @@ public class EditDisplayFrame extends EditFrame {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(1000, 750);
+		return new Point(1300, 750);
 	}
 
 	public Table getLayerViewer() {
