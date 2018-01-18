@@ -199,7 +199,10 @@ public class ModelGenerator {
 			e1.printStackTrace();
 		}
 		try {
+			
+		resource.getValidationContext().clear();
 			resource.validate();
+			
 			final List<GamlCompilationError> errors = new ArrayList<GamlCompilationError>();
 			Iterator<GamlCompilationError> it = resource.getValidationContext().getInternalErrors().iterator();
 			while (it.hasNext()) {

@@ -158,6 +158,7 @@ public class CustomDeleteFeature extends DefaultDeleteFeature {
 		for (final Object o : obj) {
 			deleteBusinessObject(((ESubSpeciesLink) o).getMicro());
 		}
+		if (ex.getMacroSpeciesLinks() != null && !ex.getMacroSpeciesLinks().isEmpty())
 		deleteBusinessObject(ex.getMacroSpeciesLinks().get(0));
 	
 	}

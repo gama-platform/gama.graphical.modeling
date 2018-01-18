@@ -179,7 +179,10 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 					enableButton(i++, e);
 				}
 			} else {
-				setStatus("Error(s) detected. Impossible to run any experiment", ok);
+				String textError = "";
+				for (GamlCompilationError err :errors)
+					if (err != null) textError += err.toString() + "; ";
+				setStatus("Error(s) detected: " + textError, ok);
 			}
 
 			toolbar.layout(true);
@@ -228,6 +231,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		layout.verticalSpacing = 0;
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
+		toolbar.setLayout(layout);
 
 		final Composite others = new Composite(parent, SWT.None);
 		data = new GridData(SWT.RIGHT, SWT.FILL, false, false);
