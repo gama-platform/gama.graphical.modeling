@@ -38,7 +38,10 @@ public class CreateSubSpeciesLinkFeature extends AbstractCreateSpeciesComponentL
 	    }  
 	    String initName = newSpeciesName;
 	    List<String> names = new ArrayList<String>();
-	    for (ESubSpeciesLink li : source.getMicroSpeciesLinks())names.add(li.getMicro().getName());
+	    for (ESubSpeciesLink li : source.getMicroSpeciesLinks()){
+	    	if (li.getMicro() == null) continue;
+	    	names.add(li.getMicro().getName());
+	    }
 	    int cpt = 2;
 	    while (names.contains(newSpeciesName)) {
 	    	newSpeciesName = initName + cpt;

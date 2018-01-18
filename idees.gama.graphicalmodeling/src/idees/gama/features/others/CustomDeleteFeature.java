@@ -69,7 +69,8 @@ public class CustomDeleteFeature extends DefaultDeleteFeature {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void deleteSpecies(final ESpecies ex) {
 		deleteBusinessObject(ex.getAspectLinks());
-
+		 
+		
 		if (ex instanceof EGUIExperiment) {
 			final EList liste = ((EGUIExperiment) ex).getDisplayLinks();
 			final List<?> obj = new ArrayList();
@@ -157,6 +158,8 @@ public class CustomDeleteFeature extends DefaultDeleteFeature {
 		for (final Object o : obj) {
 			deleteBusinessObject(((ESubSpeciesLink) o).getMicro());
 		}
+		deleteBusinessObject(ex.getMacroSpeciesLinks().get(0));
+	
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
