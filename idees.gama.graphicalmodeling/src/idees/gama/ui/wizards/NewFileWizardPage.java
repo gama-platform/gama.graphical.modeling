@@ -18,6 +18,7 @@
  */
 package idees.gama.ui.wizards;
 
+import java.io.File;
 import java.net.InetAddress;
 
 import org.eclipse.core.resources.IContainer;
@@ -273,16 +274,19 @@ public class NewFileWizardPage extends WizardPage {
 				IProject container = pro.getResource();
 				if (container != null && container.getFullPath() != null) {
 					String path = container.getFullPath().toString();
-					IContainer res = container.getParent();
-					if (res != null && res.getFullPath() != null) { 
-						path = res.getFullPath().toString();
-						while(path.equals("")) {
-							res = res.getParent();
-							if (res == null || res.getFullPath() == null) break;
+					if (path.equals("") || path.equals("/")) {
+						IContainer res = container.getParent();
+						if (res != null && res.getFullPath() != null) { 
 							path = res.getFullPath().toString();
-						}			
-						containerText.setText(path);
+							while(path.equals("")) {
+								res = res.getParent();
+								if (res == null || res.getFullPath() == null) break;
+								path = res.getFullPath().toString();
+							}			
+							
+						}
 					}
+					containerText.setText(path);
 				}
 				
 			} else if ( obj instanceof WrappedFolder ) {
@@ -291,15 +295,18 @@ public class NewFileWizardPage extends WizardPage {
 				if (container != null && container.getFullPath() != null) {
 					String path = container.getFullPath().toString();
 					IContainer res = container.getParent();
-					if (res != null && res.getFullPath() != null) { 
-						path = res.getFullPath().toString();
-						while(path.equals("")) {
-							res = res.getParent();
-							if (res == null || res.getFullPath() == null) break;
+					
+						if (res != null && res.getFullPath() != null) { 
 							path = res.getFullPath().toString();
-						}			
-						containerText.setText(path);
-					}
+							while(path.equals("")) {
+								res = res.getParent();
+								if (res == null || res.getFullPath() == null) break;
+								path = res.getFullPath().toString();
+							}			
+							
+						}
+					
+					containerText.setText(path);
 				}
 				
 			}
@@ -331,7 +338,6 @@ public class NewFileWizardPage extends WizardPage {
 		String fileName = getFileName();
 		String author = getAuthor();
 		String titleName = getModelName();
-
 		final IFile modelfile = container.getFile(new Path("diagrams/" + fileName));
 		
 		if ( getContainerName().length() == 0 ) {
