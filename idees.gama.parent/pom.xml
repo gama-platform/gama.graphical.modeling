@@ -29,11 +29,6 @@
 			<layout>p2</layout>
 		</repository>
 		<repository>
-			<id>eclipse-elk</id>
-			<url>http://build.eclipse.org/modeling/elk/updates/nightly/</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
 			<id>eclipse-graphiti</id>
 			<url>http://download.eclipse.org/graphiti/updates/milestones/</url>
 			<layout>p2</layout>

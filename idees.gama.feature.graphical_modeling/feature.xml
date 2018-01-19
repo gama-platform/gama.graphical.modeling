@@ -34,7 +34,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
- 	<plugin
+ <plugin
          id="org.eclipse.xtext.xbase.lib"
          download-size="0"
          install-size="0"
@@ -127,55 +127,6 @@
 
    <plugin
          id="org.eclipse.emf"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.elk.alg.force"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.elk.alg.layered"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.elk.alg.mrtree"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.elk.conn.graphiti"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.elk.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.elk.core.service"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.elk.graph"
          download-size="0"
          install-size="0"
          version="0.0.0"
