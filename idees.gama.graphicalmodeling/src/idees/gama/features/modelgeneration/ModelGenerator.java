@@ -437,7 +437,7 @@ public class ModelGenerator {
 				result += sp + (level == -1 ? "" : "\t") + line;
 			}
 		}
-		result += sp + "}" + EL;
+		result += EL + sp + "}" + EL;
 
 		return result;
 	}
@@ -459,7 +459,7 @@ public class ModelGenerator {
 				result += sp + (level == -1 ? "" : "\t") + line;
 			}
 		}
-		result += sp + "}" + EL;
+		result += EL + sp + "}" + EL;
 		return result;
 	}
 
@@ -515,7 +515,7 @@ public class ModelGenerator {
 			}
 		}
 
-		result += sp + "}" + EL;
+		result += EL + sp + "}" + EL;
 		return result;
 	}
 
@@ -787,7 +787,7 @@ public class ModelGenerator {
 									+ ";" + EL;
 						}
 					}
-					model += "\t\t\t}" + EL;
+					model += EL+"\t\t\t}" + EL;
 				} else {
 					model += ";" + EL;
 				}

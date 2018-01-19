@@ -19,16 +19,34 @@
 package idees.gama.ui.wizards;
 
 import java.net.InetAddress;
-import org.eclipse.core.resources.*;
+
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
+
+import ummisco.gama.ui.navigator.contents.WrappedFolder;
+import ummisco.gama.ui.navigator.contents.WrappedProject;
 
 /**
  * The "New" wizard page allows setting the container for the new file as well as the file name. The
@@ -55,6 +73,8 @@ public class NewFileWizardPage extends WizardPage {
 		this.selection = selection;
 	}
 
+	
+	
 	@Override
 	public void createControl(final Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
@@ -248,18 +268,45 @@ public class NewFileWizardPage extends WizardPage {
 			IStructuredSelection ssel = (IStructuredSelection) selection;
 			if ( ssel.size() > 1 ) { return; }
 			Object obj = ssel.getFirstElement();
-			if ( obj instanceof IResource ) {
-				IContainer container;
-				if ( obj instanceof IContainer ) {
-					container = (IContainer) obj;
-				} else {
-					container = ((IResource) obj).getParent();
+			if ( obj instanceof WrappedProject ) {
+				WrappedProject pro = (WrappedProject) obj;
+				IProject container = pro.getResource();
+				if (container != null && container.getFullPath() != null) {
+					String path = container.getFullPath().toString();
+					IContainer res = container.getParent();
+					if (res != null && res.getFullPath() != null) { 
+						path = res.getFullPath().toString();
+						while(path.equals("")) {
+							res = res.getParent();
+							if (res == null || res.getFullPath() == null) break;
+							path = res.getFullPath().toString();
+						}			
+						containerText.setText(path);
+					}
 				}
-				containerText.setText(container.getFullPath().toString());
+				
+			} else if ( obj instanceof WrappedFolder ) {
+				WrappedFolder pro = (WrappedFolder) obj;
+				IFolder container = pro.getResource();
+				if (container != null && container.getFullPath() != null) {
+					String path = container.getFullPath().toString();
+					IContainer res = container.getParent();
+					if (res != null && res.getFullPath() != null) { 
+						path = res.getFullPath().toString();
+						while(path.equals("")) {
+							res = res.getParent();
+							if (res == null || res.getFullPath() == null) break;
+							path = res.getFullPath().toString();
+						}			
+						containerText.setText(path);
+					}
+				}
+				
 			}
 		}
 		fileText.setText("new.gadl");
 	}
+	
 
 	/**
 	 * Uses the standard container selection dialog to choose the new value for the container field.

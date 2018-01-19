@@ -23,7 +23,8 @@ Require-Bundle: msi.gama.core;visibility:=reexport,
  ummisco.gama.ui.shared;visibility:=reexport,
  ummisco.gama.ui.modeling;visibility:=reexport,
  org.eclipse.emf.transaction;bundle-version="1.9.0",
- org.eclipse.gef
+ org.eclipse.gef,
+ ummisco.gama.ui.navigator;bundle-version="1.7.0"
 Export-Package: idees.gama.diagram,
  idees.gama.features,
  idees.gama.features.add,
