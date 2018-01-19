@@ -169,9 +169,11 @@ public class EditSpeciesFrame extends EditFrame {
 
 		groupVariables(container);
 
-		groupGamlCode(container, "Init");
 
 		groupReflex(container);
+		
+		groupGamlCode(container, "Init");
+
 
 		/*
 		 * // Set the absolute size of the child child.setSize(400, 400);
@@ -464,10 +466,10 @@ public class EditSpeciesFrame extends EditFrame {
 
 	public void groupVariables(final Composite container) {
 		final Group group = new Group(container, SWT.NONE);
-		group.setBounds(10, 250, 720, 200);
+	//	group.setBounds(10, 250, 720, 200);
 
 		table_vars = createTableEditor(group);
-		table_vars.setBounds(10, 30, 700, 120);
+		table_vars.setBounds(10, 30, 740, 120);
 		table_vars.setHeaderVisible(true);
 		table_vars.setLinesVisible(true);
 
@@ -513,32 +515,33 @@ public class EditSpeciesFrame extends EditFrame {
 		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
 
 		final Group group = new Group(container, SWT.NONE);
-		group.setBounds(10, 460, 720, 100);
-
+		
+		//group.setBounds(10, 460, 710, 120);
+		
 		final CLabel lblSkills = new CLabel(group, SWT.NONE);
 		lblSkills.setBounds(5, 5, 100, 20);
 		lblSkills.setText("Skills");
 		lblSkills.setFont(titleFont);
 
 		final CLabel lblAvSkills = new CLabel(group, SWT.NONE);
-		lblAvSkills.setBounds(5, 23, 100, 20);
+		lblAvSkills.setBounds(5, 23, 150, 20);
 		lblAvSkills.setText("Available Skills");
 
 		final CLabel lblSelectSkills = new CLabel(group, SWT.NONE);
-		lblSelectSkills.setBounds(325, 23, 100, 20);
+		lblSelectSkills.setBounds(405, 23, 150, 20);
 		lblSelectSkills.setText("Selected Skills");
 
 		final org.eclipse.swt.widgets.List listAvSkills = new org.eclipse.swt.widgets.List(group,
 				SWT.BORDER | SWT.V_SCROLL);
-		listAvSkills.setBounds(5, 45, 250, 45);
+		listAvSkills.setBounds(5, 45, 330, 55);
 		for (final String ski : skillsStrs) {
 			listAvSkills.add(ski);
 		}
 		skillsViewer = new org.eclipse.swt.widgets.List(group, SWT.BORDER | SWT.V_SCROLL);
-		skillsViewer.setBounds(325, 45, 250, 45);
+		skillsViewer.setBounds(405, 45, 330, 55);
 
 		final Button btnRigth = new Button(group, SWT.ARROW | SWT.RIGHT);
-		btnRigth.setBounds(265, 50, 50, 15);
+		btnRigth.setBounds(345, 45, 50, 25);
 		btnRigth.setSelection(true);
 		btnRigth.addSelectionListener(new SelectionAdapter() {
 
@@ -559,7 +562,7 @@ public class EditSpeciesFrame extends EditFrame {
 			}
 		});
 		final Button btnLeft = new Button(group, SWT.ARROW | SWT.LEFT);
-		btnLeft.setBounds(265, 70, 50, 15);
+		btnLeft.setBounds(345, 75, 50, 25);
 		btnLeft.setSelection(true);
 		btnLeft.addSelectionListener(new SelectionAdapter() {
 
@@ -595,7 +598,7 @@ public class EditSpeciesFrame extends EditFrame {
 	public void groupReflex(final Composite container) {
 		// ****** CANVAS REFLEX ORDER *********
 		final Group group = new Group(container, SWT.NONE);
-		group.setBounds(10, 460, 720, 110);
+	//	group.setBounds(10, 460, 720, 110);
 
 		reflexViewer = new org.eclipse.swt.widgets.List(group, SWT.BORDER | SWT.V_SCROLL);
 
@@ -603,7 +606,7 @@ public class EditSpeciesFrame extends EditFrame {
 			reflexViewer.add(ref);
 		}
 
-		reflexViewer.setBounds(5, 30, 700, 45);
+		reflexViewer.setBounds(5, 30, 740, 45);
 		final CLabel lblReflexOrder = new CLabel(group, SWT.NONE);
 		lblReflexOrder.setBounds(5, 5, 200, 20);
 		lblReflexOrder.setText("Reflex order");
@@ -705,14 +708,14 @@ public class EditSpeciesFrame extends EditFrame {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(CONST_WIDTH, 600);
+		return new Point(CONST_WIDTH, 700);
 	}
 
 	@Override
 	public void create() {
 		setShellStyle(SWT.DIALOG_TRIM | SWT.RESIZE);
 		super.create();
-		shell = getShell();
+		/*shell = getShell();
 		shell.addControlListener(new ControlAdapter() {
 
 			@Override
@@ -722,7 +725,7 @@ public class EditSpeciesFrame extends EditFrame {
 					shell.setBounds(rect.x, rect.y, CONST_WIDTH, rect.height);
 				}
 			}
-		});
+		});*/
 
 	}
 
