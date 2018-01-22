@@ -121,7 +121,8 @@ public class CreateRuleLinkFeature extends AbstractCreateSpeciesComponentLinkFea
 				ESpecies species = (ESpecies) object;
 				for (EFacet facet : species.getFacets()) {
 					if (facet.getName().equals("control")) {
-						if ("simple_bdi".equals(facet.getValue())) return (ESpecies) object;
+						if ("simple_bdi".equals(facet.getValue()) ||
+								"parallel_bdi".equals(facet.getValue())) return (ESpecies) object;
 						else break;
 					}
 				}	
