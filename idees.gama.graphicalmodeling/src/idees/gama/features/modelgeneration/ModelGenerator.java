@@ -432,10 +432,12 @@ public class ModelGenerator {
 				+ EL;
 		final String code = action.getGamlCode();
 		if (code != null && !code.isEmpty()) {
+			/*
 			for (final String line : code.split("\n")) {
 				if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
 				result += sp + (level == -1 ? "" : "\t") + line;
-			}
+			}*/
+			result += code;
 		}
 		result += EL + sp + "}" + EL;
 
@@ -454,10 +456,11 @@ public class ModelGenerator {
 		}
 		result += sp + "init {" + EL;
 		if (code != null && !code.isEmpty()) {
-			for (final String line : code.split("\n")) {
+			/*for (final String line : code.split("\n")) {
 				if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
 				result += sp + (level == -1 ? "" : "\t") + line;
-			}
+			}*/
+			result += code;
 		}
 		result += EL + sp + "}" + EL;
 		return result;
@@ -509,10 +512,11 @@ public class ModelGenerator {
 			code = ((EPerceive) object).getGamlCode();
 		result += " {" + EL;
 		if (code != null && !code.isEmpty()) {
-			for (final String line : code.split("\n")) {
+			/*for (final String line : code.split("\n")) {
 				if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
 				result += sp + (level == -1 ? "" : "\t") + line;
-			}
+			}*/
+			result += code;
 		}
 
 		result += EL + sp + "}" + EL;
@@ -533,10 +537,11 @@ public class ModelGenerator {
 		if (asp.isDefineGamlCode()) {
 			final String code = asp.getGamlCode();
 			if (code != null && !code.isEmpty()) {
-				for (final String line : code.split("\n")) {
+				/*for (final String line : code.split("\n")) {
 					if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
 					result += sp + (level == -1 ? "" : "\t") + line;
-				}
+				}*/
+				result += code;
 			}
 		} else {
 
@@ -684,10 +689,11 @@ public class ModelGenerator {
 		if (disp.isDefineGamlCode()) {
 			final String code = disp.getGamlCode();
 			if (code != null && !code.isEmpty()) {
-				for (final String line : code.split("\n")) {
+				/*for (final String line : code.split("\n")) {
 					if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
 					model += line;
-				}
+				}*/
+				model += code;
 			}
 		} else {
 

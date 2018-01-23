@@ -25,6 +25,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
+import msi.gama.lang.gaml.ui.editor.GamlEditor;
+
 public class ModelGenerationFeature extends AbstractCustomFeature {
  
     //private boolean hasDoneChanges = false;
@@ -106,7 +108,9 @@ public class ModelGenerationFeature extends AbstractCustomFeature {
     					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     				try {
     					IEditorPart ed = IDE.openEditor(page, file, true);
+    					((GamlEditor)ed).getAction("Format").run();
     					ed.doSave(null);
+    					
     				} catch (PartInitException e) {
     					e.printStackTrace();
     				}
