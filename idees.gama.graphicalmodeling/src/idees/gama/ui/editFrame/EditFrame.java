@@ -61,11 +61,11 @@ import msi.gama.lang.gaml.gaml.impl.S_ExperimentImpl;
 import msi.gama.lang.gaml.gaml.impl.S_ReflexImpl;
 import msi.gama.lang.gaml.gaml.impl.S_SpeciesImpl;
 import msi.gama.lang.gaml.gaml.impl.VariableRefImpl;
-import msi.gama.lang.gaml.ui.internal.GamlActivator;
 import msi.gaml.compilation.GamlCompilationError;
 import msi.gaml.descriptions.FacetProto;
 import msi.gaml.descriptions.SymbolProto;
 import msi.gaml.factories.DescriptionFactory;
+import ummisco.gama.ui.modeling.internal.ModelingActivator;
 
 public abstract class EditFrame extends ApplicationWindow {
 
@@ -341,7 +341,7 @@ public abstract class EditFrame extends ApplicationWindow {
 		group.setLayoutData(gridData);
 		group.setLayout(new GridLayout(1, false));
 
-		final Injector injector = GamlActivator.getInstance().getInjector("msi.gama.lang.gaml.Gaml");
+		final Injector injector = ModelingActivator.getInstance().getInjector("msi.gama.lang.gaml.Gaml");
 
 		rp = injector.getInstance(GAMARessourceProvider.class);
 		rp.setName(ExampleUtil.getDiagramEditor(fp), fp, diagram);
