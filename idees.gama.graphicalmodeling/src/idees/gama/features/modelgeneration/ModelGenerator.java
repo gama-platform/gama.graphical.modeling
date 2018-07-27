@@ -2,7 +2,6 @@
 package idees.gama.features.modelgeneration;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -67,7 +66,6 @@ import msi.gama.lang.gaml.resource.GamlResource;
 import msi.gama.lang.gaml.validation.GamlModelBuilder;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.compilation.GamlCompilationError;
-import msi.gaml.descriptions.ModelDescription;
 
 public class ModelGenerator {
 
@@ -93,15 +91,7 @@ public class ModelGenerator {
 			final Set<GamlResource> resources = new HashSet<GamlResource>();
 			resources.add(resource);
 			final IModel model = GamlModelBuilder.compile(resource, new ArrayList<GamlCompilationError>());
-			File f= new File(du.trimFragment().toString());
-			
-			((ModelDescription) model.getDescription()).setWorkingDirectory(f.getParent());
-			
 			//((ModelDescription) model.getDescription()).setModelFilePath(getPath(fp, diagram));
-
-			// ((ModelDescription)
-			// model.getDescription()).setModelFolderPath(getFolder(fp,
-			// diagram));
 			return model;
 		} catch (final GamaRuntimeException e1) {
 			e1.printStackTrace();
