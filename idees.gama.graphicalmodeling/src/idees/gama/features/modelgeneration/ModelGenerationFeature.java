@@ -108,8 +108,10 @@ public class ModelGenerationFeature extends AbstractCustomFeature {
     					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     				try {
     					IEditorPart ed = IDE.openEditor(page, file, true);
-    					((GamlEditor)ed).getAction("Format").run();
-    					ed.doSave(null);
+    					if (ed instanceof GamlEditor) {
+    						((GamlEditor)ed).getAction("Format").run();
+    						ed.doSave(null);
+    					}
     					
     				} catch (PartInitException e) {
     					e.printStackTrace();
