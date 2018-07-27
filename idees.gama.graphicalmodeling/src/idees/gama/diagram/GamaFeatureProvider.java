@@ -142,13 +142,12 @@ import msi.gaml.compilation.AbstractGamlAdditions;
 import msi.gaml.compilation.ISymbol;
 import msi.gaml.compilation.kernel.GamaSkillRegistry;
 import msi.gaml.descriptions.IDescription;
-import msi.gaml.descriptions.IDescription.FacetVisitor;
-import msi.gaml.descriptions.IExpressionDescription;
 import msi.gaml.descriptions.SymbolProto;
 import msi.gaml.factories.DescriptionFactory;
 import msi.gaml.species.ISpecies;
 import msi.gaml.statements.ActionStatement;
 import msi.gaml.statements.AspectStatement;
+import msi.gaml.statements.Facets;
 import msi.gaml.statements.IExecutable;
 import msi.gaml.statements.IStatement;
 import msi.gaml.variables.IVariable;
@@ -1235,22 +1234,8 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 	}
 
 	public List<String> getFacets(final ISymbol statement) {
-		final List<String> facets = new ArrayList<String>();
-		statement.getDescription().visitFacets(new FacetVisitor() {
-
-			@Override
-			public boolean visit(final String name, final IExpressionDescription ed) {
-				if (name.equals(IKeyword.NAME)) {
-					final String n = statement.getFacet(IKeyword.NAME).literalValue();
-					if (n.startsWith("internal_"))
-						return true;
-				}
-				facets.add(name);
-				return true;
-			}
-
-		});
-		return facets;
+		Facets fs =statement.getDescription().getFacets();
+		return new ArrayList<String>(fs.keySet());
 	}
 
 }

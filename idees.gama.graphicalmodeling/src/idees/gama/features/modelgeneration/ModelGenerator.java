@@ -2,6 +2,7 @@
 package idees.gama.features.modelgeneration;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -92,7 +93,11 @@ public class ModelGenerator {
 			final Set<GamlResource> resources = new HashSet<GamlResource>();
 			resources.add(resource);
 			final IModel model = GamlModelBuilder.compile(resource, new ArrayList<GamlCompilationError>());
-			((ModelDescription) model.getDescription()).setModelFilePath(getPath(fp, diagram));
+			File f= new File(du.trimFragment().toString());
+			
+			((ModelDescription) model.getDescription()).setWorkingDirectory(f.getParent());
+			
+			//((ModelDescription) model.getDescription()).setModelFilePath(getPath(fp, diagram));
 
 			// ((ModelDescription)
 			// model.getDescription()).setModelFolderPath(getFolder(fp,

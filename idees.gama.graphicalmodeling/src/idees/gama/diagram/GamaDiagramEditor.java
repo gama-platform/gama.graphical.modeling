@@ -448,7 +448,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 				if (vv.getStatements() != null) {
 					for (final Statement st : vv.getStatements()) {
 						if (st != null && st.getKey() != null && st.getKey().equals("parameter")) {
-							ids.add(0, st.getExpr().getOp());
+							//ids.add(0, st.getExpr().getOp());
 							// System.out.println("st.getExpr " + st.getExpr());
 							// System.out.println("st.getFacets " +
 							// st.getFacets());
