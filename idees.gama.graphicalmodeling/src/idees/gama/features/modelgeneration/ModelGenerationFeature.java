@@ -19,13 +19,8 @@ import org.eclipse.graphiti.features.context.ICustomContext;
 import org.eclipse.graphiti.features.custom.AbstractCustomFeature;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 
-import msi.gama.lang.gaml.ui.editor.GamlEditor;
+import msi.gama.runtime.GAMA;
 
 public class ModelGenerationFeature extends AbstractCustomFeature {
  
@@ -78,7 +73,7 @@ public class ModelGenerationFeature extends AbstractCustomFeature {
             File file = new File(path);
             if (file.exists()) file.delete();
             
-            FileWriter fw;
+           FileWriter fw;
 			try {
 				fw = new FileWriter(file, false);
 				fw.write(gamlModel);
@@ -88,38 +83,18 @@ public class ModelGenerationFeature extends AbstractCustomFeature {
 				e.printStackTrace();
 			}
 			 IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		        IResource resource = root.findMember(new Path(containerStr));
+		     IResource resource = root.findMember(new Path(containerStr));
 		        
-		        IContainer container = resource.getProject();				
-				
-				final IFile fileP = container.getFile(new Path("models/" + uri.lastSegment().replace(".gadl", ".gaml")));
-				
-		        doFinish(fileP);
+		     IContainer container = resource.getProject();			
+		     IFile fileP = null;
+		     do {
+		    	 fileP = container.getFile(new Path("models/" + uri.lastSegment().replace(".gadl", ".gaml")));
+		     } while (!fileP.exists());
+		     GAMA.getGui().editModel(GAMA.getRuntimeScope(), fileP);
 			
         
     }
     
-    private void doFinish(final IFile file) {
-    	display.asyncExec(new Runnable() {
-
-    			@Override
-    			public void run() {
-    				IWorkbenchPage page =
-    					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    				try {
-    					IEditorPart ed = IDE.openEditor(page, file, true);
-    					if (ed instanceof GamlEditor) {
-    						((GamlEditor)ed).getAction("Format").run();
-    						ed.doSave(null);
-    					}
-    					
-    				} catch (PartInitException e) {
-    					e.printStackTrace();
-    				}
-    			}
-    		});
-    	}
-
     
    
 }
