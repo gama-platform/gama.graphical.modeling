@@ -104,7 +104,7 @@ public class GenerateDiagramHandler extends AbstractHandler {
 				gfp.setGamaModel(gamaModel);
 				gfp.init();
 				ep.doSave(null);
-
+				
 			} catch (final PartInitException e) {
 				e.printStackTrace();
 			}

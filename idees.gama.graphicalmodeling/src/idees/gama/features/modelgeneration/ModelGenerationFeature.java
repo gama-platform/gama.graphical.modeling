@@ -19,7 +19,13 @@ import org.eclipse.graphiti.features.context.ICustomContext;
 import org.eclipse.graphiti.features.custom.AbstractCustomFeature;
 import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 
+import msi.gama.lang.gaml.ui.editor.GamlEditor;
 import msi.gama.runtime.GAMA;
 
 public class ModelGenerationFeature extends AbstractCustomFeature {
@@ -91,9 +97,31 @@ public class ModelGenerationFeature extends AbstractCustomFeature {
 		    	 fileP = container.getFile(new Path("models/" + uri.lastSegment().replace(".gadl", ".gaml")));
 		     } while (!fileP.exists());
 		     GAMA.getGui().editModel(GAMA.getRuntimeScope(), fileP);
+		     doFinish(fileP);
 			
         
     }
+    
+    private void doFinish(final IFile file) {	
+    	display.asyncExec(new Runnable() {	
+     			@Override	
+    			public void run() {	
+    				IWorkbenchPage page =	
+    					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();	
+    				try {	
+    					IEditorPart ed = IDE.openEditor(page, file, true);	
+    					if (ed instanceof GamlEditor) {	
+    						((GamlEditor)ed).getAction("Format").run();	
+    						ed.doSave(null);	
+    					}	
+    						
+    				} catch (PartInitException e) {	
+    					e.printStackTrace();	
+    				}	
+    			}	
+    		});	
+    	}	
+
     
     
    
