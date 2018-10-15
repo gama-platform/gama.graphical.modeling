@@ -617,4 +617,15 @@ public class EditLayerAspectFrame extends EditFrame {
 	public void updateError() {
 		frame.updateLayer();
 	}
+	
+	@Override
+	protected void handleShellCloseEvent() {
+		// create dialog with ok and cancel button and info icon
+		frame.clean();
+		this.save(null);
+		if (comboShape != null)comboShape.dispose();
+		comboShape = null;
+		setReturnCode(CANCEL);
+		close();
+	}
 }

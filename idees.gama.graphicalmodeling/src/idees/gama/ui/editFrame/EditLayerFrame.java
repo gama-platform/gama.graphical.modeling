@@ -1080,5 +1080,16 @@ public class EditLayerFrame extends EditFrame {
 	protected Point getInitialSize() {
 		return new Point(743, 510);
 	}
+	
+	@Override
+	protected void handleShellCloseEvent() {
+		// create dialog with ok and cancel button and info icon
+		frame.clean();
+		this.save(null);
+		if (comboType != null)comboType.dispose();
+		comboType = null;
+		setReturnCode(CANCEL);
+		close();
+	}
 
 }

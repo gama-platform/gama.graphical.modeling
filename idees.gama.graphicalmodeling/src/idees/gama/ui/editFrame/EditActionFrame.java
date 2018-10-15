@@ -63,7 +63,6 @@ public class EditActionFrame extends EditFrame {
 		types.add("rgb");
 		types.add("point");
 		types.add("geometry");
-		System.out.println("AbstractGamlAdditions.VARTYPE2KEYWORDS: " + AbstractGamlAdditions.VARTYPE2KEYWORDS);
 		for (final String ty : AbstractGamlAdditions.VARTYPE2KEYWORDS.values()) {
 			if (!types.contains(ty) && !ty.toString().endsWith("_file"))
 				types.add(ty);
@@ -110,8 +109,7 @@ public class EditActionFrame extends EditFrame {
 	}
 
 	protected void groupReturnType(final Composite container) {
-		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
-
+		
 		// ****** CANVAS RETURN TYPE *********
 		final Group group = new Group(container, SWT.NONE);
 		// group.setBounds(10, 50, 720, 50);
@@ -127,9 +125,9 @@ public class EditActionFrame extends EditFrame {
 		lblName.setText("Return type:");
 
 		// group.setLayout( new FillLayout(SWT.HORIZONTAL));
-		group.setText("Return Type");
+		//group.setText("Return Type");
 
-		returnType = new CCombo(group, SWT.READ_ONLY);
+		returnType = new CCombo(group, SWT.BORDER);
 		returnType.add("returns nothing");
 		final GridData gridData2 = new GridData();
 		gridData2.horizontalAlignment = SWT.FILL;
@@ -449,6 +447,20 @@ public class EditActionFrame extends EditFrame {
 		btnDeleteVariable.setBounds(183, 158, 130, 28);
 		btnDeleteVariable.setText("Delete argument");
 
+	}
+	
+	@Override
+	protected void handleShellCloseEvent() {
+		// create dialog with ok and cancel button and info icon
+		frame.clean();
+		this.save(null);
+		if (returnType != null)
+			returnType.dispose();
+		returnType = null;
+		if (table_vars != null)table_vars.dispose();
+		table_vars = null;
+		setReturnCode(CANCEL);
+		close();
 	}
 
 }
