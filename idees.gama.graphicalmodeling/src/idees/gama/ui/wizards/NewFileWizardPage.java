@@ -18,7 +18,6 @@
  */
 package idees.gama.ui.wizards;
 
-import java.io.File;
 import java.net.InetAddress;
 
 import org.eclipse.core.resources.IContainer;

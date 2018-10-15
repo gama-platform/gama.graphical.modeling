@@ -240,14 +240,14 @@ public class ModelGenerator {
 		if (species.getInheritsFrom() != null) {
 			model += " parent:" + species.getInheritsFrom().getName();
 		}
-
+		
 		if (species.getSkills() != null && !species.getSkills().isEmpty()) {
 			model += " skills:" + species.getSkills();
 		}
 		for (final EFacet facet : species.getFacets()) {
 			if (facet.getValue().replace(" ", "").isEmpty())
 				continue;
-			if (facet.getName().equals("name")) continue;
+			if (facet.getName().equals("name") || facet.getName().equals("skills")) continue;
 			model += " " + facet.getName() + ":" + facet.getValue();
 		}
 		model += " {" + EL;

@@ -381,6 +381,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			if (!"reflex".equals(sk) && !"grid".equals(sk)
 					&& !GamaSkillRegistry.INSTANCE.getArchitectureNames().contains(sk))
 				target.getSkills().add(sk.toString());
+				
 		}
 		target.setName(species.getName());
 
