@@ -10,6 +10,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -92,10 +93,12 @@ public class ModelGenerationFeature extends AbstractCustomFeature {
 		     IResource resource = root.findMember(new Path(containerStr));
 		        
 		     IContainer container = resource.getProject();			
-		     IFile fileP = null;
-		     do {
-		    	 fileP = container.getFile(new Path("models/" + uri.lastSegment().replace(".gadl", ".gaml")));
-		     } while (!fileP.exists());
+		     IFile fileP = container.getFile(new Path("models/" + uri.lastSegment().replace(".gadl", ".gaml")));
+		     try {
+				fileP.refreshLocal(1, null);
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
 		     GAMA.getGui().editModel(GAMA.getRuntimeScope(), fileP);
 		     doFinish(fileP);
 			
