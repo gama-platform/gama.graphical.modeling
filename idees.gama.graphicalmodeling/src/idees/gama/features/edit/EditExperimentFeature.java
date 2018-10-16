@@ -45,6 +45,8 @@ public class EditExperimentFeature  extends EditFeature {
             	if (frame == null || frame.getShell() == null || frame.getShell().isDisposed() ) {
             		frame = new EditExperimentFrame(getDiagram(), getFeatureProvider(), this,eExperiment, eExperiment.getName());
             		frame.open();
+
+            		frame.getTextName().setText(frame.getTextName().getText());
             		tbp.getFrames().put(eExperiment, frame);
             	
             	} else {

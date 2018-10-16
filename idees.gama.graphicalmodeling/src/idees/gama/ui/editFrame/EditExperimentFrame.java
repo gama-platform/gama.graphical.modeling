@@ -58,6 +58,7 @@ public class EditExperimentFrame extends EditFrame {
 		super(diagram, fp, eaf, experiment, name == null ? "Experiment definition" : name);
 		this.species = experiment.getExperimentLink().getSpecies();
 		this.diagram = diagram;
+
 	}
 
 	/**
@@ -77,6 +78,7 @@ public class EditExperimentFrame extends EditFrame {
 
 		// ****** CANVAS NAME *********
 		canvasName(container);
+		textName.setSimpleValidation(true);
 
 		// ****** CANVAS PARAMETER *********
 		final Canvas canvasParameter = canvasParameter(container);
@@ -85,6 +87,7 @@ public class EditExperimentFrame extends EditFrame {
 		// ****** CANVAS MONITORS *********
 		final Canvas canvasMonitors = canvasMonitor(container);
 		canvasMonitors.setBounds(10, 270, 820, 205);
+
 
 		return container;
 	}

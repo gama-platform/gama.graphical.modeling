@@ -41,7 +41,8 @@ public class ValidateText extends StyledText {
 	boolean saveData = false;
 
 	boolean nameFeature = true;
-
+	
+	boolean simpleValidation = false;
 	String addToLoc;
 
 	@SuppressWarnings("unused")
@@ -168,7 +169,10 @@ public class ValidateText extends StyledText {
 		// System.out.println("isString");
 		frame.getShell().forceFocus();
 		if (nameLoc.equals("name")) {
-			isValid = !getText().isEmpty() && !getText().contains(" ") && !getText().contains(";")
+			if (simpleValidation) 
+				isValid = !getText().isEmpty() ;
+			else 
+				isValid = !getText().isEmpty() && !getText().contains(" ") && !getText().contains(";")
 					&& !getText().contains("{") && !getText().contains("}") && !getText().contains("\t");
 		} else {
 			isValid = !ModelGenerator.hasSyntaxError(fp, getText(), true, isString);
@@ -295,5 +299,15 @@ public class ValidateText extends StyledText {
 	public void setNameFeature(final boolean nameFeature) {
 		this.nameFeature = nameFeature;
 	}
+
+	public boolean isSimpleValidation() {
+		return simpleValidation;
+	}
+
+	public void setSimpleValidation(boolean simpleValidation) {
+		this.simpleValidation = simpleValidation;
+	}
+	
+	
 
 }

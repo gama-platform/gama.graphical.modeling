@@ -396,12 +396,12 @@ public abstract class EditFrame extends ApplicationWindow {
 		return canvasName(container, true);
 	}
 
-	protected Canvas canvasName(final Composite container, final boolean hasNameFaeture) {
+	protected Canvas canvasName(final Composite container, final boolean hasNameFeature) {
 		final Canvas canvasName = new Canvas(container, SWT.BORDER);
 
 		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
 		textName = new ValidateText(canvasName, SWT.BORDER, diagram, fp, this, diagramEditor, "name", null, null);
-		textName.setNameFeature(hasNameFaeture);
+		textName.setNameFeature(hasNameFeature);
 		UtilEditFrame.buildCanvasName(container, canvasName, textName, eobject, ef);
 		canvasName.setBounds(10, 10, 720, 30);
 		textName.setSaveData(true);
@@ -561,4 +561,10 @@ public abstract class EditFrame extends ApplicationWindow {
 		struct.writeModelWithoutElement(this.eobject);
 		modelXText.updateModel(struct.getPrefix(), struct.getText(), struct.getSuffix());
 	}
+
+	public ValidateText getTextName() {
+		return textName;
+	}
+	
+	
 }

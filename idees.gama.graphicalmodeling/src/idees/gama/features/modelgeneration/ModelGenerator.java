@@ -220,6 +220,14 @@ public class ModelGenerator {
 		}
 		return null;
 	}
+	
+	static String manageName(String name) {
+		if (name.contains(" ")) {
+			return "\"" + name + "\"";
+		} else {
+			return name;
+		}
+	}
 
 	static String defineSpecies(final ESpecies species, final int level, final String id) {
 		if (species == null) {
@@ -232,13 +240,13 @@ public class ModelGenerator {
 		}
 		model += sp;
 		if (species instanceof EGrid) {
-			model += "grid " + species.getName();
+			model += "grid " + manageName(species.getName());
 		} else {
-			model += "species " + species.getName();
+			model += "species " + manageName(species.getName());
 		}
 
 		if (species.getInheritsFrom() != null) {
-			model += " parent:" + species.getInheritsFrom().getName();
+			model += " parent:" + manageName(species.getInheritsFrom().getName());
 		}
 		
 		if (species.getSkills() != null && !species.getSkills().isEmpty()) {
@@ -423,7 +431,7 @@ public class ModelGenerator {
 			arguments += (arguments.isEmpty() ? "" : ", ") + var.getType() + " " + var.getName()
 					+ (var.getInit() == null || var.getInit().isEmpty() ? "" : " <- " + var.getInit());
 		}
-		result += sp + returnType + " " + action.getName() + (arguments.isEmpty() ? "" : "(" + arguments + ")") + " {"
+		result += sp + returnType + " " + manageName(action.getName()) + (arguments.isEmpty() ? "" : "(" + arguments + ")") + " {"
 				+ EL;
 		final String code = action.getGamlCode();
 		if (code != null && !code.isEmpty()) {
@@ -486,7 +494,7 @@ public class ModelGenerator {
 			type = "perceive";
 		else if (object instanceof ERule)
 			type = "rule";
-		result += type + " " + link.getTarget().getName();
+		result += type + " " + manageName(link.getTarget().getName());
 		for (final EFacet facet : object.getFacets()) {
 			if (facet.getValue().replace(" ", "").isEmpty())
 				continue;
@@ -528,7 +536,7 @@ public class ModelGenerator {
 		for (int i = 0; i < level; i++) {
 			sp += "\t";
 		}
-		result += sp + "aspect " + asp.getName() + " {" + EL;
+		result += sp + "aspect " + manageName(asp.getName()) + " {" + EL;
 		if (asp.isDefineGamlCode()) {
 			final String code = asp.getGamlCode();
 			if (code != null && !code.isEmpty()) {
@@ -597,9 +605,9 @@ public class ModelGenerator {
 			return model;
 		}
 		if (exp instanceof EBatchExperiment) {
-			model += EL + EL + "experiment " + exp.getName() + " type:batch {}";
+			model += EL + EL + "experiment \"" + exp.getName() + "\" type:batch {}";
 		} else {
-			model += EL + EL + "experiment " + exp.getName() + " type:gui {" + EL;
+			model += EL + EL + "experiment \"" + exp.getName() + "\" type:gui {" + EL;
 			for (final EParameter link : exp.getParameters()) {
 				model += defineParameter(link);
 			}
@@ -672,7 +680,7 @@ public class ModelGenerator {
 		}
 		final EDisplay disp = link.getDisplay();
 		String model = EL + "\t\t";
-		model += "display " + disp.getName();
+		model += "display " + manageName(disp.getName());
 		for (final EFacet facet : disp.getFacets()) {
 			if (facet.getValue().replace(" ", "").isEmpty())
 				continue;
