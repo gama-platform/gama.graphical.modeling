@@ -66,7 +66,7 @@ public class EditSpeciesFrame extends EditFrame {
 	Font titleFont;
 
 	private final int CONST_WIDTH = 763;
-
+	
 	final EditFrame frame;
 
 	// topology
@@ -322,6 +322,7 @@ public class EditSpeciesFrame extends EditFrame {
 					if (column == 1) {
 						// Create the dropdown and add data to it
 						final CCombo combo = new CCombo(tableVars, SWT.READ_ONLY);
+						combos.add(combo);
 						for (int i = 0, n = types.size(); i < n; i++) {
 							combo.add(types.get(i));
 						}
@@ -351,7 +352,8 @@ public class EditSpeciesFrame extends EditFrame {
 								save("variables");
 								// They selected an item; end the editing
 								// session
-								combo.dispose();
+								//combos.remove(combo);
+								//combo.dispose();
 							}
 						});
 					} else if (column != 1) {
@@ -727,5 +729,16 @@ public class EditSpeciesFrame extends EditFrame {
 		});*/
 
 	}
+	
+	
+	@Override
+	protected void handleShellCloseEvent() {
+		// create dialog with ok and cancel button and info icon
+		clean_close();
+		close();
+		
+		
+	}
+
 
 }

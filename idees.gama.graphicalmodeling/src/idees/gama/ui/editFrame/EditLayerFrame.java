@@ -1084,11 +1084,9 @@ public class EditLayerFrame extends EditFrame {
 	@Override
 	protected void handleShellCloseEvent() {
 		// create dialog with ok and cancel button and info icon
-		frame.clean();
-		this.save(null);
+		clean_close() ;
 		if (comboType != null)comboType.dispose();
 		comboType = null;
-		setReturnCode(CANCEL);
 		close();
 	}
 

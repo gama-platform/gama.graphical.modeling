@@ -649,13 +649,11 @@ public class EditExperimentFrame extends EditFrame {
 	@Override
 	protected void handleShellCloseEvent() {
 		// create dialog with ok and cancel button and info icon
-		frame.clean();
-		this.save(null);
+		clean_close() ;
 		if (table_params != null)table_params.dispose();
 		table_params = null;
 		if (table_monitors != null)table_monitors.dispose();
 		table_monitors = null;
-		setReturnCode(CANCEL);
 		close();
 	}
 

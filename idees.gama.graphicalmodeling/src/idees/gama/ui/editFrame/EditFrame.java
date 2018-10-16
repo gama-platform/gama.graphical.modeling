@@ -81,6 +81,7 @@ public abstract class EditFrame extends ApplicationWindow {
 	EmbeddedEditor editor;
 	Button radioGaml;
 	Button radioEdit;
+	List<CCombo> combos;
 
 	Map<String, Composite> facetsEditor;
 
@@ -98,6 +99,7 @@ public abstract class EditFrame extends ApplicationWindow {
 			final String name) {
 		super(null);
 		facetsEditor = new Hashtable<String, Composite>();
+		combos = new ArrayList<>();
 		this.diagram = diagram;
 		frame = this;
 		this.fp = fp;
@@ -182,15 +184,15 @@ public abstract class EditFrame extends ApplicationWindow {
 				continue;
 			if ("layer".equals(gamlName) && ("aspect".equals(facet) || "species".equals(facet)))
 				continue;
-			if (comboValues != null && comboValues.containsKey(facet))
-				groupFacetCombo(group, facet, comboValues.get(facet), pt.doc);
-			else
+			if (comboValues != null && comboValues.containsKey(facet)) {
+				combos.add(groupFacetCombo(group, facet, comboValues.get(facet), pt.doc));
+			} else
 				groupFacet(group, facet, pt.typesToString(), pt.doc);
 		}
 		return group;
 	}
 
-	protected void groupFacetCombo(final Composite container, final String facetName, final List<String> values,
+	protected CCombo groupFacetCombo(final Composite container, final String facetName, final List<String> values,
 			final String doc) {
 		final Group group = new Group(container, SWT.NONE);
 		final GridData gridData = new GridData();
@@ -230,6 +232,7 @@ public abstract class EditFrame extends ApplicationWindow {
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {}
 		});
+		return textFacet;
 
 	}
 
@@ -460,6 +463,17 @@ public abstract class EditFrame extends ApplicationWindow {
 
 	protected abstract void save(String name);
 
+	
+	protected void clean_close() {
+		frame.clean();
+		this.save(null);
+		for (CCombo c : combos) {
+			if (c != null)c.dispose();
+			c = null;
+		}
+		combos.clear();
+		setReturnCode(CANCEL);
+	}
 	@Override
 	protected void handleShellCloseEvent() {
 		// create dialog with ok and cancel button and info icon

@@ -452,14 +452,12 @@ public class EditActionFrame extends EditFrame {
 	@Override
 	protected void handleShellCloseEvent() {
 		// create dialog with ok and cancel button and info icon
-		frame.clean();
-		this.save(null);
+		clean_close() ;
 		if (returnType != null)
 			returnType.dispose();
 		returnType = null;
 		if (table_vars != null)table_vars.dispose();
 		table_vars = null;
-		setReturnCode(CANCEL);
 		close();
 	}
 
