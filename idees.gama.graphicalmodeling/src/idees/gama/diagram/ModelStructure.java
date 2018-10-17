@@ -62,6 +62,9 @@ public class ModelStructure {
 			}
 		} else 
 			text = model;
+			while (text.indexOf("\n") == 0) {
+				text = text.replaceFirst("\n", "");
+			}
 	}
 
 	public static String getElementId(EObject newElement) {
