@@ -66,7 +66,6 @@ import idees.gama.features.ExampleUtil;
 import msi.gama.common.interfaces.IGamlIssue;
 import msi.gama.kernel.model.IModel;
 import msi.gama.lang.gaml.resource.GamlResource;
-import msi.gama.lang.gaml.validation.GamlModelBuilder;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.compilation.GamlCompilationError;
 import msi.gaml.descriptions.ModelDescription;
