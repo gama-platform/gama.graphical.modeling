@@ -389,7 +389,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			if (!(facetN instanceof String))
 				continue;
 			final String name = (String) facetN;
-			final SymbolProto proto = DescriptionFactory.getStatementProto("species");
+			final SymbolProto proto = DescriptionFactory.getStatementProto("species", null);
 			if (proto.getFacet(name).internal)
 				continue;
 			final EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
@@ -616,7 +616,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			if (!(facetN instanceof String))
 				continue;
 			final String name = (String) facetN;
-			final SymbolProto proto = DescriptionFactory.getStatementProto("display");
+			final SymbolProto proto = DescriptionFactory.getStatementProto("display", null);
 			if (proto.getFacet(name).internal)
 				continue;
 			final EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
@@ -675,7 +675,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			if (!(facetN instanceof String))
 				continue;
 			final String name = (String) facetN;
-			final SymbolProto proto = DescriptionFactory.getStatementProto("aspect");
+			final SymbolProto proto = DescriptionFactory.getStatementProto("aspect", null);
 			if (proto.getFacet(name).internal)
 				continue;
 			final EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
@@ -732,7 +732,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			if (!(facetN instanceof String))
 				continue;
 			final String name = (String) facetN;
-			final SymbolProto proto = DescriptionFactory.getStatementProto("equation");
+			final SymbolProto proto = DescriptionFactory.getStatementProto("equation", null);
 			if (proto.getFacet(name).internal)
 				continue;
 			final EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
@@ -790,7 +790,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			if (!(facetN instanceof String))
 				continue;
 			final String name = (String) facetN;
-			final SymbolProto proto = DescriptionFactory.getStatementProto("state");
+			final SymbolProto proto = DescriptionFactory.getStatementProto("state", null);
 			if (proto.getFacet(name).internal)
 				continue;
 			final EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
@@ -851,7 +851,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			if (!(facetN instanceof String))
 				continue;
 			final String name = (String) facetN;
-			final SymbolProto proto = DescriptionFactory.getStatementProto("task");
+			final SymbolProto proto = DescriptionFactory.getStatementProto("task", null);
 			if (proto.getFacet(name).internal)
 				continue;
 			final EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
@@ -912,7 +912,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			if (!(facetN instanceof String))
 				continue;
 			final String name = (String) facetN;
-			final SymbolProto proto = DescriptionFactory.getStatementProto("plan");
+			final SymbolProto proto = DescriptionFactory.getStatementProto("plan", null);
 			if (proto.getFacet(name).internal)
 				continue;
 			final EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
@@ -973,7 +973,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			if (!(facetN instanceof String))
 				continue;
 			final String name = (String) facetN;
-			final SymbolProto proto = DescriptionFactory.getStatementProto("perceive");
+			final SymbolProto proto = DescriptionFactory.getStatementProto("perceive", null);
 			if (proto.getFacet(name).internal)
 				continue;
 			final EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
@@ -1037,7 +1037,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			if (!(facetN instanceof String))
 				continue;
 			final String name = (String) facetN;
-			final SymbolProto proto = DescriptionFactory.getStatementProto("rule");
+			final SymbolProto proto = DescriptionFactory.getStatementProto("rule", null);
 			if (proto.getFacet(name).internal)
 				continue;
 			final EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();

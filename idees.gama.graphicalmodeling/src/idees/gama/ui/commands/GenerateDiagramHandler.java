@@ -60,7 +60,7 @@ public class GenerateDiagramHandler extends AbstractHandler {
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final GamlEditor editor = (GamlEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 				.getActiveEditor();
-		final IModel model = editor.getDocument().readOnly(state -> GamlModelBuilder.compile(state.getURI(), null));
+		final IModel model = editor.getDocument().readOnly(state -> GamlModelBuilder.getDefaultInstance().compile(state.getURI(), null));
 		if (model == null) {
 			return null;
 		}

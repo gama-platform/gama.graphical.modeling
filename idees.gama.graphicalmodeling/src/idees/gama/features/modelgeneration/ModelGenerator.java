@@ -22,6 +22,8 @@ import org.eclipse.graphiti.mm.pictograms.Shape;
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
+import com.google.common.collect.Iterables;
+
 import gama.EAction;
 import gama.EActionLink;
 import gama.EAspect;
@@ -61,16 +63,38 @@ import gama.EWorldAgent;
 import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.diagram.ModelStructure;
 import idees.gama.features.ExampleUtil;
+import msi.gama.common.interfaces.IGamlIssue;
 import msi.gama.kernel.model.IModel;
 import msi.gama.lang.gaml.resource.GamlResource;
 import msi.gama.lang.gaml.validation.GamlModelBuilder;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.compilation.GamlCompilationError;
+import msi.gaml.descriptions.ModelDescription;
 
 public class ModelGenerator {
 
 	private static String EL = System.getProperty("line.separator");
 
+	
+	private static ModelDescription buildModelDescription(final GamlResource r, final List<GamlCompilationError> errors) {
+		try {
+			
+			// Syntactic errors detected, we cannot build the resource
+			if (r.hasErrors()) {
+				if (errors != null)
+					errors.add(new GamlCompilationError("Syntax errors ", IGamlIssue.GENERAL, r.getContents().get(0),
+							false, false));
+				return null;
+			} else {
+				// We build the description
+				final ModelDescription model = r.buildCompleteDescription();
+				if (errors != null)
+					Iterables.addAll(errors, r.getValidationContext());
+				return model;
+			}
+		} finally {}
+	}
+	
 	public static IModel modelGeneration(final IFeatureProvider fp, final Diagram diagram) {
 		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
 		diagramEditor.initIdsEObjects();
@@ -90,9 +114,9 @@ public class ModelGenerator {
 		try {
 			final Set<GamlResource> resources = new HashSet<GamlResource>();
 			resources.add(resource);
-			final IModel model = GamlModelBuilder.compile(resource, new ArrayList<GamlCompilationError>());
+			final ModelDescription modeldesc = buildModelDescription(resource, new ArrayList<GamlCompilationError>());
 			//((ModelDescription) model.getDescription()).setModelFilePath(getPath(fp, diagram));
-			return model;
+			return modeldesc == null ? null : (IModel) modeldesc.compile();
 		} catch (final GamaRuntimeException e1) {
 			e1.printStackTrace();
 		} catch (final Exception e) {
