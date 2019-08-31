@@ -1,10 +1,13 @@
 package idees.gama.diagram;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -148,6 +151,7 @@ import msi.gaml.species.ISpecies;
 import msi.gaml.statements.ActionStatement;
 import msi.gaml.statements.AspectStatement;
 import msi.gaml.statements.Facets;
+import msi.gaml.statements.Facets.Facet;
 import msi.gaml.statements.IExecutable;
 import msi.gaml.statements.IStatement;
 import msi.gaml.variables.IVariable;
@@ -1245,7 +1249,11 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 
 	public List<String> getFacets(final ISymbol statement) {
 		Facets fs =statement.getDescription().getFacets();
-		return new ArrayList<String>(fs.keySet());
+		ArrayList<String> a=new ArrayList<String>();
+		for(Facet f : fs.getFacets()){
+			a.add(f.key);
+		}
+		return a;
 	}
 
 }

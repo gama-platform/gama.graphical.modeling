@@ -38,7 +38,7 @@ import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gama.util.TOrderedHashMap;
+import msi.gama.util.GamaMapFactory;
 
 public class EditDisplayFrame extends EditFrame {
 
@@ -68,7 +68,7 @@ public class EditDisplayFrame extends EditFrame {
 		comboValues = new Hashtable<String, List<String>>();
 		comboValues.put("type", Arrays.asList("java2D", "opengl"));
 
-		layerFrames = new TOrderedHashMap<ELayer, EditLayerFrame>();
+		layerFrames = GamaMapFactory.create();
 		species = new ArrayList<ESpecies>();
 		grids = new ArrayList<ESpecies>();
 		this.diagram = diagram;

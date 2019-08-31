@@ -69,7 +69,7 @@ import msi.gama.lang.gaml.resource.GamlResource;
 import msi.gama.lang.gaml.resource.GamlResourceServices;
 import msi.gama.lang.gaml.validation.IGamlBuilderListener;
 import msi.gama.runtime.GAMA;
-import msi.gama.util.TOrderedHashMap;
+import msi.gama.util.GamaMapFactory;
 import msi.gaml.compilation.GamlCompilationError;
 import msi.gaml.descriptions.IDescription;
 import msi.gaml.descriptions.ValidationContext;
@@ -97,10 +97,10 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 			"transparency:", "color:", "empty:", "rotate:", "schedules:", "at:", "depth:", "texture:");
 
 	boolean toRefresh = true;
-	Map<List<String>, EObject> idsEObjects = new TOrderedHashMap<List<String>, EObject>();
+	Map<List<String>, EObject> idsEObjects = GamaMapFactory.create();
 
-	Map<List<String>, Map<String, String>> errorsLoc = new TOrderedHashMap<List<String>, Map<String, String>>();
-	Map<List<String>, Map<String, String>> syntaxErrorsLoc = new TOrderedHashMap<List<String>, Map<String, String>>();
+	Map<List<String>, Map<String, String>> errorsLoc = GamaMapFactory.create();
+	Map<List<String>, Map<String, String>> syntaxErrorsLoc = GamaMapFactory.create();
 
 	static {
 		final FontData fd = Display.getDefault().getSystemFont().getFontData()[0];
@@ -372,7 +372,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 			Map<String, String> locs = errorsLoc.get(ids);
 
 			if (locs == null) {
-				locs = new TOrderedHashMap<String, String>();
+				locs = GamaMapFactory.create();
 			}
 			// System.out.println("error.getCode() : " + error.getCode());
 			final String key = error.getCode().equals("gaml.duplicate.definition.issue")
@@ -652,7 +652,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 
 					initIdsEObjects();
 					final List<List<String>> vals = new ArrayList<List<String>>(idsEObjects.keySet());
-					final Map<List<String>, EObject> valM = new TOrderedHashMap<List<String>, EObject>(idsEObjects);
+					final Map<List<String>, EObject> valM = GamaMapFactory.create();
 					for (final EObject bo : valM.values()) {
 						if (bo instanceof EGamaObject) {
 							((EGamaObject) bo).setHasError(false);

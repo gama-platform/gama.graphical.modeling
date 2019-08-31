@@ -5,9 +5,10 @@ import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
+import msi.gama.util.GamaMapFactory;
+
 import java.util.*;
 import java.util.List;
-import msi.gama.util.TOrderedHashMap;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.*;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -35,7 +36,7 @@ public class EditAspectFrame extends EditFrame {
 	public EditAspectFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature eaf,
 		final EAspect aspect, final String name) {
 		super(diagram, fp, eaf, aspect, name == null ? "Aspect definition" : name);
-		layerFrames = new TOrderedHashMap<ELayerAspect, EditLayerAspectFrame>();
+		layerFrames = GamaMapFactory.create();
 		frame = this;
 		layers = new ArrayList<ELayerAspect>();
 		layers.addAll(aspect.getLayers());

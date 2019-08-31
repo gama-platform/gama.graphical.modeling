@@ -4,8 +4,9 @@ import gama.*;
 import idees.gama.features.create.*;
 import idees.gama.features.edit.*;
 import idees.gama.ui.editFrame.EditFrame;
+import msi.gama.util.GamaMapFactory;
+
 import java.util.*;
-import msi.gama.util.TOrderedHashMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.graphiti.dt.IDiagramTypeProvider;
 import org.eclipse.graphiti.features.*;
@@ -22,7 +23,7 @@ public class MyGamaToolBehaviorProvider extends DefaultToolBehaviorProvider {
 
 	public MyGamaToolBehaviorProvider(final IDiagramTypeProvider diagramTypeProvider) {
 		super(diagramTypeProvider);
-		frames = new TOrderedHashMap<EObject, EditFrame>();
+		frames = GamaMapFactory.create();
 	}
 
 	@Override

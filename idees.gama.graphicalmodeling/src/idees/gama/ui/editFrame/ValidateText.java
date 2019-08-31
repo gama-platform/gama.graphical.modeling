@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.ToolTip;
 
 import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gama.util.TOrderedHashMap;
+import msi.gama.util.GamaMapFactory; 
 
 public class ValidateText extends StyledText {
 
@@ -142,7 +142,7 @@ public class ValidateText extends StyledText {
 			Map<String, String> locs = editor.getSyntaxErrorsLoc().get(loc);
 
 			if (locs == null) {
-				locs = new TOrderedHashMap<String, String>();
+				locs = GamaMapFactory.create();
 			}
 			locs.put(nameLoc, "Syntax errors detected ");
 			// .out.println("loc: " + loc);
@@ -224,7 +224,7 @@ public class ValidateText extends StyledText {
 			Map<String, String> locs = editor.getSyntaxErrorsLoc().get(loc);
 
 			if (locs == null) {
-				locs = new TOrderedHashMap<String, String>();
+				locs = GamaMapFactory.create();
 			}
 			locs.put(nameLoc, "Syntax errors detected ");
 
