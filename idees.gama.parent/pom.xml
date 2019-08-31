@@ -24,8 +24,8 @@
 		</repository>
 
 		<repository>
-			<id>eclipse-oxygen</id>
-			<url>http://download.eclipse.org/releases/oxygen</url>
+			<id>eclipse-2019-03</id>
+			<url>http://download.eclipse.org/releases/2019-03</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
@@ -193,7 +193,7 @@
 			<properties>
 				<!-- Properties relative to the distant host where to upload the repo -->
 				<ftp.url>scp://51.255.46.42</ftp.url>
-				<ftp.toDir>./var/www/gama_updates/graphical_modeling/oxygen</ftp.toDir>
+				<ftp.toDir>./var/www/gama_updates/graphical_modeling/</ftp.toDir>
 				<!-- Relative path to the repo being uploaded -->
 				<repo.path>${project.build.directory}/repository/</repo.path>
 			</properties>
