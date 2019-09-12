@@ -117,7 +117,7 @@
 		<module>../idees.gama.graphicalmodeling</module>
 		<module>../idees.gama.emf.metamodel</module>
 		<module>../idees.gama.feature.graphical_modeling</module>
-		<!-- <module>../idees.gama.p2site</module> -->
+		<module>../idees.gama.p2site</module>
 	</modules>
 	<properties>
 		<p2-maven.version>1.2.0-SNAPSHOT</p2-maven.version>
