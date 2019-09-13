@@ -9,7 +9,7 @@
 		<version>1.7.0-SNAPSHOT</version>
 		<relativePath>../idees.gama.parent/</relativePath>
 	</parent>
-	<artifactId>ummisco.gaml.extensions.p2site</artifactId>
+	<artifactId>idees.gama.p2site</artifactId>
 	<packaging>eclipse-repository</packaging>
 
 	<distributionManagement>
