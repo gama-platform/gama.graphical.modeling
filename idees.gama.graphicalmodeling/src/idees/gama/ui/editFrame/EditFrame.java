@@ -84,6 +84,8 @@ public abstract class EditFrame extends ApplicationWindow {
 	List<CCombo> combos;
 
 	Map<String, Composite> facetsEditor;
+	
+	List<String> facetsToRemove;
 
 	List<String> gridFacets = Arrays.asList("schedules", "frequency", "control", "neighbors", "file", "cell_height",
 			"cell_width", "width", "height", "use_regular_agents", "use_individual_shapes", "use_neighbors_cache");
@@ -92,12 +94,12 @@ public abstract class EditFrame extends ApplicationWindow {
 	Map<String, List<String>> comboValues;
 	GAMARessourceProvider rp;
 
-	/**
-	 * Create the application window.
-	 */
+	
+	
 	public EditFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature ef, final EGamaObject eobject,
-			final String name) {
+			final String name, List<String> facetsToRemove) {
 		super(null);
+		this.facetsToRemove = facetsToRemove;
 		facetsEditor = new Hashtable<String, Composite>();
 		combos = new ArrayList<>();
 		this.diagram = diagram;
@@ -110,8 +112,36 @@ public abstract class EditFrame extends ApplicationWindow {
 		addMenuBar();
 		addStatusLine();
 		ModelGenerator.modelValidation(fp, diagram);
-
 	}
+	
+	/**
+	 * Create the application window.
+	 */
+	public EditFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature ef, final EGamaObject eobject,
+			final String name) {
+		super(null);
+		facetsToRemove = new ArrayList<>();
+		facetsEditor = new Hashtable<String, Composite>();
+		combos = new ArrayList<>();
+		this.diagram = diagram;
+		frame = this;
+		this.fp = fp;
+		this.ef = ef;
+		this.name = name;
+		this.eobject = eobject;
+		addToolBar(SWT.FLAT | SWT.WRAP);
+		addMenuBar();
+		addStatusLine();
+		ModelGenerator.modelValidation(fp, diagram);
+	}
+	
+	
+
+	public List<String> getFacetsToRemove() {
+		return facetsToRemove;
+	}
+
+
 
 	static public String fromErrorToString(final GamlCompilationError error) {
 		String result = "Error concerning: ";
@@ -157,6 +187,9 @@ public abstract class EditFrame extends ApplicationWindow {
 	protected Group groupFacets(final Composite container, final String gamlName, final int nbCol) {
 		final SymbolProto proto = "layer".equals(gamlName) ? DescriptionFactory.getStatementProto("display_population", null)
 				: DescriptionFactory.getStatementProto(gamlName, null);
+		if (gamlName == "experiment") {
+			System.out.println("proto: " + proto) ;
+		}
 		final Group group = new Group(container, SWT.NONE);
 		final GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
@@ -172,7 +205,9 @@ public abstract class EditFrame extends ApplicationWindow {
 			facets = speciesFacets;
 		} else {
 			facets = new ArrayList<String>(proto.getPossibleFacets().keySet());
+			facets.removeAll(facetsToRemove);
 			Collections.sort(facets);
+			
 		}
 		for (final String facet : facets) {
 			final FacetProto pt = proto.getFacet(facet);
@@ -257,7 +292,6 @@ public abstract class EditFrame extends ApplicationWindow {
 		} else {
 			nm = "name";
 		}
-
 		final ValidateText textFacet =
 				new ValidateText(group, SWT.BORDER, diagram, fp, this, diagramEditor, nm, uselessName, null);
 		textFacet.setToolTipText(doc);

@@ -533,6 +533,20 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 				}
 			}
 		}
+		
+		for (final Object facetN : getFacets(xp)) {
+			if (!(facetN instanceof String))
+				continue;
+			final String name = (String) facetN;
+			final SymbolProto proto = DescriptionFactory.getStatementProto("experiment", null);
+			if (proto.getFacet(name).internal || name.equals("type") || name.equals("name"))
+				continue;
+			final EFacet facet = gama.GamaFactory.eINSTANCE.createEFacet();
+			facet.setName(name);
+			facet.setOwner(target);
+			target.getFacets().add(facet);
+			facet.setValue(xp.getFacet(name).serialize(false).replace("\\/", "/"));
+		}
 
 		return target;
 	}

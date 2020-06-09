@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -40,7 +41,7 @@ import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
 
-public class EditExperimentFrame extends EditFrame {
+public class EditGUIExperimentFrame extends EditFrame {
 
 	StyledText gamlCode;
 	ESpecies species;
@@ -49,13 +50,14 @@ public class EditExperimentFrame extends EditFrame {
 	List<String> variables;
 	List<String> types_parameter_tot = Arrays.asList("int", "float", "string", "file", "list", "matrix", "map", "bool");
 	Diagram diagram;
-
+	
+	static final List<String> facetsNotConcerned = Arrays.asList("benchmark", "virtual", "control", "frequency", "keep_seed", "keep_simulations", "name", "parallel", "parent", "repeat", "skills", "title", "type", "until");
 	/**
 	 * Create the application window.
 	 */
-	public EditExperimentFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature eaf,
+	public EditGUIExperimentFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature eaf,
 			final EExperiment experiment, final String name) {
-		super(diagram, fp, eaf, experiment, name == null ? "Experiment definition" : name);
+		super(diagram, fp, eaf, experiment, name == null ? "GUI Experiment definition" : name,facetsNotConcerned);
 		this.species = experiment.getExperimentLink().getSpecies();
 		this.diagram = diagram;
 
@@ -79,14 +81,20 @@ public class EditExperimentFrame extends EditFrame {
 		// ****** CANVAS NAME *********
 		canvasName(container);
 		textName.setSimpleValidation(true);
+		
+		Group gp = groupFacets(container, "experiment", 3);
+		
+		gp.setBounds(10, 50, 820, 100);
 
 		// ****** CANVAS PARAMETER *********
 		final Canvas canvasParameter = canvasParameter(container);
-		canvasParameter.setBounds(10, 50, 820, 205);
+		canvasParameter.setBounds(10, 150, 820, 205);
+		//canvasParameter.setBounds(10, 50, 820, 205);
 
 		// ****** CANVAS MONITORS *********
 		final Canvas canvasMonitors = canvasMonitor(container);
-		canvasMonitors.setBounds(10, 270, 820, 205);
+		//canvasMonitors.setBounds(10, 270, 820, 205);
+		canvasMonitors.setBounds(10, 370, 820, 205);
 
 
 		return container;
@@ -585,7 +593,7 @@ public class EditExperimentFrame extends EditFrame {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(850, 550);
+		return new Point(850, 650);
 	}
 
 	@Override
@@ -597,6 +605,7 @@ public class EditExperimentFrame extends EditFrame {
 				@Override
 				public void doExecute() {
 					eobject.setName(textName.getText());
+					saveFacets();
 					final EExperiment xp = (EExperiment) eobject;
 					final List<EParameter> params = new ArrayList<EParameter>();
 					params.addAll(xp.getParameters());

@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -628,9 +629,30 @@ public class ModelGenerator {
 			return model;
 		}
 		if (exp instanceof EBatchExperiment) {
-			model += EL + EL + "experiment \"" + exp.getName() + "\" type:batch {}";
+			model += EL + EL + "experiment \"" + exp.getName() + "\" type:batch ";
+			for (final EFacet facet : exp.getFacets()) {
+				if (facet.getValue().replace(" ", "").isEmpty())
+					continue;
+					model += " " + facet.getName() + ":" + facet.getValue();
+			}
+					
+			model +=  " {" +EL;
+			for (final EParameter link : exp.getParameters()) {
+				model += defineParameter(link);
+			}
+
+			model += EL + "}" + EL;
+
 		} else {
-			model += EL + EL + "experiment \"" + exp.getName() + "\" type:gui {" + EL;
+			model += EL + EL + "experiment \"" + exp.getName() + "\" type:gui " ;
+			for (final EFacet facet : exp.getFacets()) {
+				if (facet.getValue().replace(" ", "").isEmpty())
+					continue;
+					model += " " + facet.getName() + ":" + facet.getValue();
+			}
+					
+			model +=  " {" +EL;
+			
 			for (final EParameter link : exp.getParameters()) {
 				model += defineParameter(link);
 			}

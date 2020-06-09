@@ -1,8 +1,10 @@
 package idees.gama.features.edit;
 
 import gama.EExperiment;
+import gama.EGUIExperiment;
 import idees.gama.diagram.MyGamaToolBehaviorProvider;
-import idees.gama.ui.editFrame.EditExperimentFrame;
+import idees.gama.ui.editFrame.EditGUIExperimentFrame;
+import idees.gama.ui.editFrame.EditBatchExperimentFrame;
 import idees.gama.ui.editFrame.EditFrame;
 
 import org.eclipse.graphiti.features.IFeatureProvider;
@@ -42,8 +44,13 @@ public class EditExperimentFeature  extends EditFeature {
             Object bo = getBusinessObjectForPictogramElement(pes[0]);
             if (bo instanceof EExperiment) {
             	EExperiment eExperiment = (EExperiment) bo; 
+            	
             	if (frame == null || frame.getShell() == null || frame.getShell().isDisposed() ) {
-            		frame = new EditExperimentFrame(getDiagram(), getFeatureProvider(), this,eExperiment, eExperiment.getName());
+            		if (bo instanceof EGUIExperiment)
+            			frame = new EditGUIExperimentFrame(getDiagram(), getFeatureProvider(), this,eExperiment, eExperiment.getName());
+            		else 
+            			frame = new EditBatchExperimentFrame(getDiagram(), getFeatureProvider(), this,eExperiment, eExperiment.getName());
+                	
             		frame.open();
 
             		frame.getTextName().setText(frame.getTextName().getText());
