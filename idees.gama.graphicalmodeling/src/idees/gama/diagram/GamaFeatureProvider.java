@@ -1,13 +1,10 @@
 package idees.gama.diagram;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -141,7 +138,7 @@ import msi.gaml.architecture.simplebdi.PerceiveStatement;
 import msi.gaml.architecture.simplebdi.RuleStatement;
 import msi.gaml.architecture.simplebdi.SimpleBdiPlanStatement;
 import msi.gaml.architecture.weighted_tasks.WeightedTaskStatement;
-import msi.gaml.compilation.AbstractGamlAdditions;
+import msi.gaml.compilation.GAML;
 import msi.gaml.compilation.ISymbol;
 import msi.gaml.compilation.kernel.GamaSkillRegistry;
 import msi.gaml.descriptions.IDescription;
@@ -178,7 +175,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		fp = this;
 
 		built_in_actions = new ArrayList<String>();
-		for (final IDescription desc : AbstractGamlAdditions.getAllActions()) {
+		for (final IDescription desc : GAML.getAllActions()) {
 			built_in_actions.add(desc.getName());
 		}
 	}
@@ -492,7 +489,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 	public EExperiment createXP(final ESpecies source, final PictogramElement sourceE, final IExperimentPlan xp,
 			final Diagram diagram) {
 		EExperiment target = null;
-		if (xp.isGui()) {
+		if (!xp.isBatch()) {
 			target = gama.GamaFactory.eINSTANCE.createEGUIExperiment();
 		} else {
 			target = gama.GamaFactory.eINSTANCE.createEBatchExperiment();
@@ -525,7 +522,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		final GamaDiagramEditor diagramEditor =
 				(GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 		diagramEditor.addEOject(target);
-		if (xp.isGui() && xp.getExperimentOutputs() != null) {
+		if (!xp.isBatch() && xp.getExperimentOutputs() != null) {
 			for (final IOutput output : ((SimulationOutputManager) xp.getOriginalSimulationOutputs()).getOutputs()
 					.values()) {
 				if (output instanceof LayeredDisplayOutput) {

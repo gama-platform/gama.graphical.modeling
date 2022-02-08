@@ -39,7 +39,7 @@ import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gaml.compilation.AbstractGamlAdditions;
+import msi.gaml.compilation.GAML;
 
 public class EditActionFrame extends EditFrame {
 
@@ -63,7 +63,7 @@ public class EditActionFrame extends EditFrame {
 		types.add("rgb");
 		types.add("point");
 		types.add("geometry");
-		for (final String ty : AbstractGamlAdditions.VARTYPE2KEYWORDS.values()) {
+		for (final String ty : GAML.VARTYPE2KEYWORDS.values()) {
 			if (!types.contains(ty) && !ty.toString().endsWith("_file"))
 				types.add(ty);
 

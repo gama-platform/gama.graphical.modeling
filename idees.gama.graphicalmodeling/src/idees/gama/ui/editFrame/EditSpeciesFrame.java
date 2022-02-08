@@ -17,8 +17,6 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.TableEditor;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -45,7 +43,7 @@ import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditSpeciesFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gaml.compilation.AbstractGamlAdditions;
+import msi.gaml.compilation.GAML;
 import msi.gaml.compilation.kernel.GamaSkillRegistry;
 
 public class EditSpeciesFrame extends EditFrame {
@@ -127,7 +125,7 @@ public class EditSpeciesFrame extends EditFrame {
 		types.add("rgb");
 		types.add("point");
 		types.add("geometry");
-		for (final String ty : AbstractGamlAdditions.VARTYPE2KEYWORDS.values()) {
+		for (final String ty : GAML.VARTYPE2KEYWORDS.values()) {
 			if (!types.contains(ty) && !ty.toString().endsWith("_file"))
 				types.add(ty);
 
