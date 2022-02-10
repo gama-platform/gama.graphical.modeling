@@ -32,98 +32,91 @@
          id="org.eclipse.xtext.xbase.lib"
          download-size="0"
          install-size="0"
-         version="2.17.0.v20190304-0518"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.xtend.lib.macro"
          download-size="0"
          install-size="0"
-         version="2.17.0.v20190304-0518"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.graphiti"
          download-size="0"
          install-size="0"
-         version="0.15.0.201806050830"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.graphiti.mm"
          download-size="0"
          install-size="0"
-         version="0.15.0.201806050830"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.graphiti.pattern"
          download-size="0"
          install-size="0"
-         version="0.15.0.201806050830"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.graphiti.ui"
          download-size="0"
          install-size="0"
-         version="0.15.0.201806050830"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.graphiti.ui.capabilities"
-         download-size="0"
-         install-size="0"
-         version="0.15.0.201806050830"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.draw2d"
          download-size="0"
          install-size="0"
-         version="3.10.100.201606061308"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.gef"
          download-size="0"
          install-size="0"
-         version="3.11.0.201606061308"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.validation"
          download-size="0"
          install-size="0"
-         version="1.8.0.201812070911"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.transaction"
          download-size="0"
          install-size="0"
-         version="1.9.1.201805140824"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.workspace"
          download-size="0"
          install-size="0"
-         version="1.5.1.201805140824"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.ecore.change"
          download-size="0"
          install-size="0"
-         version="2.13.0.v20180706-1146"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.emf"
          download-size="0"
          install-size="0"
-         version="2.8.0.v20180706-1146"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin

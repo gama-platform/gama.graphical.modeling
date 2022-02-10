@@ -1,12 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %pluginName
+Bundle-Name: GraphicalModeling
 Bundle-SymbolicName: idees.gama.emf.metamodel;singleton:=true
 Bundle-Version: 1.7.0.qualifier
-Bundle-ClassPath: .
-Bundle-Vendor: %providerName
-Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: gama,
  gama.impl,
  gama.util

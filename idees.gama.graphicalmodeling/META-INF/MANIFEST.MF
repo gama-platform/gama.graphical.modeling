@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: GraphicalModeling
 Bundle-SymbolicName: idees.gama.graphicalmodeling;singleton:=true
 Bundle-Version: 1.7.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: msi.gama.core;visibility:=reexport,
  idees.gama.emf.metamodel,
  org.eclipse.ui.ide,
@@ -24,7 +24,9 @@ Require-Bundle: msi.gama.core;visibility:=reexport,
  ummisco.gama.ui.modeling;visibility:=reexport,
  org.eclipse.emf.transaction,
  org.eclipse.gef,
- ummisco.gama.ui.navigator
+ ummisco.gama.ui.navigator,
+ ummisco.gaml.extensions.maths;bundle-version="1.8.2",
+ msi.gaml.architecture.simplebdi;bundle-version="1.8.2"
 Export-Package: idees.gama.diagram,
  idees.gama.features,
  idees.gama.features.add,
@@ -38,6 +40,3 @@ Export-Package: idees.gama.diagram,
  idees.gama.ui.image,
  idees.gama.ui.wizards
 Bundle-ActivationPolicy: lazy
-Import-Package: com.google.inject,
- msi.gaml.architecture.simplebdi,
- ummisco.gaml.extensions.maths.ode.statements
