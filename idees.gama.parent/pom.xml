@@ -81,6 +81,11 @@
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
+			<artifactId>msi.gama.application</artifactId>
+			<version>1.8.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.headless</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
@@ -112,6 +117,36 @@
 		<dependency>
 			<groupId>ummisco.gaml.extensions.maths</groupId>
 			<artifactId>ummisco.gaml.extensions.maths</artifactId>
+			<version>1.8.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>msi.gaml.architecture.simplebdi</groupId>
+			<artifactId>msi.gaml.architecture.simplebdi</artifactId>
+			<version>1.8.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>irit.gaml.extensions.database</groupId>
+			<artifactId>irit.gaml.extensions.database</artifactId>
+			<version>1.8.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>ummisco.gama.network</groupId>
+			<artifactId>ummisco.gama.network</artifactId>
+			<version>1.8.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>ummisco.gama.serialize</groupId>
+			<artifactId>ummisco.gama.serialize</artifactId>
+			<version>1.8.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>simtools.gaml.extensions.physics</groupId>
+			<artifactId>simtools.gaml.extensions.physics</artifactId>
+			<version>1.8.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>simtools.gaml.extensions.traffic</groupId>
+			<artifactId>simtools.gaml.extensions.traffic</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies> 
