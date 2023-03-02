@@ -25,8 +25,8 @@ Require-Bundle: msi.gama.core;visibility:=reexport,
  org.eclipse.emf.transaction,
  org.eclipse.gef,
  ummisco.gama.ui.navigator,
- ummisco.gaml.extensions.maths;bundle-version="1.8.2",
- msi.gaml.architecture.simplebdi;bundle-version="1.8.2"
+ ummisco.gaml.extensions.maths;bundle-version="1.9.0",
+ msi.gaml.architecture.simplebdi;bundle-version="1.9.0"
 Export-Package: idees.gama.diagram,
  idees.gama.features,
  idees.gama.features.add,
