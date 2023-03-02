@@ -10,22 +10,23 @@
 
 	<repositories>
 		<repository>
+			<id>p2Repo</id>
+			<name>p2Repo</name>
+			<url>https://updates.gama-platform.org/1.9.0</url>
+			<layout>p2</layout>
 			<snapshots>
 				<enabled>true</enabled>
 				<checksumPolicy>ignore</checksumPolicy>
 			</snapshots>
 			<releases>
-				<checksumPolicy>ignore</checksumPolicy>
 				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
 			</releases>
-			<id>p2Repo</id>
-			<name>p2Repo</name>
-			<url>http://updates.gama-platform.org/1.9.0</url>
 		</repository>
 
 		<repository>
-			<id>eclipse-2021-12</id>
-			<url>https://download.eclipse.org/releases/2021-12</url>
+			<id>eclipse-2022-12</id>
+			<url>https://download.eclipse.org/releases/2022-12</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
