@@ -72,6 +72,7 @@ import msi.gama.runtime.GAMA;
 import msi.gama.util.GamaMapFactory;
 import msi.gaml.compilation.GamlCompilationError;
 import msi.gaml.descriptions.IDescription;
+import msi.gaml.descriptions.ModelDescription;
 import msi.gaml.descriptions.ValidationContext;
 import ummisco.gama.ui.resources.IGamaColors;
 
@@ -113,7 +114,8 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 	}
 
 	@Override
-	public void validationEnded(final Iterable<? extends IDescription> experiments, final ValidationContext status) {
+	public void validationEnded(ModelDescription model, final Iterable<? extends IDescription> experiments,
+			final ValidationContext status) {
 		updateExperiments(experiments, status.hasErrors());
 		toRefresh = true;
 	}
