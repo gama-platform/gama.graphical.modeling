@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>idees.gama</groupId>
 	<artifactId>idees.gama.parent</artifactId>
-	<version>1.7.0-SNAPSHOT</version>
+	<version>1.9.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 
@@ -229,7 +229,7 @@
 				<version>${tycho.version}</version>
 				<configuration>
 					<!-- <target> <artifact> <groupId>msi.gama</groupId> <artifactId>gama.target.platform</artifactId> 
-						<version>1.7.0-SNAPSHOT</version> </artifact> </target> -->
+						<version>1.9.0-SNAPSHOT</version> </artifact> </target> -->
 
 					<dependency-resolution>
 						<optionalDependencies>ignore</optionalDependencies>

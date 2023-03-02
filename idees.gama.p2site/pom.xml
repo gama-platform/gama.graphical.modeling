@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>idees.gama</groupId>
 		<artifactId>idees.gama.parent</artifactId>
-		<version>1.7.0-SNAPSHOT</version>
+		<version>1.9.0-SNAPSHOT</version>
 		<relativePath>../idees.gama.parent/</relativePath>
 	</parent>
 	<artifactId>idees.gama.p2site</artifactId>
