@@ -40,7 +40,7 @@
 		</repository>
 		<repository>
 			<id>eclipse-xtext</id>
-			<url>https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.25.0/</url>
+			<url>https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.29.0/</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
