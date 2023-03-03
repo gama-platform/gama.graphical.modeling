@@ -13,6 +13,20 @@
 			<id>p2Repo</id>
 			<name>p2Repo</name>
 			<url>https://updates.gama-platform.org/1.9.0</url>
+			<layout>p2</layout>
+			<snapshots>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+		</repository>
+		<repository>
+			<id>gamaRepo</id>
+			<name>p2Repo</name>
+			<url>https://updates.gama-platform.org/1.9.0</url>
 			<snapshots>
 				<enabled>true</enabled>
 				<checksumPolicy>ignore</checksumPolicy>
