@@ -45,9 +45,9 @@ jobs:
           TRAVIS_COMMIT: ${ GITHUB_SHA }
           TRAVIS_EVENT_TYPE: ${{ github.event_name }}
               
-      - name: Publish to Github
+      - name: Publish to GAMA update repo
         shell: bash
-        run: $GITHUB_WORKSPACE/publish.sh
+        run: bash $GITHUB_WORKSPACE/publish.sh
         env:  
           SSH_USER_PWD: ${{ secrets.USER_PWD }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
