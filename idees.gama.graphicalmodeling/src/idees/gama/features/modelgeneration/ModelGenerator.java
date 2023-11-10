@@ -64,7 +64,7 @@ import gama.EWorldAgent;
 import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.diagram.ModelStructure;
 import idees.gama.features.ExampleUtil;
-import msi.gama.common.interfaces.IGamlIssue;
+import msi.gaml.interfaces.IGamlIssue;
 import msi.gama.kernel.model.IModel;
 import msi.gama.lang.gaml.resource.GamlResource;
 import msi.gama.runtime.exceptions.GamaRuntimeException;

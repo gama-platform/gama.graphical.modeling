@@ -351,22 +351,22 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		eVar.setType(var.getType().toString());
 		eVar.setName(var.getName());
 		if (var.hasFacet(IKeyword.INIT)) {
-			eVar.setInit(var.getFacet(IKeyword.INIT).serialize(false).replace("\\/", "/"));
+			eVar.setInit(var.getFacet(IKeyword.INIT).serializeToGaml(false).replace("\\/", "/"));
 		}
 		if (var.hasFacet(IKeyword.UPDATE)) {
-			eVar.setUpdate(var.getFacet(IKeyword.UPDATE).serialize(false).replace("\\/", "/"));
+			eVar.setUpdate(var.getFacet(IKeyword.UPDATE).serializeToGaml(false).replace("\\/", "/"));
 		}
 		if (var.hasFacet(IKeyword.MIN)) {
-			eVar.setMin(var.getFacet(IKeyword.MIN).serialize(false));
+			eVar.setMin(var.getFacet(IKeyword.MIN).serializeToGaml(false));
 		}
 		if (var.hasFacet(IKeyword.MAX)) {
-			eVar.setMax(var.getFacet(IKeyword.MAX).serialize(false));
+			eVar.setMax(var.getFacet(IKeyword.MAX).serializeToGaml(false));
 		}
 		if (var.hasFacet(IKeyword.FUNCTION)) {
-			eVar.setFunction(var.getFacet(IKeyword.FUNCTION).serialize(false).replace("\\/", "/"));
+			eVar.setFunction(var.getFacet(IKeyword.FUNCTION).serializeToGaml(false).replace("\\/", "/"));
 		}
 		if (var.hasFacet(IKeyword.VALUE)) {
-			eVar.setFunction(var.getFacet(IKeyword.VALUE).serialize(false).replace("\\/", "/"));
+			eVar.setFunction(var.getFacet(IKeyword.VALUE).serializeToGaml(false).replace("\\/", "/"));
 		}
 		target.getVariables().add(eVar);
 	}
@@ -397,7 +397,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setName(name);
 			facet.setOwner(target);
 			target.getFacets().add(facet);
-			facet.setValue(species.getFacet(name).serialize(false).replace("\\/", "/"));
+			facet.setValue(species.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
 
 		for (final IVariable var : species.getVars()) {
@@ -455,7 +455,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 							if (st == null) {
 								continue;
 							}
-							gmlCode += st.serialize(false);
+							gmlCode += st.serializeToGaml(false);
 						}
 					}
 					target.setInit(gmlCode);
@@ -542,7 +542,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setName(name);
 			facet.setOwner(target);
 			target.getFacets().add(facet);
-			facet.setValue(xp.getFacet(name).serialize(false).replace("\\/", "/"));
+			facet.setValue(xp.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
 
 		return target;
@@ -557,7 +557,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		String gmlCode = "";
 		if (action.getCommands() != null) {
 			for (final IStatement st : action.getCommands()) {
-				gmlCode += st.serialize(false) + System.getProperty("line.separator");
+				gmlCode += st.serializeToGaml(false) + System.getProperty("line.separator");
 			}
 		}
 		gmlCode = gmlCode.replace("\\/", "/");
@@ -638,9 +638,9 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setName(name);
 			facet.setOwner(target);
 			target.getFacets().add(facet);
-			facet.setValue(display.getFacet(name).serialize(false).replace("\\/", "/"));
+			facet.setValue(display.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
-		String gmlCode = display.serialize(false);
+		String gmlCode = display.serializeToGaml(false);
 		if (gmlCode.contains("{")) {
 			gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
 			gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
@@ -697,9 +697,9 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setName(name);
 			facet.setOwner(target);
 			target.getFacets().add(facet);
-			facet.setValue(aspect.getFacet(name).serialize(false).replace("\\/", "/"));
+			facet.setValue(aspect.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
-		String gmlCode = aspect.serialize(false);
+		String gmlCode = aspect.serializeToGaml(false);
 		if (gmlCode.contains("{")) {
 			gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
 			gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
@@ -754,9 +754,9 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setName(name);
 			facet.setOwner(target);
 			target.getFacets().add(facet);
-			facet.setValue(equation.getFacet(name).serialize(false).replace("\\/", "/"));
+			facet.setValue(equation.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
-		String gmlCode = equation.serialize(false);
+		String gmlCode = equation.serializeToGaml(false);
 		if (gmlCode.contains("{")) {
 			gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
 			gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
@@ -812,7 +812,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setName(name);
 			facet.setOwner(target);
 			target.getFacets().add(facet);
-			facet.setValue(state.getFacet(name).serialize(false).replace("\\/", "/"));
+			facet.setValue(state.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
 		String gmlCode = "";
 		if (state.getCommands() != null) {
@@ -820,7 +820,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 				if (st == null) {
 					continue;
 				}
-				gmlCode += st.serialize(false);
+				gmlCode += st.serializeToGaml(false);
 			}
 		}
 		gmlCode = gmlCode.replace("\\/", "/");
@@ -873,7 +873,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setName(name);
 			facet.setOwner(target);
 			target.getFacets().add(facet);
-			facet.setValue(task.getFacet(name).serialize(false).replace("\\/", "/"));
+			facet.setValue(task.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
 		String gmlCode = "";
 		if (task.getCommands() != null) {
@@ -881,7 +881,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 				if (st == null) {
 					continue;
 				}
-				gmlCode += st.serialize(false);
+				gmlCode += st.serializeToGaml(false);
 			}
 		}
 		gmlCode = gmlCode.replace("\\/", "/");
@@ -934,7 +934,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setName(name);
 			facet.setOwner(target);
 			target.getFacets().add(facet);
-			facet.setValue(plan.getFacet(name).serialize(false).replace("\\/", "/"));
+			facet.setValue(plan.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
 		String gmlCode = "";
 		if (plan.getCommands() != null) {
@@ -942,7 +942,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 				if (st == null) {
 					continue;
 				}
-				gmlCode += st.serialize(false);
+				gmlCode += st.serializeToGaml(false);
 			}
 		}
 		gmlCode = gmlCode.replace("\\/", "/");
@@ -995,7 +995,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setName(name);
 			facet.setOwner(target);
 			target.getFacets().add(facet);
-			facet.setValue(perception.getFacet(name).serialize(false).replace("\\/", "/"));
+			facet.setValue(perception.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
 		String gmlCode = "";
 		if (perception.getCommands() != null) {
@@ -1003,7 +1003,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 				if (st == null) {
 					continue;
 				}
-				gmlCode += st.serialize(false);
+				gmlCode += st.serializeToGaml(false);
 			}
 		}
 		gmlCode = gmlCode.replace("\\/", "/");
@@ -1059,7 +1059,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setName(name);
 			facet.setOwner(target);
 			target.getFacets().add(facet);
-			facet.setValue(rule.getFacet(name).serialize(false).replace("\\/", "/"));
+			facet.setValue(rule.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
 		return target;
 	}
@@ -1070,7 +1070,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		final EReflex target = gama.GamaFactory.eINSTANCE.createEReflex();
 		diagram.eResource().getContents().add(target);
 		target.setName(reflex.getName());
-		String gmlCode = reflex.serialize(false);
+		String gmlCode = reflex.serializeToGaml(false);
 		if (gmlCode.contains("{")) {
 			gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
 			gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
@@ -1083,7 +1083,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setOwner(target);
 			target.getFacets().add(facet);
 			facet.setName(IKeyword.WHEN);
-			facet.setValue(reflex.getFacet(IKeyword.WHEN).serialize(false));
+			facet.setValue(reflex.getFacet(IKeyword.WHEN).serializeToGaml(false));
 		}
 
 		final CreateContext ac = new CreateContext();
@@ -1158,7 +1158,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 							if (st == null) {
 								continue;
 							}
-							gmlCode += st.serialize(false);
+							gmlCode += st.serializeToGaml(false);
 						}
 					}
 					gmlCode = gmlCode.replace("\\/", "/");
