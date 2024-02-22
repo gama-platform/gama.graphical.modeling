@@ -1,3 +1,13 @@
+/*******************************************************************************************************
+ *
+ * GamaDiagramEditor.java, in idees.gama.graphicalmodeling, is part of the source code of the GAMA modeling and
+ * simulation platform (v.1.9.3).
+ *
+ * (c) 2007-2024 UMI 209 UMMISCO IRD/SU & Partners (IRIT, MIAT, TLU, CTU)
+ *
+ * Visit https://github.com/gama-platform/gama for license information and contacts.
+ *
+ ********************************************************************************************************/
 package idees.gama.diagram;
 
 import java.util.ArrayList;
@@ -49,58 +59,92 @@ import gama.EParameter;
 import gama.EReflex;
 import gama.ESpecies;
 import gama.EVariable;
+import gama.core.kernel.model.IModel;
+import gama.core.runtime.GAMA;
+import gama.core.util.GamaMapFactory;
+import gama.gaml.compilation.GamlCompilationError;
+import gama.gaml.descriptions.IDescription;
+import gama.gaml.descriptions.ModelDescription;
+import gama.gaml.descriptions.ValidationContext;
+import gama.ui.shared.resources.IGamaColors;
+import gaml.compiler.gaml.Model;
+import gaml.compiler.gaml.Statement;
+import gaml.compiler.gaml.impl.ArgumentDefinitionImpl;
+import gaml.compiler.gaml.impl.BlockImpl;
+import gaml.compiler.gaml.impl.FacetImpl;
+import gaml.compiler.gaml.impl.S_ActionImpl;
+import gaml.compiler.gaml.impl.S_DefinitionImpl;
+import gaml.compiler.gaml.impl.S_DisplayImpl;
+import gaml.compiler.gaml.impl.S_ExperimentImpl;
+import gaml.compiler.gaml.impl.S_ReflexImpl;
+import gaml.compiler.gaml.impl.S_SpeciesImpl;
+import gaml.compiler.gaml.impl.StatementImpl;
+import gaml.compiler.gaml.impl.VariableRefImpl;
+import gaml.compiler.gaml.impl.speciesOrGridDisplayStatementImpl;
+import gaml.compiler.gaml.resource.GamlResource;
+import gaml.compiler.gaml.resource.GamlResourceServices;
+import gaml.compiler.gaml.validation.IGamlBuilderListener;
 import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gama.kernel.model.IModel;
-import msi.gama.lang.gaml.gaml.Model;
-import msi.gama.lang.gaml.gaml.Statement;
-import msi.gama.lang.gaml.gaml.impl.ArgumentDefinitionImpl;
-import msi.gama.lang.gaml.gaml.impl.BlockImpl;
-import msi.gama.lang.gaml.gaml.impl.FacetImpl;
-import msi.gama.lang.gaml.gaml.impl.S_ActionImpl;
-import msi.gama.lang.gaml.gaml.impl.S_DefinitionImpl;
-import msi.gama.lang.gaml.gaml.impl.S_DisplayImpl;
-import msi.gama.lang.gaml.gaml.impl.S_ExperimentImpl;
-import msi.gama.lang.gaml.gaml.impl.S_ReflexImpl;
-import msi.gama.lang.gaml.gaml.impl.S_SpeciesImpl;
-import msi.gama.lang.gaml.gaml.impl.StatementImpl;
-import msi.gama.lang.gaml.gaml.impl.VariableRefImpl;
-import msi.gama.lang.gaml.gaml.impl.speciesOrGridDisplayStatementImpl;
-import msi.gama.lang.gaml.resource.GamlResource;
-import msi.gama.lang.gaml.resource.GamlResourceServices;
-import msi.gama.lang.gaml.validation.IGamlBuilderListener;
-import msi.gama.runtime.GAMA;
-import msi.gama.util.GamaMapFactory;
-import msi.gaml.compilation.GamlCompilationError;
-import msi.gaml.descriptions.IDescription;
-import msi.gaml.descriptions.ModelDescription;
-import msi.gaml.descriptions.ValidationContext;
-import ummisco.gama.ui.resources.IGamaColors;
 
+/**
+ * The Class GamaDiagramEditor.
+ */
 public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderListener {
 
+	/** The Constant INITIAL_BUTTONS. */
 	private static final int INITIAL_BUTTONS = 20;
+
+	/** The Constant COLOR_TEXT. */
 	public static final Color COLOR_TEXT = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+
+	/** The label font. */
 	private static Font labelFont;
 
+	/** The resource. */
 	GamlResource resource;
-	List<String> abbreviations = new ArrayList<String>();
-	List<String> completeNamesOfExperiments = new ArrayList<String>();
+
+	/** The abbreviations. */
+	List<String> abbreviations = new ArrayList<>();
+
+	/** The complete names of experiments. */
+	List<String> completeNamesOfExperiments = new ArrayList<>();
+
+	/** The inited. */
 	boolean wasOK = true, inited = false;
+
+	/** The indicator. */
 	Composite toolbar, parent, indicator;
+
+	/** The buttons. */
 	Button[] buttons = new Button[INITIAL_BUTTONS];
+
+	/** The status. */
 	CLabel status;
+
+	/** The menu. */
 	Button menu;
+
+	/** The diagram. */
 	Diagram diagram;
+
+	/** The errors. */
 	List<GamlCompilationError> errors;
 
+	/** The facets. */
 	List<String> facets = Arrays.asList("torus:", "width:", "height:", "neighbours:", "refresh_every:", "background:",
 			"among:", "->", "<-", "step:", "min:", "max:", "update:", "refresh:", "size:", "position:", "background:",
 			"transparency:", "color:", "empty:", "rotate:", "schedules:", "at:", "depth:", "texture:");
 
+	/** The to refresh. */
 	boolean toRefresh = true;
+
+	/** The ids E objects. */
 	Map<List<String>, EObject> idsEObjects = GamaMapFactory.create();
 
+	/** The errors loc. */
 	Map<List<String>, Map<String, String>> errorsLoc = GamaMapFactory.create();
+
+	/** The syntax errors loc. */
 	Map<List<String>, Map<String, String>> syntaxErrorsLoc = GamaMapFactory.create();
 
 	static {
@@ -109,12 +153,23 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		labelFont = new Font(Display.getDefault(), fd);
 	}
 
-	public GamaDiagramEditor() {
-		super();
-	}
+	/**
+	 * Instantiates a new gama diagram editor.
+	 */
+	public GamaDiagramEditor() {}
 
+	/**
+	 * Validation ended.
+	 *
+	 * @param model
+	 *            the model
+	 * @param experiments
+	 *            the experiments
+	 * @param status
+	 *            the status
+	 */
 	@Override
-	public void validationEnded(ModelDescription model, final Iterable<? extends IDescription> experiments,
+	public void validationEnded(final ModelDescription model, final Iterable<? extends IDescription> experiments,
 			final ValidationContext status) {
 		updateExperiments(experiments, status.hasErrors());
 		toRefresh = true;
@@ -122,33 +177,43 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 
 	/*
 	 * public void validationEnded(Set<String> experiments, boolean withErrors) {
-	 * 
+	 *
 	 * }
 	 */
 
+	/**
+	 * Update experiments.
+	 *
+	 * @param <T>
+	 *            the generic type
+	 * @param experiments
+	 *            the experiments
+	 * @param withErrors
+	 *            the with errors
+	 */
 	private <T extends IDescription> void updateExperiments(final Iterable<T> experiments, final boolean withErrors) {
-		if (withErrors == true && wasOK == false) { return; }
-		final Set<String> oldNames = new LinkedHashSet<String>(completeNamesOfExperiments);
-		if (inited && wasOK && !withErrors && oldNames.equals(experiments)) { return; }
+		if (withErrors && !wasOK) return;
+		final Set<String> oldNames = new LinkedHashSet<>(completeNamesOfExperiments);
+		if (inited && wasOK && !withErrors && oldNames.equals(experiments)) return;
 		final Collection<T> exps = new ArrayList<>();
-		for (final T desc : experiments)
-			exps.add(desc);
+		for (final T desc : experiments) { exps.add(desc); }
 		inited = true;
 		wasOK = !withErrors;
-		completeNamesOfExperiments = exps.stream().map(each -> each.getName()).collect(Collectors.toList());
+		completeNamesOfExperiments = exps.stream().map(IDescription::getName).collect(Collectors.toList());
 		buildAbbreviations();
 		updateToolbar(wasOK);
 	}
 
+	/**
+	 * Builds the abbreviations.
+	 */
 	private void buildAbbreviations() {
 		// Very simple method used here
 		final int size = completeNamesOfExperiments.size();
 		abbreviations.clear();
 		if (size > 6) {
 			// We remove "Experiment".
-			for (final String s : completeNamesOfExperiments) {
-				abbreviations.add(s.replaceFirst("Experiment ", ""));
-			}
+			for (final String s : completeNamesOfExperiments) { abbreviations.add(s.replaceFirst("Experiment ", "")); }
 		} else if (size > 4) {
 			// We replace "Experiment" by "Exp."
 			for (final String s : completeNamesOfExperiments) {
@@ -160,15 +225,17 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		}
 	}
 
+	/**
+	 * Update toolbar.
+	 *
+	 * @param ok
+	 *            the ok
+	 */
 	public void updateToolbar(final boolean ok) {
 
 		Display.getDefault().asyncExec(() -> {
-			if (toolbar == null || toolbar.isDisposed()) { return; }
-			for (final Button b : buttons) {
-				if (b.isVisible()) {
-					hideButton(b);
-				}
-			}
+			if (toolbar == null || toolbar.isDisposed()) return;
+			for (final Button b : buttons) { if (b.isVisible()) { hideButton(b); } }
 			if (ok) {
 				final int size = abbreviations.size();
 				if (size == 0) {
@@ -177,14 +244,12 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 					setStatus(size == 1 ? "Run :" : "Run :", ok);
 				}
 				int i = 0;
-				for (final String e : abbreviations) {
-					enableButton(i++, e);
-				}
+				for (final String e : abbreviations) { enableButton(i++, e); }
 			} else {
-				String textError = "";
-				for (GamlCompilationError err :errors)
-					if (err != null) textError += err.toString() + "; ";
-				setStatus("Error(s) detected: " + textError, ok);
+				StringBuilder textError = new StringBuilder();
+				for (GamlCompilationError err : errors)
+					if (err != null) { textError.append(err.toString()).append("; "); }
+				setStatus("Error(s) detected: " + textError.toString(), ok);
 			}
 
 			toolbar.layout(true);
@@ -192,19 +257,41 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 
 	}
 
+	/**
+	 * Enable button.
+	 *
+	 * @param index
+	 *            the index
+	 * @param text
+	 *            the text
+	 */
 	private void enableButton(final int index, final String text) {
-		if (text == null) { return; }
+		if (text == null) return;
 		((GridData) buttons[index].getLayoutData()).exclude = false;
 		buttons[index].setVisible(true);
 		buttons[index].setText(text);
 		buttons[index].pack();
 	}
 
+	/**
+	 * Hide button.
+	 *
+	 * @param b
+	 *            the b
+	 */
 	private void hideButton(final Button b) {
 		((GridData) b.getLayoutData()).exclude = true;
 		b.setVisible(false);
 	}
 
+	/**
+	 * Sets the status.
+	 *
+	 * @param text
+	 *            the text
+	 * @param ok
+	 *            the ok
+	 */
 	private void setStatus(final String text, final boolean ok) {
 		final Color c = ok ? abbreviations.size() == 0 ? IGamaColors.WARNING.inactive() : IGamaColors.OK.inactive()
 				: IGamaColors.ERROR.inactive();
@@ -212,6 +299,12 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		status.setText(text);
 	}
 
+	/**
+	 * Creates the part control XP.
+	 *
+	 * @param parent
+	 *            the parent
+	 */
 	public void createPartControlXP(final Composite parent) {
 		this.parent = parent;
 
@@ -279,6 +372,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 
 	}
 
+	/** The listener. */
 	private final SelectionListener listener = new SelectionAdapter() {
 
 		@Override
@@ -288,9 +382,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 			if (diagram != null && !diagram.getChildren().isEmpty()) {
 				final IModel model =
 						ModelGenerator.modelGeneration(getDiagramTypeProvider().getFeatureProvider(), diagram);
-				if (model != null) {
-					GAMA.runGuiExperiment(xp, model);
-				}
+				if (model != null) { GAMA.runGuiExperiment(xp, model); }
 			}
 
 		}
@@ -301,6 +393,9 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		super.doSave(monitor);
 	}
 
+	/**
+	 * Inits the gaml resource.
+	 */
 	public void initGamlResource() {
 		final XtextResourceSet rs = new SynchronizedXtextResourceSet();
 		rs.setClasspathURIContext(ModelGenerator.class);
@@ -308,6 +403,11 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		resource = (GamlResource) rs.createResource(uri);
 	}
 
+	/**
+	 * Gets the diagram.
+	 *
+	 * @return the diagram
+	 */
 	public Diagram getDiagram() {
 		Diagram diag = diagram;
 		if (diagram == null) {
@@ -335,22 +435,38 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		createPartControlXP(parent);
 	}
 
-	public GamlResource getResource() {
-		return resource;
-	}
+	/**
+	 * Gets the resource.
+	 *
+	 * @return the resource
+	 */
+	public GamlResource getResource() { return resource; }
 
+	/**
+	 * Sets the resource.
+	 *
+	 * @param resource
+	 *            the new resource
+	 */
 	public void setResource(final GamlResource resource) {
 		this.resource = resource;
-		if (resource != null) {
-			GamlResourceServices.addResourceListener(resource.getURI(), GamaDiagramEditor.this);
-		}
+		if (resource != null) { GamlResourceServices.addResourceListener(resource.getURI(), GamaDiagramEditor.this); }
 
 	}
 
-	public List<GamlCompilationError> getErrors() {
-		return errors;
-	}
+	/**
+	 * Gets the errors.
+	 *
+	 * @return the errors
+	 */
+	public List<GamlCompilationError> getErrors() { return errors; }
 
+	/**
+	 * Sets the errors.
+	 *
+	 * @param errors
+	 *            the new errors
+	 */
 	public void setErrors(final List<GamlCompilationError> errors/*
 																	 * , ValidateStyledText vst
 																	 */) {
@@ -359,31 +475,24 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		for (final GamlCompilationError error : errors) {
 			final EObject toto = error.getStatement();
 			// System.out.println("syntaxErrorsLoc : " + syntaxErrorsLoc);*/
-			final List<String> ids = new ArrayList<String>();
+			final List<String> ids = new ArrayList<>();
 			final String fist_obj = buildLocation(toto, ids);
 			// System.out.println("location of error: " + ids);
 			while (!ids.isEmpty()) {
 				// System.out.println("idsEObjects.getKeys(): " +
 				// idsEObjects.getKeys());
-				if (!idsEObjects.keySet().contains(ids)) {
-					ids.remove(ids.size() - 1);
-				} else {
-					break;
-				}
+				if (idsEObjects.containsKey(ids)) { break; }
+				ids.remove(ids.size() - 1);
 			}
 			Map<String, String> locs = errorsLoc.get(ids);
 
-			if (locs == null) {
-				locs = GamaMapFactory.create();
-			}
+			if (locs == null) { locs = GamaMapFactory.create(); }
 			// System.out.println("error.getCode() : " + error.getCode());
-			final String key = error.getCode().equals("gaml.duplicate.definition.issue")
-					|| error.getCode().equals("gaml.duplicate.name.issue") ? "name" : fist_obj;
+			final String key = "gaml.duplicate.definition.issue".equals(error.getCode())
+					|| "gaml.duplicate.name.issue".equals(error.getCode()) ? "name" : fist_obj;
 			locs.put(key, (locs.containsKey(key) ? locs.get(key) : "") + "\n" + error.toString());
-			if (error.toString().equals("Syntax errors detected ")) {
-				if (syntaxErrorsLoc.isEmpty()) {
-					syntaxErrorsLoc.put(ids, locs);
-				}
+			if ("Syntax errors detected ".equals(error.toString())) {
+				if (syntaxErrorsLoc.isEmpty()) { syntaxErrorsLoc.put(ids, locs); }
 			} else {
 				errorsLoc.put(ids, locs);
 			}
@@ -393,64 +502,56 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		updateEObjectErrors();
 	}
 
+	/**
+	 * Builds the location.
+	 *
+	 * @param toto
+	 *            the toto
+	 * @param ids
+	 *            the ids
+	 * @return the string
+	 */
 	public String buildLocation(EObject toto, final List<String> ids) {
 		String fist_obj = null;
 		do {
 			// System.out.println("toto: " + toto);
-			if (toto instanceof S_ReflexImpl) {
-				final S_ReflexImpl vv = (S_ReflexImpl) toto;
-				if (vv.getName() != null) {
-					ids.add(0, vv.getName());
-				}
+			if (toto instanceof final S_ReflexImpl vv) {
+				if (vv.getName() != null) { ids.add(0, vv.getName()); }
 				if (fist_obj == null) {
 					if (vv.getName() != null) {
 						fist_obj = vv.getName();
-					} else if (vv.getKey() != null) {
-						fist_obj = vv.getKey();
-					}
+					} else if (vv.getKey() != null) { fist_obj = vv.getKey(); }
 				}
-			} else if (toto instanceof S_SpeciesImpl) {
-				final S_SpeciesImpl vv = (S_SpeciesImpl) toto;
+			} else if (toto instanceof final S_SpeciesImpl vv) {
 				ids.add(0, vv.getName());
-				if (fist_obj == null) {
-					fist_obj = vv.getName();
-				}
+				if (fist_obj == null) { fist_obj = vv.getName(); }
 
-			} else if (toto instanceof FacetImpl) {
-				final FacetImpl vv = (FacetImpl) toto;
+			} else if (toto instanceof final FacetImpl vv) {
 				// System.out.println("vv :" + vv.getKey() + ";");
 				if (fist_obj == null && facets.contains(vv.getKey())) {
 					fist_obj = vv.getKey();
 					// System.out.println("fist_obj facet : " + fist_obj);
 				}
-			} else if (toto instanceof S_ActionImpl) {
-				final S_ActionImpl vv = (S_ActionImpl) toto;
+			} else if (toto instanceof final S_ActionImpl vv) {
 				ids.add(0, vv.getName());
-				if (fist_obj == null) {
-					fist_obj = vv.getName();
-				}
-			} else if (toto instanceof speciesOrGridDisplayStatementImpl) {
-				final speciesOrGridDisplayStatementImpl vv = (speciesOrGridDisplayStatementImpl) toto;
+				if (fist_obj == null) { fist_obj = vv.getName(); }
+			} else if (toto instanceof final speciesOrGridDisplayStatementImpl vv) {
 				ids.add(0, vv.getKey());
 				// System.out.println("vv:"+ vv.getKey());
 
 				// System.out.println("vv.getFacets:"+ vv.getFacets());
-			} else if (toto instanceof S_DisplayImpl) {
-				final S_DisplayImpl vv = (S_DisplayImpl) toto;
+			} else if (toto instanceof final S_DisplayImpl vv) {
 				ids.add(0, vv.getName());
-				if (fist_obj == null) {
-					fist_obj = vv.getName();
-				}
-			} else if (toto instanceof BlockImpl) {
-				final BlockImpl vv = (BlockImpl) toto;
+				if (fist_obj == null) { fist_obj = vv.getName(); }
+			} else if (toto instanceof final BlockImpl vv) {
 				/*
 				 * System.out.println("block:" + vv ); System.out.println( "block getFunction:" + vv.getFunction() );
 				 * System.out.println("block getStatements:" + vv.getStatements() );
 				 */
 				if (vv.getStatements() != null) {
 					for (final Statement st : vv.getStatements()) {
-						if (st != null && st.getKey() != null && st.getKey().equals("parameter")) {
-							//ids.add(0, st.getExpr().getOp());
+						if (st != null && st.getKey() != null && "parameter".equals(st.getKey())) {
+							// ids.add(0, st.getExpr().getOp());
 							// System.out.println("st.getExpr " + st.getExpr());
 							// System.out.println("st.getFacets " +
 							// st.getFacets());
@@ -461,22 +562,16 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 					}
 				}
 
-			} else if (toto instanceof S_DefinitionImpl) {
-				final S_DefinitionImpl vv = (S_DefinitionImpl) toto;
+			} else if (toto instanceof final S_DefinitionImpl vv) {
 				ids.add(0, vv.getName());
-			} else if (toto instanceof ArgumentDefinitionImpl) {
-				final ArgumentDefinitionImpl vv = (ArgumentDefinitionImpl) toto;
+			} else if (toto instanceof final ArgumentDefinitionImpl vv) {
 				ids.add(0, vv.getName());
-			} else if (toto instanceof S_ExperimentImpl) {
-				final S_ExperimentImpl vv = (S_ExperimentImpl) toto;
+			} else if (toto instanceof final S_ExperimentImpl vv) {
 				ids.add(0, vv.getName());
-				if (fist_obj == null) {
-					fist_obj = vv.getName();
-				}
-			} else if (toto instanceof StatementImpl) {
-				final StatementImpl vv = (StatementImpl) toto;
-				if (vv.getKey().equals("text") || vv.getKey().equals("image") || vv.getKey().equals("chart")
-						|| vv.getKey().equals("draw")) {
+				if (fist_obj == null) { fist_obj = vv.getName(); }
+			} else if (toto instanceof final StatementImpl vv) {
+				if ("text".equals(vv.getKey()) || "image".equals(vv.getKey()) || "chart".equals(vv.getKey())
+						|| "draw".equals(vv.getKey())) {
 					ids.add(0, vv.getKey());
 				}
 			} else if (toto instanceof VariableRefImpl) {
@@ -488,8 +583,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 				 * } else if (toto instanceof S_DefinitionImpl) { S_DefinitionImpl vv = (S_DefinitionImpl) toto;
 				 * ids.add(0,vv.getName()); if (fist_obj == null) { fist_obj = vv.getName(); }
 				 */
-			} else if (toto instanceof EGamaObject) {
-				final EGamaObject vv = (EGamaObject) toto;
+			} else if (toto instanceof final EGamaObject vv) {
 				if (toto instanceof ELayer) {
 					ids.add(0, ((ELayer) vv).getType() == null ? "species" : ((ELayer) vv).getType());
 				} else if (toto instanceof ELayerAspect) {
@@ -497,9 +591,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 				} else {
 					ids.add(0, vv.getName());
 				}
-				if (fist_obj == null) {
-					fist_obj = vv.getName();
-				}
+				if (fist_obj == null) { fist_obj = vv.getName(); }
 			}
 
 			if (toto instanceof EAction) {
@@ -517,7 +609,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 			} else if (toto instanceof EDisplay) {
 				toto = ((EDisplay) toto).getDisplayLink().getExperiment();
 			} else if (toto instanceof ESpecies) {
-				if (!((ESpecies) toto).getName().equals("world")) {
+				if (!"world".equals(((ESpecies) toto).getName())) {
 					toto = ((ESpecies) toto).getMacroSpeciesLinks().get(0).getMacro();
 				} else {
 					toto = null;
@@ -527,51 +619,60 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 			}
 
 		} while (toto != null && !(toto instanceof Model));
-		if (!ids.contains("world")) {
-			ids.add(0, "world");
-		}
+		if (!ids.contains("world")) { ids.add(0, "world"); }
 		// System.out.println("ids: " + ids);
 		return fist_obj;
 	}
 
+	/**
+	 * Contain errors.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param uselessName
+	 *            the useless name
+	 * @return the string
+	 */
 	public String containErrors(final List<String> location, final String name, final List<String> uselessName) {
 		// System.out.println("syntaxErrorsLoc: " + syntaxErrorsLoc);
-		final boolean noName = name.equals("");
+		final boolean noName = "".equals(name);
 		// System.out.println("location: " + location + " name: " + name);
 
 		// System.out.println("errorsLoc: " + errorsLoc);
-		if (errorsLoc == null || errorsLoc.isEmpty() || !errorsLoc.containsKey(location)) { return ""; }
+		if (errorsLoc == null || errorsLoc.isEmpty() || !errorsLoc.containsKey(location)) return "";
 
 		if (noName) {
 			final Map<String, String> er = errorsLoc.get(location);
-			if (uselessName != null) {
-				for (final String val : uselessName) {
-					er.remove(val);
-				}
-			}
+			if (uselessName != null) { for (final String val : uselessName) { er.remove(val); } }
 			// System.out.println("er 2: " + er);
 			if (!er.isEmpty()) {
-				final List<String> l = new ArrayList<String>(er.values());
+				final List<String> l = new ArrayList<>(er.values());
 				return l.get(0);
 			}
-		} else if (errorsLoc.get(location).containsKey(name)) {
-			// System.out.println("errorsLoc.get(location).get(name): " +
+		} else if (errorsLoc.get(location).containsKey(name)) // System.out.println("errorsLoc.get(location).get(name):
+																// " +
 			// errorsLoc.get(location).get(name));
 			return errorsLoc.get(location).get(name);
-		}
 
 		return "";
 	}
 
+	/**
+	 * Compute ids.
+	 *
+	 * @param obj
+	 *            the obj
+	 * @return the list
+	 */
 	public List<String> computeIds(final EObject obj) {
 		EObject toto = obj;
-		final List<String> ids = new ArrayList<String>();
+		final List<String> ids = new ArrayList<>();
 		do {
 			if (toto != null) {
 				if (toto instanceof EGamaObject) {
-					if (toto instanceof ELayer) {
-						ids.add(0, ((ELayer) toto).getType());
-					}
+					if (toto instanceof ELayer) { ids.add(0, ((ELayer) toto).getType()); }
 					if (toto instanceof ELayerAspect) {
 						ids.add(0, "draw");
 					} else {
@@ -581,9 +682,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 
 				else if (toto instanceof EVariable) {
 					ids.add(0, ((EVariable) toto).getName());
-				} else if (toto instanceof EFacet) {
-					ids.add(0, ((EFacet) toto).getName());
-				}
+				} else if (toto instanceof EFacet) { ids.add(0, ((EFacet) toto).getName()); }
 				if (toto instanceof EAction) {
 					toto = ((EAction) toto).getActionLinks().get(0).getSpecies();
 				} else if (toto instanceof EReflex) {
@@ -599,7 +698,7 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 				} else if (toto instanceof ELayerAspect) {
 					toto = ((ELayerAspect) toto).getAspect();
 				} else if (toto instanceof ESpecies) {
-					if (!((ESpecies) toto).getName().equals("world")) {
+					if (!"world".equals(((ESpecies) toto).getName())) {
 						toto = ((ESpecies) toto).getMacroSpeciesLinks().get(0).getMacro();
 					} else {
 						toto = null;
@@ -609,12 +708,16 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 				}
 			}
 		} while (toto != null && !(toto instanceof Model));
-		if (!ids.contains("world")) {
-			ids.add(0, "world");
-		}
+		if (!ids.contains("world")) { ids.add(0, "world"); }
 		return ids;
 	}
 
+	/**
+	 * Adds the E oject.
+	 *
+	 * @param obj
+	 *            the obj
+	 */
 	public void addEOject(final EObject obj) {
 		final List<String> ids = computeIds(obj);
 		if (obj instanceof EVariable) {
@@ -633,17 +736,34 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		// idsEObjects: " + idsEObjects.keySet());
 	}
 
+	/**
+	 * Adds the E oject.
+	 *
+	 * @param obj
+	 *            the obj
+	 * @param name
+	 *            the name
+	 */
 	public void addEOject(final EObject obj, final String name) {
 		final List<String> ids = computeIds(obj);
 		ids.add(name);
 		idsEObjects.put(ids, obj);
 	}
 
+	/**
+	 * Removes the E oject.
+	 *
+	 * @param obj
+	 *            the obj
+	 */
 	public void removeEOject(final EObject obj) {
 		final List<String> ids = computeIds(obj);
 		idsEObjects.remove(ids);
 	}
 
+	/**
+	 * Update E object errors.
+	 */
 	public void updateEObjectErrors() {
 		final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(getDiagram());
 		if (domain != null) {
@@ -653,21 +773,17 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 				public void doExecute() {
 
 					initIdsEObjects();
-					final List<List<String>> vals = new ArrayList<List<String>>(idsEObjects.keySet());
+					final List<List<String>> vals = new ArrayList<>(idsEObjects.keySet());
 					final Map<List<String>, EObject> valM = GamaMapFactory.create();
 					for (final EObject bo : valM.values()) {
 						if (bo instanceof EGamaObject) {
 							((EGamaObject) bo).setHasError(false);
-						} else if (bo instanceof EVariable) {
-							((EVariable) bo).setHasError(false);
-						}
+						} else if (bo instanceof EVariable) { ((EVariable) bo).setHasError(false); }
 					}
 					for (final List<String> ids : vals) {
 						final EObject obj = valM.get(ids);
 						// System.out.println("ids: " + ids + " obj: " + obj);
-						if (obj == null) {
-							continue;
-						}
+						if (obj == null) { continue; }
 						final boolean val = syntaxErrorsLoc.containsKey(ids) || errorsLoc.containsKey(ids);
 						// System.out.println("val = " +val);
 						if (val && obj instanceof EGamaObject) {
@@ -681,18 +797,30 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 		}
 	}
 
-	public Map<List<String>, Map<String, String>> getErrorsLoc() {
-		return errorsLoc;
-	}
+	/**
+	 * Gets the errors loc.
+	 *
+	 * @return the errors loc
+	 */
+	public Map<List<String>, Map<String, String>> getErrorsLoc() { return errorsLoc; }
 
-	public Map<List<String>, Map<String, String>> getSyntaxErrorsLoc() {
-		return syntaxErrorsLoc;
-	}
+	/**
+	 * Gets the syntax errors loc.
+	 *
+	 * @return the syntax errors loc
+	 */
+	public Map<List<String>, Map<String, String>> getSyntaxErrorsLoc() { return syntaxErrorsLoc; }
 
-	public Map<List<String>, EObject> getIdsEObjects() {
-		return idsEObjects;
-	}
+	/**
+	 * Gets the ids E objects.
+	 *
+	 * @return the ids E objects
+	 */
+	public Map<List<String>, EObject> getIdsEObjects() { return idsEObjects; }
 
+	/**
+	 * Inits the ids E objects.
+	 */
 	public void initIdsEObjects() {
 		// System.out.println("initIdsEObjects");
 		if (diagram != null && !diagram.getChildren().isEmpty() && idsEObjects.isEmpty()) {
@@ -709,57 +837,48 @@ public class GamaDiagramEditor extends DiagramEditor implements IGamlBuilderList
 					boolean location = false;
 					for (final EVariable v : ((ESpecies) bo).getVariables()) {
 						addEOject(v);
-						if (location || v.getName().equals("location")) {
-							location = true;
-						}
-						if (shape || v.getName().equals("shape")) {
-							shape = true;
-						}
+						if (location || "location".equals(v.getName())) { location = true; }
+						if (shape || "shape".equals(v.getName())) { shape = true; }
 					}
-					if (!shape) {
-						addEOject((EObject) bo, "shape");
-					}
-					if (!location) {
-						addEOject((EObject) bo, "location");
-					}
+					if (!shape) { addEOject((EObject) bo, "shape"); }
+					if (!location) { addEOject((EObject) bo, "location"); }
 				} else if (bo instanceof EAspect) {
 					addEOject((EObject) bo, "draw");
 				} else if (bo instanceof EDisplay) {
-					for (final ELayer lay : ((EDisplay) bo).getLayers()) {
-						addEOject((EObject) bo, lay.getType());
-					}
+					for (final ELayer lay : ((EDisplay) bo).getLayers()) { addEOject((EObject) bo, lay.getType()); }
 				} else if (bo instanceof EExperiment) {
-					for (final EParameter v : ((EExperiment) bo).getParameters()) {
-						addEOject(v);
-					}
-					for (final EMonitor v : ((EExperiment) bo).getMonitors()) {
-						addEOject(v);
-					}
+					for (final EParameter v : ((EExperiment) bo).getParameters()) { addEOject(v); }
+					for (final EMonitor v : ((EExperiment) bo).getMonitors()) { addEOject(v); }
 				}
 			}
 		}
 	}
 
+	/**
+	 * Update errors.
+	 *
+	 * @param oldId
+	 *            the old id
+	 * @param newId
+	 *            the new id
+	 */
 	public void updateErrors(final List<String> oldId, final List<String> newId) {
 		final Map<String, String> eMap = errorsLoc.remove(oldId);
-		if (eMap != null) {
-			errorsLoc.put(newId, eMap);
-		}
+		if (eMap != null) { errorsLoc.put(newId, eMap); }
 
 		final Map<String, String> eMap2 = syntaxErrorsLoc.remove(oldId);
-		if (eMap2 != null) {
-			syntaxErrorsLoc.put(newId, eMap2);
-		}
+		if (eMap2 != null) { syntaxErrorsLoc.put(newId, eMap2); }
 
 		final EObject obj = idsEObjects.remove(oldId);
-		if (obj != null) {
-			idsEObjects.put(newId, obj);
-		}
+		if (obj != null) { idsEObjects.put(newId, obj); }
 	}
 
-	public boolean isWasOK() {
-		return wasOK;
-	}
+	/**
+	 * Checks if is was OK.
+	 *
+	 * @return true, if is was OK
+	 */
+	public boolean isWasOK() { return wasOK; }
 
 	@Override
 	protected DiagramBehavior createDiagramBehavior() {

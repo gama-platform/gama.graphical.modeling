@@ -1,3 +1,13 @@
+/*******************************************************************************************************
+ *
+ * EditActionFrame.java, in idees.gama.graphicalmodeling, is part of the source code of the GAMA modeling and simulation
+ * platform (v.1.9.3).
+ *
+ * (c) 2007-2024 UMI 209 UMMISCO IRD/SU & Partners (IRIT, MIAT, TLU, CTU)
+ *
+ * Visit https://github.com/gama-platform/gama for license information and contacts.
+ *
+ ********************************************************************************************************/
 package idees.gama.ui.editFrame;
 
 import java.util.ArrayList;
@@ -35,18 +45,30 @@ import gama.EAction;
 import gama.EGamaObject;
 import gama.ESpecies;
 import gama.EVariable;
+import gama.gaml.compilation.GAML;
 import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gaml.compilation.GAML;
 
+/**
+ * The Class EditActionFrame.
+ */
 public class EditActionFrame extends EditFrame {
 
+	/** The table vars. */
 	private Table table_vars;
+
+	/** The cpt. */
 	int cpt = 1;
-	private final List<String> types = new ArrayList<String>();
+
+	/** The types. */
+	private final List<String> types = new ArrayList<>();
+
+	/** The title font. */
 	Font titleFont;
+
+	/** The return type. */
 	CCombo returnType;
 
 	/**
@@ -64,21 +86,30 @@ public class EditActionFrame extends EditFrame {
 		types.add("point");
 		types.add("geometry");
 		for (final String ty : GAML.VARTYPE2KEYWORDS.values()) {
-			if (!types.contains(ty) && !ty.toString().endsWith("_file"))
-				types.add(ty);
+			if (!types.contains(ty) && !ty.toString().endsWith("_file")) { types.add(ty); }
 
 		}
-		for (final ESpecies sp : speciesList) {
-			types.add(sp.getName());
-		}
+		for (final ESpecies sp : speciesList) { types.add(sp.getName()); }
 		types.remove("unknown");
 		types.remove("world");
-		final List<String> tt = new ArrayList<String>(types);
-		for (final String ty : tt) {
-			types.add("list<" + ty + ">");
-		}
+		final List<String> tt = new ArrayList<>(types);
+		for (final String ty : tt) { types.add("list<" + ty + ">"); }
 	}
 
+	/**
+	 * Instantiates a new edits the action frame.
+	 *
+	 * @param diagram
+	 *            the diagram
+	 * @param fp
+	 *            the fp
+	 * @param eaf
+	 *            the eaf
+	 * @param action
+	 *            the action
+	 * @param name
+	 *            the name
+	 */
 	public EditActionFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature eaf,
 			final EGamaObject action, final String name) {
 		super(diagram, fp, eaf, action, name == null ? "Action definition" : name);
@@ -86,7 +117,7 @@ public class EditActionFrame extends EditFrame {
 
 	/**
 	 * Create contents of the application window.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
@@ -108,8 +139,14 @@ public class EditActionFrame extends EditFrame {
 		return container;
 	}
 
+	/**
+	 * Group return type.
+	 *
+	 * @param container
+	 *            the container
+	 */
 	protected void groupReturnType(final Composite container) {
-		
+
 		// ****** CANVAS RETURN TYPE *********
 		final Group group = new Group(container, SWT.NONE);
 		// group.setBounds(10, 50, 720, 50);
@@ -125,7 +162,7 @@ public class EditActionFrame extends EditFrame {
 		lblName.setText("Return type:");
 
 		// group.setLayout( new FillLayout(SWT.HORIZONTAL));
-		//group.setText("Return Type");
+		// group.setText("Return Type");
 
 		returnType = new CCombo(group, SWT.BORDER);
 		returnType.add("returns nothing");
@@ -134,9 +171,7 @@ public class EditActionFrame extends EditFrame {
 		gridData2.grabExcessHorizontalSpace = true;
 		returnType.setLayoutData(gridData2);
 
-		for (int i = 0, n = types.size(); i < n; i++) {
-			returnType.add(types.get(i));
-		}
+		for (String type : types) { returnType.add(type); }
 		final EAction action = (EAction) eobject;
 		if (action.getReturnType() == null || action.getReturnType().isEmpty()) {
 			returnType.setText("returns nothing");
@@ -152,9 +187,7 @@ public class EditActionFrame extends EditFrame {
 	 * Return the initial size of the window.
 	 */
 	@Override
-	protected Point getInitialSize() {
-		return new Point(743, 680);
-	}
+	protected Point getInitialSize() { return new Point(743, 680); }
 
 	@Override
 	protected void save(final String name) {
@@ -167,22 +200,18 @@ public class EditActionFrame extends EditFrame {
 					if (name == null) {
 						eobject.setName(textName.getText());
 						final EAction action = (EAction) eobject;
-						if (modelXText != null) {
-							((EAction) eobject).setGamlCode(modelXText.getEditablePart());
-						}
+						if (modelXText != null) { ((EAction) eobject).setGamlCode(modelXText.getEditablePart()); }
 						action.setReturnType(
-								returnType.getText().equals("returns nothing") ? "" : returnType.getText());
+								"returns nothing".equals(returnType.getText()) ? "" : returnType.getText());
 						modifyArguments();
 						updateEditor();
-					} else if (name.equals("name")) {
+					} else if ("name".equals(name)) {
 						eobject.setName(textName.getText());
 					} else {
 						final EAction action = (EAction) eobject;
-						if (modelXText != null) {
-							((EAction) eobject).setGamlCode(modelXText.getEditablePart());
-						}
+						if (modelXText != null) { ((EAction) eobject).setGamlCode(modelXText.getEditablePart()); }
 						action.setReturnType(
-								returnType.getText().equals("returns nothing") ? "" : returnType.getText());
+								"returns nothing".equals(returnType.getText()) ? "" : returnType.getText());
 						modifyArguments();
 						updateEditor();
 					}
@@ -194,9 +223,12 @@ public class EditActionFrame extends EditFrame {
 
 	}
 
+	/**
+	 * Modify arguments.
+	 */
 	private void modifyArguments() {
 		final EAction action = (EAction) eobject;
-		final List<EVariable> vars = new ArrayList<EVariable>();
+		final List<EVariable> vars = new ArrayList<>();
 		vars.addAll(action.getVariables());
 		action.getVariables().clear();
 		for (final EVariable var : vars) {
@@ -217,6 +249,13 @@ public class EditActionFrame extends EditFrame {
 		}
 	}
 
+	/**
+	 * Creates the table editor.
+	 *
+	 * @param container
+	 *            the container
+	 * @return the table
+	 */
 	private Table createTableEditor(final Composite container) {
 		// Create the table
 		final Table tableVars = new Table(container, SWT.SINGLE | SWT.FULL_SELECTION
@@ -252,9 +291,7 @@ public class EditActionFrame extends EditFrame {
 			public void mouseDown(final MouseEvent event) {
 				// Dispose any existing editor
 				final Control old = editor.getEditor();
-				if (old != null) {
-					old.dispose();
-				}
+				if (old != null) { old.dispose(); }
 
 				// Determine where the mouse was clicked
 				final Point pt = new Point(event.x, event.y);
@@ -278,9 +315,7 @@ public class EditActionFrame extends EditFrame {
 					if (column == 1) {
 						// Create the dropdown and add data to it
 						final CCombo combo = new CCombo(tableVars, SWT.READ_ONLY);
-						for (int i = 0, n = types.size(); i < n; i++) {
-							combo.add(types.get(i));
-						}
+						for (String type : types) { combo.add(type); }
 
 						// Select the previously selected item from the cell
 						combo.select(combo.indexOf(item.getText(column)));
@@ -310,17 +345,17 @@ public class EditActionFrame extends EditFrame {
 								combo.dispose();
 							}
 						});
-					} else if (column != 1) {
+					} else {
 						// Create the Text object for our editor
 						final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
-						final List<String> uselessName = new ArrayList<String>();
+						final List<String> uselessName = new ArrayList<>();
 
 						String name = "name";
 						switch (column) {
-						case 2:
-							name = "";
-							uselessName.add("name");
-							break;
+							case 2:
+								name = "";
+								uselessName.add("name");
+								break;
 						}
 
 						final ValidateText text = new ValidateText(tableVars, SWT.BORDER, diagram, fp, frame,
@@ -361,14 +396,12 @@ public class EditActionFrame extends EditFrame {
 
 							item.setBackground(col, text.getBackground());
 							for (int i = 2; i < table_vars.getColumnCount(); i++) {
-								if (i == col) {
-									continue;
-								}
+								if (i == col) { continue; }
 								String name1 = "name";
 								switch (i) {
-								case 2:
-									name1 = "";
-									break;
+									case 2:
+										name1 = "";
+										break;
 								}
 								final String error = diagramEditor.containErrors(text.getLoc(), name1, null);
 								// System.out.println("error = " + error);
@@ -390,6 +423,9 @@ public class EditActionFrame extends EditFrame {
 		return tableVars;
 	}
 
+	/**
+	 * Inits the table.
+	 */
 	void initTable() {
 		for (final EVariable var : ((EAction) eobject).getVariables()) {
 			final TableItem ti = new TableItem(table_vars, SWT.NONE);
@@ -398,6 +434,12 @@ public class EditActionFrame extends EditFrame {
 		}
 	}
 
+	/**
+	 * Group var.
+	 *
+	 * @param container
+	 *            the container
+	 */
 	public void groupVar(final Composite container) {
 		// ****** CANVAS VARIABLES *********
 
@@ -448,15 +490,14 @@ public class EditActionFrame extends EditFrame {
 		btnDeleteVariable.setText("Delete argument");
 
 	}
-	
+
 	@Override
 	protected void handleShellCloseEvent() {
 		// create dialog with ok and cancel button and info icon
-		clean_close() ;
-		if (returnType != null)
-			returnType.dispose();
+		clean_close();
+		if (returnType != null) { returnType.dispose(); }
 		returnType = null;
-		if (table_vars != null)table_vars.dispose();
+		if (table_vars != null) { table_vars.dispose(); }
 		table_vars = null;
 		close();
 	}

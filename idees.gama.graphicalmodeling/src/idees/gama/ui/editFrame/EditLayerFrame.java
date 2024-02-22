@@ -1,3 +1,13 @@
+/*******************************************************************************************************
+ *
+ * EditLayerFrame.java, in idees.gama.graphicalmodeling, is part of the source code of the GAMA modeling and simulation
+ * platform (v.1.9.3).
+ *
+ * (c) 2007-2024 UMI 209 UMMISCO IRD/SU & Partners (IRIT, MIAT, TLU, CTU)
+ *
+ * Visit https://github.com/gama-platform/gama for license information and contacts.
+ *
+ ********************************************************************************************************/
 package idees.gama.ui.editFrame;
 
 import java.util.ArrayList;
@@ -43,83 +53,215 @@ import gama.EChartLayer;
 import gama.EGamaObject;
 import gama.ELayer;
 import gama.ESpecies;
+import gama.core.common.interfaces.IKeyword;
 import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gama.common.interfaces.IKeyword;
 
+/**
+ * The Class EditLayerFrame.
+ */
 public class EditLayerFrame extends EditFrame {
 
+	/** The combo type. */
 	// Types
 	private CCombo comboType;
+
+	/** The type shape. */
 	private final String[] type_shape = { "species", "grid", "agents", "image", "text", "chart" };
+
+	/** The species list. */
 	private String[] species_list;
+
+	/** The grid list. */
 	private String[] grid_list;
+
+	/** The aspects species. */
 	private Map<String, String[]> aspectsSpecies;
+
+	/** The styles layer. */
 	private final String[] styles_layer = { IKeyword.LINE, IKeyword.WHISKER, IKeyword.AREA, IKeyword.BAR, IKeyword.DOT,
 			IKeyword.STEP, IKeyword.SPLINE, IKeyword.STACK, IKeyword.THREE_D, IKeyword.RING, IKeyword.EXPLODED };
-	private final String[] types_chart = { IKeyword.SERIES, IKeyword.HISTOGRAM, IKeyword.PIE, IKeyword.BOX_WHISKER,
-			IKeyword.XY };
 
+	/** The types chart. */
+	private final String[] types_chart =
+			{ IKeyword.SERIES, IKeyword.HISTOGRAM, IKeyword.PIE, IKeyword.BOX_WHISKER, IKeyword.XY };
+
+	/** The aspects. */
 	private String[] aspects;
+
+	/** The layer frame. */
 	EditLayerFrame layerFrame;
 
+	/** The text path. */
 	private ValidateText textPath;
+
+	/** The text text. */
 	private ValidateText textText;
+
+	/** The text size text. */
 	private ValidateText textSizeText;
+
+	/** The text agents. */
 	private ValidateText textAgents;
 
+	/** The species comp. */
 	Composite speciesComp;
+
+	/** The chart comp. */
 	Composite chartComp;
+
+	/** The grid comp. */
 	Composite gridComp;
+
+	/** The agents comp. */
 	Composite agentsComp;
+
+	/** The text comp. */
 	Composite textComp;
+
+	/** The image comp. */
 	Composite imageComp;
+
+	/** The shape comp. */
 	Composite shapeComp;
 
+	/** The combo species. */
 	private CCombo comboSpecies;
+
+	/** The combo aspects species. */
 	private CCombo comboAspectsSpecies;
+
+	/** The combo aspects agents. */
 	private CCombo comboAspectsAgents;
+
+	/** The combo grid. */
 	private CCombo comboGrid;
+
+	/** The combo type chart. */
 	private CCombo comboTypeChart;
+
+	/** The ok. */
 	boolean ok = false;
+
+	/** The edit. */
 	boolean edit;
 
+	/** The table chart layers. */
 	private Table table_chart_layers;
 
+	/** The frame. */
 	EditDisplayFrame frame;
+
+	/** The c frame. */
 	EditLayerFrame cFrame;
+
+	/** The color. */
 	Color color;
+
+	/** The rgb. */
 	int[] rgb;
 
+	/** The btn show lines. */
 	Button btnShowLines;
 
+	/** The text color grid. */
 	ValidateText textColorGrid;
+
+	/** The btn cst col grid. */
 	Button btnCstColGrid;
+
+	/** The btn expression grid. */
 	Button btnExpressionGrid;
+
+	/** The color label grid. */
 	Label colorLabelGrid;
+
+	/** The text color text. */
 	ValidateText textColorText;
+
+	/** The btn cst col text. */
 	Button btnCstColText;
+
+	/** The btn expression text. */
 	Button btnExpressionText;
+
+	/** The color label text. */
 	Label colorLabelText;
+
+	/** The text color image. */
 	ValidateText textColorImage;
+
+	/** The btn cst col image. */
 	Button btnCstColImage;
+
+	/** The btn expression image. */
 	Button btnExpressionImage;
+
+	/** The color label image. */
 	Label colorLabelImage;
+
+	/** The text color chart. */
 	ValidateText textColorChart;
+
+	/** The btn expression chart. */
 	Button btnExpressionChart;
+
+	/** The btn cst col chart. */
 	Button btnCstColChart;
+
+	/** The color label chart. */
 	Label colorLabelChart;
+
+	/** The species. */
 	List<ESpecies> species;
+
+	/** The grids. */
 	List<ESpecies> grids;
+
+	/** The diagram. */
 	Diagram diagram;
 
+	/**
+	 * Instantiates a new edits the layer frame.
+	 *
+	 * @param diagram
+	 *            the diagram
+	 * @param fp
+	 *            the fp
+	 * @param ef
+	 *            the ef
+	 * @param eobject
+	 *            the eobject
+	 * @param name
+	 *            the name
+	 */
 	public EditLayerFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature ef,
 			final EGamaObject eobject, final String name) {
 		super(diagram, fp, ef, eobject, name);
 	}
 
+	/**
+	 * Instantiates a new edits the layer frame.
+	 *
+	 * @param elayer
+	 *            the elayer
+	 * @param asp
+	 *            the asp
+	 * @param species
+	 *            the species
+	 * @param grids
+	 *            the grids
+	 * @param edit
+	 *            the edit
+	 * @param diagram
+	 *            the diagram
+	 * @param fp
+	 *            the fp
+	 * @param ef
+	 *            the ef
+	 */
 	public EditLayerFrame(final ELayer elayer, final EditDisplayFrame asp, final List<ESpecies> species,
 			final List<ESpecies> grids, final boolean edit, final Diagram diagram, final IFeatureProvider fp,
 			final EditFeature ef) {
@@ -139,40 +281,34 @@ public class EditLayerFrame extends EditFrame {
 
 	}
 
+	/**
+	 * Update species aspect.
+	 */
 	public void updateSpeciesAspect() {
-		aspectsSpecies = new Hashtable<String, String[]>();
+		aspectsSpecies = new Hashtable<>();
 		species_list = new String[species.size()];
-		final List<String> aspectsL = new ArrayList<String>();
+		final List<String> aspectsL = new ArrayList<>();
 		for (int i = 0; i < species_list.length; i++) {
 			final ESpecies sp = species.get(i);
-			final List<String> aspL = new ArrayList<String>(aspectSpecies(aspectsL, sp));
-			if (aspL.isEmpty()) {
-				aspL.add("default");
-			}
+			final List<String> aspL = new ArrayList<>(aspectSpecies(aspectsL, sp));
+			if (aspL.isEmpty()) { aspL.add("default"); }
 			aspectsSpecies.put(sp.getName(), aspL.toArray(new String[aspL.size()]));
 			species_list[i] = sp.getName();
 		}
 		aspects = aspectsL.toArray(new String[aspectsL.size()]);
 		grid_list = new String[grids.size()];
-		for (int i = 0; i < grid_list.length; i++) {
-			grid_list[i] = grids.get(i).getName();
-		}
+		for (int i = 0; i < grid_list.length; i++) { grid_list[i] = grids.get(i).getName(); }
 	}
 
+	/**
+	 * Load data.
+	 */
 	private void loadData() {
 		final ELayer elayer = (ELayer) eobject;
-		if (elayer.getType() != null) {
-			comboType.setText(elayer.getType());
-		}
-		if (elayer.getText() != null) {
-			textText.setText(elayer.getText());
-		}
-		if (elayer.getSize() != null) {
-			textSizeText.setText(elayer.getSize());
-		}
-		if (elayer.getAgents() != null) {
-			textAgents.setText(elayer.getAgents());
-		}
+		if (elayer.getType() != null) { comboType.setText(elayer.getType()); }
+		if (elayer.getText() != null) { textText.setText(elayer.getText()); }
+		if (elayer.getSize() != null) { textSizeText.setText(elayer.getSize()); }
+		if (elayer.getAgents() != null) { textAgents.setText(elayer.getAgents()); }
 		if (elayer.getSpecies() != null) {
 			final List<String> ln = Arrays.asList(species_list);
 			if (ln.contains(elayer.getSpecies())) {
@@ -181,9 +317,7 @@ public class EditLayerFrame extends EditFrame {
 				comboSpecies.setText("world");
 			}
 		}
-		if (elayer.getGrid() != null) {
-			comboGrid.setText(elayer.getGrid());
-		}
+		if (elayer.getGrid() != null) { comboGrid.setText(elayer.getGrid()); }
 		if (elayer.getAspect() != null) {
 			final List<String> la = Arrays.asList(aspectsSpecies.get(comboSpecies.getText()));
 			if (la.contains(elayer.getAspect())) {
@@ -192,9 +326,7 @@ public class EditLayerFrame extends EditFrame {
 				comboAspectsSpecies.setText("");
 			}
 			final List<String> la2 = Arrays.asList(aspects);
-			if (la2.contains(elayer.getAspect())) {
-				comboAspectsAgents.setText(elayer.getAspect());
-			}
+			if (la2.contains(elayer.getAspect())) { comboAspectsAgents.setText(elayer.getAspect()); }
 		}
 		if (elayer.getColor() != null) {
 			this.textColorChart.setText(elayer.getColor());
@@ -228,15 +360,31 @@ public class EditLayerFrame extends EditFrame {
 			colorLabelChart.setBackground(color);
 
 		}
-		if (elayer.getChart_type() != null) {
-			comboTypeChart.setText(elayer.getChart_type());
-		}
+		if (elayer.getChart_type() != null) { comboTypeChart.setText(elayer.getChart_type()); }
 
 		initTable();
 		frame.updateLayerId();
 
 	}
 
+	/**
+	 * Builds the color composite.
+	 *
+	 * @param compositeColor
+	 *            the composite color
+	 * @param textColor
+	 *            the text color
+	 * @param colorLabel
+	 *            the color label
+	 * @param button
+	 *            the button
+	 * @param btnCstCol
+	 *            the btn cst col
+	 * @param btnExpressionCol
+	 *            the btn expression col
+	 * @param text
+	 *            the text
+	 */
 	public void buildColorComposite(final Composite compositeColor, final ValidateText textColor,
 			final Label colorLabel, final Button button, final Button btnCstCol, final Button btnExpressionCol,
 			final String text) {
@@ -327,18 +475,23 @@ public class EditLayerFrame extends EditFrame {
 
 	}
 
+	/**
+	 * Aspect species.
+	 *
+	 * @param aspectsL
+	 *            the aspects L
+	 * @param sp
+	 *            the sp
+	 * @return the sets the
+	 */
 	private Set<String> aspectSpecies(final List<String> aspectsL, final ESpecies sp) {
-		final Set<String> aspL = new HashSet<String>();
+		final Set<String> aspL = new HashSet<>();
 		for (final EAspectLink al : sp.getAspectLinks()) {
 			final String apN = al.getAspect().getName();
 			aspL.add(apN);
-			if (!aspectsL.contains(apN)) {
-				aspectsL.add(apN);
-			}
+			if (!aspectsL.contains(apN)) { aspectsL.add(apN); }
 		}
-		if (sp.getInheritsFrom() != null) {
-			aspL.addAll(aspectSpecies(aspectsL, sp.getInheritsFrom()));
-		}
+		if (sp.getInheritsFrom() != null) { aspL.addAll(aspectSpecies(aspectsL, sp.getInheritsFrom())); }
 		return aspL;
 	}
 
@@ -405,7 +558,7 @@ public class EditLayerFrame extends EditFrame {
 					elayer.setAgents(textAgents.getText());
 					elayer.setSpecies(comboSpecies.getText());
 					elayer.setGrid(comboGrid.getText());
-					elayer.setAspect(comboType.getText().equals("species") ? comboAspectsSpecies.getText()
+					elayer.setAspect("species".equals(comboType.getText()) ? comboAspectsSpecies.getText()
 							: comboAspectsAgents.getText());
 					elayer.setChart_type(comboTypeChart.getText());
 					elayer.getColorRBG().clear();
@@ -413,28 +566,28 @@ public class EditLayerFrame extends EditFrame {
 					elayer.getColorRBG().add(rgb[1]);
 					elayer.getColorRBG().add(rgb[2]);
 					elayer.setShowLines(btnShowLines.getSelection());
-					if (elayer.getType().equals("image")) {
+					if ("image".equals(elayer.getType())) {
 						elayer.setIsColorCst(btnCstColImage.getSelection());
 						// if (btnCstColImage.getSelection())
 						// elayer.setColor("rgb(" + rgb[0] + "," + rgb[1] + ","
 						// + rgb[2] +")");
 						// else
 						elayer.setColor(textColorImage.getText());
-					} else if (elayer.getType().equals("text")) {
+					} else if ("text".equals(elayer.getType())) {
 						elayer.setIsColorCst(btnCstColText.getSelection());
 						// if (btnCstColText.getSelection())
 						// elayer.setColor("rgb(" + rgb[0] + "," + rgb[1] + ","
 						// + rgb[2] +")");
 						// else
 						elayer.setColor(textColorText.getText());
-					} else if (elayer.getType().equals("chart")) {
+					} else if ("chart".equals(elayer.getType())) {
 						elayer.setIsColorCst(btnCstColChart.getSelection());
 						// if (btnCstColChart.getSelection())
 						// elayer.setColor("rgb(" + rgb[0] + "," + rgb[1] + ","
 						// + rgb[2] +")");
 						// else
 						elayer.setColor(textColorChart.getText());
-					} else if (elayer.getType().equals("grid")) {
+					} else if ("grid".equals(elayer.getType())) {
 						elayer.setIsColorCst(btnCstColGrid.getSelection());
 						// if (btnCstColGrid.getSelection())
 						// elayer.setColor("rgb(" + rgb[0] + "," + rgb[1] + ","
@@ -454,6 +607,9 @@ public class EditLayerFrame extends EditFrame {
 		frame.updateLayer();
 	}
 
+	/**
+	 * Modify chart layers.
+	 */
 	private void modifyChartLayers() {
 		for (final EChartLayer cl : ((ELayer) eobject).getChartlayers()) {
 			diagram.eResource().getContents().remove(cl);
@@ -475,6 +631,9 @@ public class EditLayerFrame extends EditFrame {
 
 	}
 
+	/**
+	 * Update visible.
+	 */
 	private void updateVisible() {
 		final String val = comboType.getText();
 		final int size = textPath.getLoc().size() - 1;
@@ -495,7 +654,7 @@ public class EditLayerFrame extends EditFrame {
 		textColorImage.getLoc().remove(size);
 		textColorImage.getLoc().add(val);
 
-		if (val.equals("species")) {
+		if ("species".equals(val)) {
 			speciesComp.setVisible(true);
 			speciesComp.setEnabled(true);
 			imageComp.setVisible(false);
@@ -508,7 +667,7 @@ public class EditLayerFrame extends EditFrame {
 			agentsComp.setVisible(false);
 			chartComp.setEnabled(false);
 			chartComp.setVisible(false);
-		} else if (val.equals("grid")) {
+		} else if ("grid".equals(val)) {
 			speciesComp.setVisible(false);
 			speciesComp.setEnabled(false);
 			imageComp.setVisible(false);
@@ -521,7 +680,7 @@ public class EditLayerFrame extends EditFrame {
 			agentsComp.setVisible(false);
 			chartComp.setEnabled(false);
 			chartComp.setVisible(false);
-		} else if (val.equals("agents")) {
+		} else if ("agents".equals(val)) {
 			speciesComp.setVisible(false);
 			speciesComp.setEnabled(false);
 			imageComp.setVisible(false);
@@ -534,7 +693,7 @@ public class EditLayerFrame extends EditFrame {
 			agentsComp.setVisible(true);
 			chartComp.setEnabled(false);
 			chartComp.setVisible(false);
-		} else if (val.equals("image")) {
+		} else if ("image".equals(val)) {
 			speciesComp.setVisible(false);
 			speciesComp.setEnabled(false);
 			imageComp.setVisible(true);
@@ -547,7 +706,7 @@ public class EditLayerFrame extends EditFrame {
 			agentsComp.setVisible(false);
 			chartComp.setEnabled(false);
 			chartComp.setVisible(false);
-		} else if (val.equals("text")) {
+		} else if ("text".equals(val)) {
 			speciesComp.setVisible(false);
 			speciesComp.setEnabled(false);
 			imageComp.setVisible(false);
@@ -560,7 +719,7 @@ public class EditLayerFrame extends EditFrame {
 			agentsComp.setVisible(false);
 			chartComp.setEnabled(false);
 			chartComp.setVisible(false);
-		} else if (val.equals("chart")) {
+		} else if ("chart".equals(val)) {
 			speciesComp.setVisible(false);
 			speciesComp.setEnabled(false);
 			imageComp.setVisible(false);
@@ -578,6 +737,12 @@ public class EditLayerFrame extends EditFrame {
 
 	}
 
+	/**
+	 * Builds the canvas topo.
+	 *
+	 * @param container
+	 *            the container
+	 */
 	public void buildCanvasTopo(final Composite container) {
 		// ****** CANVAS TYPE *********
 		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
@@ -629,15 +794,11 @@ public class EditLayerFrame extends EditFrame {
 		comboSpecies = new CCombo(speciesComp, SWT.BORDER);
 		comboSpecies.setItems(species_list);
 		comboSpecies.setBounds(70, 0, 300, 20);
-		if (species_list.length > 0) {
-			comboSpecies.setText(species_list[0]);
-		}
+		if (species_list.length > 0) { comboSpecies.setText(species_list[0]); }
 		comboSpecies.addModifyListener(event -> {
 			comboAspectsSpecies.setItems(aspectsSpecies.get(comboSpecies.getText()));
 			comboAspectsSpecies.setText(aspectsSpecies.get(comboSpecies.getText())[0]);
-			if (textColorText.isSaveData()) {
-				save("");
-			}
+			if (textColorText.isSaveData()) { save(""); }
 
 			ModelGenerator.modelValidation(fp, diagram);
 			diagramEditor.updateEObjectErrors();
@@ -651,14 +812,10 @@ public class EditLayerFrame extends EditFrame {
 		comboAspectsSpecies.setEditable(false);
 		comboAspectsSpecies.setItems(aspectsSpecies.get(comboSpecies.getText()));
 		comboAspectsSpecies.setBounds(70, 30, 300, 20);
-		if (species_list.length > 0) {
-			comboAspectsSpecies.setText(aspectsSpecies.get(comboSpecies.getText())[0]);
-		}
+		if (species_list.length > 0) { comboAspectsSpecies.setText(aspectsSpecies.get(comboSpecies.getText())[0]); }
 
 		comboAspectsSpecies.addModifyListener(event -> {
-			if (textColorText.isSaveData()) {
-				save("");
-			}
+			if (textColorText.isSaveData()) { save(""); }
 
 			ModelGenerator.modelValidation(fp, diagram);
 			diagramEditor.updateEObjectErrors();
@@ -675,9 +832,7 @@ public class EditLayerFrame extends EditFrame {
 		comboGrid = new CCombo(gridComp, SWT.BORDER);
 		comboGrid.setItems(grid_list);
 		comboGrid.setBounds(70, 0, 300, 20);
-		if (grid_list.length > 0) {
-			comboGrid.setText(grid_list[0]);
-		}
+		if (grid_list.length > 0) { comboGrid.setText(grid_list[0]); }
 
 		final CLabel lblSL = new CLabel(gridComp, SWT.NONE);
 		lblSL.setBounds(0, 40, 90, 20);
@@ -689,9 +844,7 @@ public class EditLayerFrame extends EditFrame {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if (textColorText.isSaveData()) {
-					save("");
-				}
+				if (textColorText.isSaveData()) { save(""); }
 
 				ModelGenerator.modelValidation(fp, diagram);
 				diagramEditor.updateEObjectErrors();
@@ -700,9 +853,7 @@ public class EditLayerFrame extends EditFrame {
 
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {
-				if (textColorText.isSaveData()) {
-					save("");
-				}
+				if (textColorText.isSaveData()) { save(""); }
 
 				ModelGenerator.modelValidation(fp, diagram);
 				diagramEditor.updateEObjectErrors();
@@ -772,7 +923,7 @@ public class EditLayerFrame extends EditFrame {
 
 		final Composite cct = new Composite(textComp, SWT.NONE);
 		textColorText = new ValidateText(cct, SWT.NONE, diagram, fp, this, diagramEditor, "color:", null, null);
-		;
+
 		colorLabelText = new Label(cct, SWT.NONE);
 		final Button button3 = new Button(cct, SWT.PUSH);
 		final Composite cColor3 = new Composite(cct, SWT.NONE);
@@ -803,13 +954,9 @@ public class EditLayerFrame extends EditFrame {
 		comboAspectsAgents.setEditable(false);
 		comboAspectsAgents.setItems(aspects);
 		comboAspectsAgents.setBounds(70, 30, 300, 20);
-		if (aspects.length > 0) {
-			comboAspectsAgents.setText(aspects[0]);
-		}
+		if (aspects.length > 0) { comboAspectsAgents.setText(aspects[0]); }
 		comboAspectsAgents.addModifyListener(event -> {
-			if (textColorText.isSaveData()) {
-				save("");
-			}
+			if (textColorText.isSaveData()) { save(""); }
 
 			ModelGenerator.modelValidation(fp, diagram);
 			diagramEditor.updateEObjectErrors();
@@ -841,14 +988,19 @@ public class EditLayerFrame extends EditFrame {
 		comboTypeChart = new CCombo(chartComp, SWT.BORDER);
 		comboTypeChart.setItems(types_chart);
 		comboTypeChart.setBounds(90, 30, 200, 20);
-		if (types_chart.length > 0) {
-			comboTypeChart.setText(types_chart[0]);
-		}
+		if (types_chart.length > 0) { comboTypeChart.setText(types_chart[0]); }
 
 		final Canvas canvasCL = canvasChartLayer(chartComp);
 		canvasCL.setLocation(0, 70);
 	}
 
+	/**
+	 * Canvas chart layer.
+	 *
+	 * @param container
+	 *            the container
+	 * @return the canvas
+	 */
 	public Canvas canvasChartLayer(final Composite container) {
 		// ****** CANVAS CHART LAYER *********
 		final Canvas canvasChartLayer = new Canvas(container, SWT.NONE);
@@ -897,7 +1049,7 @@ public class EditLayerFrame extends EditFrame {
 
 	/**
 	 * Creates the main window's contents
-	 * 
+	 *
 	 * @param shell
 	 *            the main window
 	 */
@@ -937,9 +1089,7 @@ public class EditLayerFrame extends EditFrame {
 			public void mouseDown(final MouseEvent event) {
 				// Dispose any existing editor
 				final Control old = editor.getEditor();
-				if (old != null) {
-					old.dispose();
-				}
+				if (old != null) { old.dispose(); }
 
 				// Determine where the mouse was clicked
 				final Point pt = new Point(event.x, event.y);
@@ -991,26 +1141,24 @@ public class EditLayerFrame extends EditFrame {
 								combo.dispose();
 							}
 						});
-					} else if (column != 1) {
+					} else {
 						// Create the Text object for our editor
 						final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
 						String name = "legend:";
 						switch (column) {
-						case 2:
-							name = "color:";
-							break;
-						case 3:
-							name = "";
-							break;
+							case 2:
+								name = "color:";
+								break;
+							case 3:
+								name = "";
+								break;
 						}
 						final ValidateText text = new ValidateText(tableChartLayer, SWT.NONE, diagram, fp, cFrame,
 								diagramEditor, name, null, null);
 						item.setBackground(column, text.getBackground());
 
 						text.setForeground(item.getForeground());
-						if (column == 0) {
-							text.setString(true);
-						}
+						if (column == 0) { text.setString(true); }
 						// Transfer any text from the cell to the Text control,
 						// set the color to match this row, select the text,
 						// and set focus to the control
@@ -1038,17 +1186,15 @@ public class EditLayerFrame extends EditFrame {
 
 							item.setBackground(col, text.getBackground());
 							for (int i = 2; i < tableChartLayer.getColumnCount(); i++) {
-								if (i == col) {
-									continue;
-								}
+								if (i == col) { continue; }
 								String name1 = "legend:";
 								switch (col) {
-								case 2:
-									name1 = "color:";
-									break;
-								case 3:
-									name1 = "";
-									break;
+									case 2:
+										name1 = "color:";
+										break;
+									case 3:
+										name1 = "";
+										break;
 								}
 								final String error = diagramEditor.containErrors(text.getLoc(), name1, null);
 								final String textI = item.getText(i);
@@ -1066,10 +1212,11 @@ public class EditLayerFrame extends EditFrame {
 		return tableChartLayer;
 	}
 
+	/**
+	 * Inits the table.
+	 */
 	void initTable() {
-		if (((ELayer) eobject).getChartlayers() == null) {
-			return;
-		}
+		if (((ELayer) eobject).getChartlayers() == null) return;
 		for (final EChartLayer var : ((ELayer) eobject).getChartlayers()) {
 			final TableItem ti = new TableItem(table_chart_layers, SWT.NONE);
 			ti.setText(new String[] { var.getName(), var.getStyle(), var.getColor(), var.getValue() });
@@ -1077,15 +1224,13 @@ public class EditLayerFrame extends EditFrame {
 	}
 
 	@Override
-	protected Point getInitialSize() {
-		return new Point(743, 510);
-	}
-	
+	protected Point getInitialSize() { return new Point(743, 510); }
+
 	@Override
 	protected void handleShellCloseEvent() {
 		// create dialog with ok and cancel button and info icon
-		clean_close() ;
-		if (comboType != null)comboType.dispose();
+		clean_close();
+		if (comboType != null) { comboType.dispose(); }
 		comboType = null;
 		close();
 	}

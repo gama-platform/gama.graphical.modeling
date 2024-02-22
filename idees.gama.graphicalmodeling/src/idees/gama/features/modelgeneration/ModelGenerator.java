@@ -1,3 +1,13 @@
+/*******************************************************************************************************
+ *
+ * ModelGenerator.java, in idees.gama.graphicalmodeling, is part of the source code of the GAMA modeling and simulation
+ * platform (v.1.9.3).
+ *
+ * (c) 2007-2024 UMI 209 UMMISCO IRD/SU & Partners (IRIT, MIAT, TLU, CTU)
+ *
+ * Visit https://github.com/gama-platform/gama for license information and contacts.
+ *
+ ********************************************************************************************************/
 
 package idees.gama.features.modelgeneration;
 
@@ -7,13 +17,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -61,47 +69,67 @@ import gama.ETask;
 import gama.ETaskLink;
 import gama.EVariable;
 import gama.EWorldAgent;
+import gama.core.kernel.model.IModel;
+import gama.gaml.compilation.GamlCompilationError;
+import gama.gaml.descriptions.ModelDescription;
+import gama.gaml.interfaces.IGamlIssue;
+import gaml.compiler.gaml.resource.GamlResource;
 import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.diagram.ModelStructure;
 import idees.gama.features.ExampleUtil;
-import msi.gama.common.interfaces.IGamlIssue;
-import msi.gama.kernel.model.IModel;
-import msi.gama.lang.gaml.resource.GamlResource;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gaml.compilation.GamlCompilationError;
-import msi.gaml.descriptions.ModelDescription;
 
+/**
+ * The Class ModelGenerator.
+ */
 public class ModelGenerator {
 
-	private static String EL = System.getProperty("line.separator");
+	/** The el. */
+	private static String EL = System.lineSeparator();
 
-	
-	private static ModelDescription buildModelDescription(final GamlResource r, final List<GamlCompilationError> errors) {
+	/**
+	 * Builds the model description.
+	 *
+	 * @param r
+	 *            the r
+	 * @param errors
+	 *            the errors
+	 * @return the model description
+	 */
+	private static ModelDescription buildModelDescription(final GamlResource r,
+			final List<GamlCompilationError> errors) {
 		try {
-			
+
 			// Syntactic errors detected, we cannot build the resource
 			if (r.hasErrors()) {
-				if (errors != null)
+				if (errors != null) {
 					errors.add(new GamlCompilationError("Syntax errors ", IGamlIssue.GENERAL, r.getContents().get(0),
 							false, false));
+				}
 				return null;
-			} else {
-				// We build the description
-				final ModelDescription model = r.buildCompleteDescription();
-				if (errors != null)
-					Iterables.addAll(errors, r.getValidationContext());
-				return model;
 			}
+			// We build the description
+			final ModelDescription model = r.buildCompleteDescription();
+			if (errors != null) { Iterables.addAll(errors, r.getValidationContext()); }
+			return model;
 		} finally {}
 	}
-	
+
+	/**
+	 * Model generation.
+	 *
+	 * @param fp
+	 *            the fp
+	 * @param diagram
+	 *            the diagram
+	 * @return the i model
+	 */
 	public static IModel modelGeneration(final IFeatureProvider fp, final Diagram diagram) {
 		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
 		diagramEditor.initIdsEObjects();
 		final XtextResourceSet rs = new SynchronizedXtextResourceSet();
 		rs.setClasspathURIContext(ModelGenerator.class);
 		URI du = diagramEditor.getDiagramEditorInput().getUri();
-		final URI uri = URI.createURI((du.trimFragment()).toString().replace(".gadl",".gaml"), true);
+		final URI uri = URI.createURI(du.trimFragment().toString().replace(".gadl", ".gaml"), true);
 		final GamlResource resource = (GamlResource) rs.createResource(uri);
 		final String gamlModel = ModelGenerator.generateModel(fp, diagram, null);
 		final InputStream is = new ByteArrayInputStream(gamlModel.getBytes());
@@ -112,68 +140,99 @@ public class ModelGenerator {
 			e1.printStackTrace();
 		}
 		try {
-			final Set<GamlResource> resources = new HashSet<GamlResource>();
+			final Set<GamlResource> resources = new HashSet<>();
 			resources.add(resource);
-			final ModelDescription modeldesc = buildModelDescription(resource, new ArrayList<GamlCompilationError>());
-			//((ModelDescription) model.getDescription()).setModelFilePath(getPath(fp, diagram));
+			final ModelDescription modeldesc = buildModelDescription(resource, new ArrayList<>());
+			// ((ModelDescription) model.getDescription()).setModelFilePath(getPath(fp, diagram));
 			return modeldesc == null ? null : (IModel) modeldesc.compile();
-		} catch (final GamaRuntimeException e1) {
-			e1.printStackTrace();
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
+	/**
+	 * Gets the path.
+	 *
+	 * @param fp
+	 *            the fp
+	 * @param diagram
+	 *            the diagram
+	 * @return the path
+	 */
 	public static String getPath(final IFeatureProvider fp, final Diagram diagram) {
 		final List<Shape> contents = diagram.getChildren();
 		URI uri = null;
-		if (contents != null) {
-			uri = EcoreUtil.getURI((EObject) fp.getBusinessObjectForPictogramElement(contents.get(0)));
-		} else {
-			return "";
-		}
+		if (contents == null) return "";
+		uri = EcoreUtil.getURI((EObject) fp.getBusinessObjectForPictogramElement(contents.get(0)));
 		uri = uri.trimFragment();
-		if (uri.isPlatform()) {
-			uri = URI.createURI(uri.toPlatformString(true));
-		}
+		if (uri.isPlatform()) { uri = URI.createURI(uri.toPlatformString(true)); }
 		// String containerStr = "/"+ uri.segment(0);
 		String path = ResourcesPlugin.getWorkspace().getRoot().getLocation() + uri.path();
 		path = path.replace(".gadl", ".gaml");
 		return path;
 	}
 
+	/**
+	 * Gets the folder.
+	 *
+	 * @param fp
+	 *            the fp
+	 * @param diagram
+	 *            the diagram
+	 * @return the folder
+	 */
 	public static String getFolder(final IFeatureProvider fp, final Diagram diagram) {
 		final String path = getPath(fp, diagram);
 		final String[] pp = path.split("/");
-		String pF = "";
-		for (int i = 0; i < pp.length - 1; i++) {
-			pF += pp[i] + "/";
-		}
-		return pF;
+		StringBuilder pF = new StringBuilder();
+		for (int i = 0; i < pp.length - 1; i++) { pF.append(pp[i]).append("/"); }
+		return pF.toString();
 	}
 
+	/**
+	 * Checks for syntax error.
+	 *
+	 * @param fp
+	 *            the fp
+	 * @param expression
+	 *            the expression
+	 * @param isExpression
+	 *            the is expression
+	 * @return true, if successful
+	 */
 	public static boolean hasSyntaxError(final IFeatureProvider fp, final String expression,
 			final boolean isExpression) {
 		return hasSyntaxError(fp, expression, isExpression, false);
 	}
 
+	/**
+	 * Checks for syntax error.
+	 *
+	 * @param fp
+	 *            the fp
+	 * @param expression
+	 *            the expression
+	 * @param isExpression
+	 *            the is expression
+	 * @param isString
+	 *            the is string
+	 * @return true, if successful
+	 */
 	public static boolean hasSyntaxError(final IFeatureProvider fp, final String expression, final boolean isExpression,
 			final boolean isString) {
-		if (expression.replace(" ", "").isEmpty()) {
-			return false;
-		}
+		if (expression.replace(" ", "").isEmpty()) return false;
 		URI du = ((GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp)).getDiagramEditorInput().getUri();
-		
-		final URI uri = URI.createURI((du.trimFragment()).toString().replace(".gadl",".gaml"), true);
-		
+
+		final URI uri = URI.createURI(du.trimFragment().toString().replace(".gadl", ".gaml"), true);
+
 		final XtextResourceSet rs = new SynchronizedXtextResourceSet();
 		rs.setClasspathURIContext(ModelGenerator.class);
 		final String gamlModel = "model toto2733663525\nglobal{init{" + (isExpression ? "string _toto_t <-" : "")
 				+ (isString ? "\"" : "") + expression + (isString ? "\"" : "") + (isExpression ? ";" : "") + "}}";
 		final InputStream is = new ByteArrayInputStream(gamlModel.getBytes());
 		final GamlResource resource = (GamlResource) rs.createResource(uri);
-		
+
 		try {
 			resource.load(is, null);
 		} catch (final IOException e1) {
@@ -181,23 +240,25 @@ public class ModelGenerator {
 		}
 		try {
 			resource.validate();
-			Iterator<GamlCompilationError> it = resource.getValidationContext().getInternalErrors().iterator();
-			while (it.hasNext()) {
-				GamlCompilationError error = it.next();
-				if (error.isError() && error.toString().equals("Syntax errors detected ")) {
-					return true;
-				}
+			for (GamlCompilationError error : resource.getValidationContext().getInternalErrors()) {
+				if (error.isError() && "Syntax errors detected ".equals(error.toString())) return true;
 			}
 			return false;
-		} catch (final GamaRuntimeException e1) {
-			return true;
 		} catch (final Exception e) {
 			return true;
 		}
 	}
 
-	public static List<GamlCompilationError> modelValidation(final IFeatureProvider fp,
-			final Diagram diagram) {
+	/**
+	 * Model validation.
+	 *
+	 * @param fp
+	 *            the fp
+	 * @param diagram
+	 *            the diagram
+	 * @return the list
+	 */
+	public static List<GamlCompilationError> modelValidation(final IFeatureProvider fp, final Diagram diagram) {
 
 		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
 		diagramEditor.initIdsEObjects();
@@ -205,11 +266,10 @@ public class ModelGenerator {
 		final XtextResourceSet rs = new SynchronizedXtextResourceSet();
 		rs.setClasspathURIContext(ModelGenerator.class);
 		URI du = diagramEditor.getDiagramEditorInput().getUri();
-		final URI uri = URI.createURI((du.trimFragment()).toString().replace(".gadl",".gaml"), true);
+		final URI uri = URI.createURI(du.trimFragment().toString().replace(".gadl", ".gaml"), true);
 		final GamlResource resource = (GamlResource) rs.createResource(uri);
 		final String gamlModel = ModelGenerator.generateModel(fp, diagram, null);
-		if (gamlModel.equals(""))
-			return null;
+		if ("".equals(gamlModel)) return null;
 		final InputStream is = new ByteArrayInputStream(gamlModel.getBytes());
 		diagramEditor.setResource(resource);
 		try {
@@ -218,100 +278,96 @@ public class ModelGenerator {
 			e1.printStackTrace();
 		}
 		try {
-			
-		resource.getValidationContext().clear();
+
+			resource.getValidationContext().clear();
 			resource.validate();
-			
-			final List<GamlCompilationError> errors = new ArrayList<GamlCompilationError>();
-			Iterator<GamlCompilationError> it = resource.getValidationContext().getInternalErrors().iterator();
-			while (it.hasNext()) {
-				GamlCompilationError error = it.next();
-				if (error.isError()) {
-					errors.add(error);
-				}
+
+			final List<GamlCompilationError> errors = new ArrayList<>();
+			for (GamlCompilationError error : resource.getValidationContext().getInternalErrors()) {
+				if (error.isError()) { errors.add(error); }
 			}
 			diagramEditor.getErrorsLoc().clear();
 
 			diagramEditor.setErrors(errors);
-			if (errors.isEmpty()) {
-				diagramEditor.getSyntaxErrorsLoc().clear();
-			}
+			if (errors.isEmpty()) { diagramEditor.getSyntaxErrorsLoc().clear(); }
 			return errors;
-		} catch (final GamaRuntimeException e1) {
-			e1.printStackTrace();
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
-	static String manageName(String name) {
-		if (name.contains(" ")) {
-			return "\"" + name + "\"";
-		} else {
-			return name;
-		}
+
+	/**
+	 * Manage name.
+	 *
+	 * @param name
+	 *            the name
+	 * @return the string
+	 */
+	static String manageName(final String name) {
+		if (name.contains(" ")) return "\"" + name + "\"";
+		return name;
 	}
 
+	/**
+	 * Define species.
+	 *
+	 * @param species
+	 *            the species
+	 * @param level
+	 *            the level
+	 * @param id
+	 *            the id
+	 * @return the string
+	 */
 	static String defineSpecies(final ESpecies species, final int level, final String id) {
-		if (species == null) {
-			return "";
-		}
-		String model = EL;
+		if (species == null) return "";
+		StringBuilder model = new StringBuilder().append(EL);
 		String sp = "";
-		for (int i = 0; i < level; i++) {
-			sp += "\t";
-		}
-		model += sp;
+		for (int i = 0; i < level; i++) { sp += "\t"; }
+		model.append(sp);
 		if (species instanceof EGrid) {
-			model += "grid " + manageName(species.getName());
+			model.append("grid ").append(manageName(species.getName()));
 		} else {
-			model += "species " + manageName(species.getName());
+			model.append("species ").append(manageName(species.getName()));
 		}
 
 		if (species.getInheritsFrom() != null) {
-			model += " parent:" + manageName(species.getInheritsFrom().getName());
+			model.append(" parent:").append(manageName(species.getInheritsFrom().getName()));
 		}
-		
+
 		if (species.getSkills() != null && !species.getSkills().isEmpty()) {
-			model += " skills:" + species.getSkills();
+			model.append(" skills:").append(species.getSkills());
 		}
 		for (final EFacet facet : species.getFacets()) {
-			if (facet.getValue().replace(" ", "").isEmpty())
+			if (facet.getValue().replace(" ", "").isEmpty() || "name".equals(facet.getName())
+					|| "skills".equals(facet.getName())) {
 				continue;
-			if (facet.getName().equals("name") || facet.getName().equals("skills")) continue;
-			model += " " + facet.getName() + ":" + facet.getValue();
+			}
+			model.append(" ").append(facet.getName()).append(":").append(facet.getValue());
 		}
-		model += " {" + EL;
-		for (final EVariable var : species.getVariables()) {
-			model += defineVariable(var, level + 1);
-		}
+		model.append(" {").append(EL);
+		for (final EVariable var : species.getVariables()) { model.append(defineVariable(var, level + 1)); }
 		String idT = ModelStructure.getElementId(species);
 		boolean isId = idT.equals(id);
-		if (isId)
-			model += EL + idT + EL;
-		model += defineInit(species, isId ? -1 : level + 1);
-		if (isId)
-			model += EL + idT + EL;
+		if (isId) { model.append(EL).append(idT).append(EL); }
+		model.append(defineInit(species, isId ? -1 : level + 1));
+		if (isId) { model.append(EL).append(idT).append(EL); }
 
-		final Map<String, EReflexLink> reflexMap = new Hashtable<String, EReflexLink>();
+		final Map<String, EReflexLink> reflexMap = new Hashtable<>();
 
 		for (final EActionLink link : species.getActionLinks()) {
 			final String idA = ModelStructure.getElementId(link.getAction());
 			isId = idA.equals(id);
-			if (isId)
-				model += EL + idA + EL;
-			model += defineAction(link, isId ? -1 : level + 1);
-			if (isId)
-				model += EL + idA + EL;
+			if (isId) { model.append(EL).append(idA).append(EL); }
+			model.append(defineAction(link, isId ? -1 : level + 1));
+			if (isId) { model.append(EL).append(idA).append(EL); }
 		}
 		for (final EReflexLink link : species.getReflexLinks()) {
-			if (link.getTarget() == null) {
-				continue;
-			}
+			if (link.getTarget() == null) { continue; }
 			reflexMap.put(link.getTarget().getName(), link);
 		}
-		final List<String> reflexes = new ArrayList<String>();
+		final List<String> reflexes = new ArrayList<>();
 		if (species.getReflexList().isEmpty() && !reflexMap.isEmpty()) {
 			reflexes.addAll(reflexMap.keySet());
 		} else {
@@ -321,11 +377,9 @@ public class ModelGenerator {
 			if (reflexMap.containsKey(reflex)) {
 				idT = ModelStructure.getElementId(reflexMap.get(reflex).getReflex());
 				isId = idT.equals(id);
-				if (isId)
-					model += EL + idT + EL;
-				model += defineGeneric(reflexMap.get(reflex), isId ? -1 : level + 1);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model.append(EL).append(idT).append(EL); }
+				model.append(defineGeneric(reflexMap.get(reflex), isId ? -1 : level + 1));
+				if (isId) { model.append(EL).append(idT).append(EL); }
 
 			}
 		}
@@ -333,342 +387,338 @@ public class ModelGenerator {
 		for (final EStateLink link : species.getStateLinks()) {
 			final String idT2 = ModelStructure.getElementId(link.getState());
 			final boolean isId2 = idT2.equals(id);
-			if (isId2)
-				model += EL + idT2 + EL;
-			model += defineGeneric(link, isId2 ? -1 : level);
-			if (isId2)
-				model += EL + idT2 + EL;
+			if (isId2) { model.append(EL).append(idT2).append(EL); }
+			model.append(defineGeneric(link, isId2 ? -1 : level));
+			if (isId2) { model.append(EL).append(idT2).append(EL); }
 		}
 		for (final ETaskLink link : species.getTaskLinks()) {
 			final String idT2 = ModelStructure.getElementId(link.getTask());
 			final boolean isId2 = idT2.equals(id);
-			if (isId2)
-				model += EL + idT2 + EL;
-			model += defineGeneric(link, isId2 ? -1 : level);
-			if (isId2)
-				model += EL + idT2 + EL;
+			if (isId2) { model.append(EL).append(idT2).append(EL); }
+			model.append(defineGeneric(link, isId2 ? -1 : level));
+			if (isId2) { model.append(EL).append(idT2).append(EL); }
 		}
 		for (final EEquationLink link : species.getEquationLinks()) {
 			final String idT2 = ModelStructure.getElementId(link.getEquation());
 			final boolean isId2 = idT2.equals(id);
-			if (isId2)
-				model += EL + idT2 + EL;
-			model += defineGeneric(link, isId2 ? -1 : level);
-			if (isId2)
-				model += EL + idT2 + EL;
+			if (isId2) { model.append(EL).append(idT2).append(EL); }
+			model.append(defineGeneric(link, isId2 ? -1 : level));
+			if (isId2) { model.append(EL).append(idT2).append(EL); }
 		}
 		for (final EPlanLink link : species.getPlanLinks()) {
 			final String idT2 = ModelStructure.getElementId(link.getPlan());
 			final boolean isId2 = idT2.equals(id);
-			if (isId2)
-				model += EL + idT2 + EL;
-			model += defineGeneric(link, isId2 ? -1 : level);
-			if (isId2)
-				model += EL + idT2 + EL;
+			if (isId2) { model.append(EL).append(idT2).append(EL); }
+			model.append(defineGeneric(link, isId2 ? -1 : level));
+			if (isId2) { model.append(EL).append(idT2).append(EL); }
 		}
 		for (final ERuleLink link : species.getRuleLinks()) {
 			final String idT2 = ModelStructure.getElementId(link.getRule());
 			final boolean isId2 = idT2.equals(id);
-			if (isId2)
-				model += EL + idT2 + EL;
-			model += defineGeneric(link, isId2 ? -1 : level);
-			if (isId2)
-				model += EL + idT2 + EL;
+			if (isId2) { model.append(EL).append(idT2).append(EL); }
+			model.append(defineGeneric(link, isId2 ? -1 : level));
+			if (isId2) { model.append(EL).append(idT2).append(EL); }
 		}
 		for (final EPerceiveLink link : species.getPerceiveLinks()) {
 			final String idT2 = ModelStructure.getElementId(link.getPerceive());
 			final boolean isId2 = idT2.equals(id);
-			if (isId2)
-				model += EL + idT2 + EL;
-			model += defineGeneric(link, isId2 ? -1 : level);
-			if (isId2)
-				model += EL + idT2 + EL;
+			if (isId2) { model.append(EL).append(idT2).append(EL); }
+			model.append(defineGeneric(link, isId2 ? -1 : level));
+			if (isId2) { model.append(EL).append(idT2).append(EL); }
 		}
 
 		for (final EAspectLink link : species.getAspectLinks()) {
 			final String idA = ModelStructure.getElementId(link.getAspect());
 			isId = idA.equals(id);
-			if (isId)
-				model += EL + idA + EL;
-			model += defineAspect(link, isId ? -1 : level + 1);
-			if (isId)
-				model += EL + idA + EL;
+			if (isId) { model.append(EL).append(idA).append(EL); }
+			model.append(defineAspect(link, isId ? -1 : level + 1));
+			if (isId) { model.append(EL).append(idA).append(EL); }
 		}
 		for (final ESubSpeciesLink link : species.getMicroSpeciesLinks()) {
-			model += defineSpecies(link.getMicro(), level + 1, id);
+			model.append(defineSpecies(link.getMicro(), level + 1, id));
 		}
 
-		model += sp + "}" + EL;
+		model.append(sp).append("}").append(EL);
 
-		return model;
+		return model.toString();
 	}
 
+	/**
+	 * Define variable.
+	 *
+	 * @param var
+	 *            the var
+	 * @param level
+	 *            the level
+	 * @return the string
+	 */
 	static String defineVariable(final EVariable var, final int level) {
-		if (var == null) {
-			return "";
-		}
-		String varStr = "";
-		for (int i = 0; i < level; i++) {
-			varStr += "\t";
-		}
-		if (var.getType() == null || var.getType().equals("")) {
-			varStr += "var ";
+		if (var == null) return "";
+		StringBuilder varStr = new StringBuilder();
+		for (int i = 0; i < level; i++) { varStr.append("\t"); }
+		if (var.getType() == null || "".equals(var.getType())) {
+			varStr.append("var ");
 		} else {
-			varStr += var.getType() + " ";
+			varStr.append(var.getType()).append(" ");
 		}
-		varStr += var.getName();
-		if (var.getInit() != null && !var.getInit().equals("")) {
-			varStr += " <- " + var.getInit();
+		varStr.append(var.getName());
+		if (var.getInit() != null && !"".equals(var.getInit())) { varStr.append(" <- ").append(var.getInit()); }
+		if (var.getUpdate() != null && !"".equals(var.getUpdate())) {
+			varStr.append(" update: ").append(var.getUpdate());
 		}
-		if (var.getUpdate() != null && !var.getUpdate().equals("")) {
-			varStr += " update: " + var.getUpdate();
+		if (var.getFunction() != null && !"".equals(var.getFunction())) {
+			varStr.append(" -> {").append(var.getFunction()).append("}");
 		}
-		if (var.getFunction() != null && !var.getFunction().equals("")) {
-			varStr += " -> {" + var.getFunction() + "}";
-		}
-		if (var.getMin() != null && !var.getMin().equals("")) {
-			varStr += " min: " + var.getMin();
-		}
-		if (var.getMax() != null && !var.getMax().equals("")) {
-			varStr += " max: " + var.getMax();
-		}
-		varStr += ";" + EL;
-		return varStr;
+		if (var.getMin() != null && !"".equals(var.getMin())) { varStr.append(" min: ").append(var.getMin()); }
+		if (var.getMax() != null && !"".equals(var.getMax())) { varStr.append(" max: ").append(var.getMax()); }
+		varStr.append(";").append(EL);
+		return varStr.toString();
 	}
 
+	/**
+	 * Define action.
+	 *
+	 * @param link
+	 *            the link
+	 * @param level
+	 *            the level
+	 * @return the string
+	 */
 	static String defineAction(final EActionLink link, final int level) {
-		if (link == null || link.getAction() == null) {
-			return "";
-		}
+		if (link == null || link.getAction() == null) return "";
 
 		final EAction action = link.getAction();
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		String sp = "";
-		for (int i = 0; i < level; i++) {
-			sp += "\t";
-		}
+		for (int i = 0; i < level; i++) { sp += "\t"; }
 
-		final String returnType = action.getReturnType() == null || action.getReturnType().isEmpty() ? "action"
-				: action.getReturnType();
+		final String returnType =
+				action.getReturnType() == null || action.getReturnType().isEmpty() ? "action" : action.getReturnType();
 		String arguments = "";
 		for (final EVariable var : action.getVariables()) {
 			arguments += (arguments.isEmpty() ? "" : ", ") + var.getType() + " " + var.getName()
 					+ (var.getInit() == null || var.getInit().isEmpty() ? "" : " <- " + var.getInit());
 		}
-		result += sp + returnType + " " + manageName(action.getName()) + (arguments.isEmpty() ? "" : "(" + arguments + ")") + " {"
-				+ EL;
+		result.append(sp).append(returnType).append(" ").append(manageName(action.getName()))
+				.append(arguments.isEmpty() ? "" : "(" + arguments + ")").append(" {").append(EL);
 		final String code = action.getGamlCode();
 		if (code != null && !code.isEmpty()) {
 			/*
-			for (final String line : code.split("\n")) {
-				if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
-				result += sp + (level == -1 ? "" : "\t") + line;
-			}*/
-			result += code;
+			 * for (final String line : code.split("\n")) { if (line.replace(" ", "").replace("\t", "").isEmpty())
+			 * continue; result += sp + (level == -1 ? "" : "\t") + line; }
+			 */
+			result.append(code);
 		}
-		result += EL + sp + "}" + EL;
+		result.append(EL).append(sp).append("}").append(EL);
 
-		return result;
+		return result.toString();
 	}
 
+	/**
+	 * Define init.
+	 *
+	 * @param species
+	 *            the species
+	 * @param level
+	 *            the level
+	 * @return the string
+	 */
 	static String defineInit(final ESpecies species, final int level) {
-		if (species == null) {
-			return "";
-		}
-		String result = "";
+		if (species == null) return "";
+		StringBuilder result = new StringBuilder();
 		final String code = species.getInit();
 		String sp = "";
-		for (int i = 0; i < level; i++) {
-			sp += "\t";
-		}
-		result += sp + "init {" + EL;
+		for (int i = 0; i < level; i++) { sp += "\t"; }
+		result.append(sp).append("init {").append(EL);
 		if (code != null && !code.isEmpty()) {
-			/*for (final String line : code.split("\n")) {
-				if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
-				result += sp + (level == -1 ? "" : "\t") + line;
-			}*/
-			result += code;
+			/*
+			 * for (final String line : code.split("\n")) { if (line.replace(" ", "").replace("\t", "").isEmpty())
+			 * continue; result += sp + (level == -1 ? "" : "\t") + line; }
+			 */
+			result.append(code);
 		}
-		result += EL + sp + "}" + EL;
-		return result;
+		result.append(EL).append(sp).append("}").append(EL);
+		return result.toString();
 	}
 
+	/**
+	 * Define generic.
+	 *
+	 * @param link
+	 *            the link
+	 * @param level
+	 *            the level
+	 * @return the string
+	 */
 	static String defineGeneric(final EGamaLink link, final int level) {
-		if (link == null || link.getTarget() == null) {
-			return "";
-		}
+		if (link == null || link.getTarget() == null) return "";
 		final EGamaObject object = link.getTarget();
-		String result = "";
-		String sp = "";
-		for (int i = 0; i < level; i++) {
-			sp += "\t";
-		}
+		StringBuilder result = new StringBuilder();
+		StringBuilder sp = new StringBuilder();
+		for (int i = 0; i < level; i++) { sp.append("\t"); }
 		String type = "";
-		if (object instanceof EReflex)
+		if (object instanceof EReflex) {
 			type = "reflex";
-		else if (object instanceof EState)
+		} else if (object instanceof EState) {
 			type = "state";
-		else if (object instanceof ETask)
+		} else if (object instanceof ETask) {
 			type = "task";
-		else if (object instanceof EEquation)
+		} else if (object instanceof EEquation) {
 			type = "equation";
-		else if (object instanceof EPlan)
+		} else if (object instanceof EPlan) {
 			type = "plan";
-		else if (object instanceof EPerceive)
+		} else if (object instanceof EPerceive) {
 			type = "perceive";
-		else if (object instanceof ERule)
-			type = "rule";
-		result += type + " " + manageName(link.getTarget().getName());
+		} else if (object instanceof ERule) { type = "rule"; }
+		result.append(type).append(" ").append(manageName(link.getTarget().getName()));
 		for (final EFacet facet : object.getFacets()) {
-			if (facet.getValue().replace(" ", "").isEmpty())
-				continue;
-			result += " " + facet.getName() + ":" + facet.getValue();
+			if (facet.getValue().replace(" ", "").isEmpty()) { continue; }
+			result.append(" ").append(facet.getName()).append(":").append(facet.getValue());
 		}
 		String code = null;
-		if (object instanceof EReflex)
+		if (object instanceof EReflex) {
 			code = ((EReflex) object).getGamlCode();
-		else if (object instanceof EState)
+		} else if (object instanceof EState) {
 			code = ((EState) object).getGamlCode();
-		else if (object instanceof EEquation)
+		} else if (object instanceof EEquation) {
 			code = ((EEquation) object).getGamlCode();
-		else if (object instanceof ETask)
+		} else if (object instanceof ETask) {
 			code = ((ETask) object).getGamlCode();
-		else if (object instanceof EPlan)
+		} else if (object instanceof EPlan) {
 			code = ((EPlan) object).getGamlCode();
-		else if (object instanceof EPerceive)
-			code = ((EPerceive) object).getGamlCode();
-		result += " {" + EL;
+		} else if (object instanceof EPerceive) { code = ((EPerceive) object).getGamlCode(); }
+		result.append(" {").append(EL);
 		if (code != null && !code.isEmpty()) {
-			/*for (final String line : code.split("\n")) {
-				if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
-				result += sp + (level == -1 ? "" : "\t") + line;
-			}*/
-			result += code;
+			/*
+			 * for (final String line : code.split("\n")) { if (line.replace(" ", "").replace("\t", "").isEmpty())
+			 * continue; result += sp + (level == -1 ? "" : "\t") + line; }
+			 */
+			result.append(code);
 		}
 
-		result += EL + sp + "}" + EL;
-		return result;
+		result.append(EL).append(sp.toString()).append("}").append(EL);
+		return result.toString();
 	}
 
+	/**
+	 * Define aspect.
+	 *
+	 * @param link
+	 *            the link
+	 * @param level
+	 *            the level
+	 * @return the string
+	 */
 	static String defineAspect(final EAspectLink link, final int level) {
-		if (link == null || link.getAspect() == null) {
-			return "";
-		}
-		String result = "";
+		if (link == null || link.getAspect() == null) return "";
+		StringBuilder result = new StringBuilder();
 		final EAspect asp = link.getAspect();
 		String sp = "";
-		for (int i = 0; i < level; i++) {
-			sp += "\t";
-		}
-		result += sp + "aspect " + manageName(asp.getName()) + " {" + EL;
+		for (int i = 0; i < level; i++) { sp += "\t"; }
+		result.append(sp).append("aspect ").append(manageName(asp.getName())).append(" {").append(EL);
 		if (asp.isDefineGamlCode()) {
 			final String code = asp.getGamlCode();
 			if (code != null && !code.isEmpty()) {
-				/*for (final String line : code.split("\n")) {
-					if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
-					result += sp + (level == -1 ? "" : "\t") + line;
-				}*/
-				result += code;
+				/*
+				 * for (final String line : code.split("\n")) { if (line.replace(" ", "").replace("\t", "").isEmpty())
+				 * continue; result += sp + (level == -1 ? "" : "\t") + line; }
+				 */
+				result.append(code);
 			}
 		} else {
 
 			for (final ELayerAspect lay : asp.getLayers()) {
-				String code = sp + (level >= 0 ? "\t" : "") + "draw ";
+				StringBuilder code = new StringBuilder().append(sp).append(level >= 0 ? "\t" : "").append("draw ");
 				final String val = lay.getShapeType();
-				if (val == null) {
-					continue;
-				}
-				if (val.equals("polyline") || val.equals("polygon")) {
-					code += val + "(" + lay.getPoints() + ")";
-				} else if (val.equals("circle") || val.equals("sphere")) {
-					code += val + "(" + lay.getRadius() + ")";
-				} else if (val.equals("square") || val.equals("cube") || val.equals("pyramid")) {
-					code += val + "(" + lay.getSize() + ")";
-				} else if (val.equals("rectangle") || val.equals("hexagon")) {
-					code += val + "({" + lay.getWidth() + "," + lay.getHeigth() + "})";
-				} else if (val.equals("expression")) {
-					code += lay.getExpression();
-				} else if (val.equals("image")) {
-					code += "file(\"" + lay.getPath() + "\")"
-							+ (lay.getImageSize() != null && !lay.getImageSize().isEmpty() ? ""
+				if (val == null) { continue; }
+				if ("polyline".equals(val) || "polygon".equals(val)) {
+					code.append(val).append("(").append(lay.getPoints()).append(")");
+				} else if ("circle".equals(val) || "sphere".equals(val)) {
+					code.append(val).append("(").append(lay.getRadius()).append(")");
+				} else if ("square".equals(val) || "cube".equals(val) || "pyramid".equals(val)) {
+					code.append(val).append("(").append(lay.getSize()).append(")");
+				} else if ("rectangle".equals(val) || "hexagon".equals(val)) {
+					code.append(val).append("({").append(lay.getWidth()).append(",").append(lay.getHeigth())
+							.append("})");
+				} else if ("expression".equals(val)) {
+					code.append(lay.getExpression());
+				} else if ("image".equals(val)) {
+					code.append("file(\"").append(lay.getPath()).append("\")")
+							.append(lay.getImageSize() != null && !lay.getImageSize().isEmpty() ? ""
 									: " size:" + lay.getSize());
-				} else if (val.equals("text")) {
-					code += "\"" + lay.getText() + "\"" + (lay.getTextSize() != null && !lay.getTextSize().isEmpty()
-							? "" : " size:" + lay.getSize());
+				} else if ("text".equals(val)) {
+					code.append("\"").append(lay.getText()).append("\"").append(
+							lay.getTextSize() != null && !lay.getTextSize().isEmpty() ? "" : " size:" + lay.getSize());
 				}
 				if (lay.getIsColorCst()) {
-					code += " color: rgb(" + lay.getColorRBG().toString().replace("[", "").replace("]", "") + ")";
+					code.append(" color: rgb(").append(lay.getColorRBG().toString().replace("[", "").replace("]", ""))
+							.append(")");
 				} else if (lay.getColor() != null && !lay.getColor().isEmpty()) {
-					code += " color: " + lay.getColor();
+					code.append(" color: ").append(lay.getColor());
 				}
-				if (lay.getEmpty() != null && !lay.getEmpty().isEmpty() && !lay.getEmpty().equals("false")) {
-					code += " empty: " + lay.getEmpty();
+				if (lay.getEmpty() != null && !lay.getEmpty().isEmpty() && !"false".equals(lay.getEmpty())) {
+					code.append(" empty: ").append(lay.getEmpty());
 				}
-				if (lay.getRotate() != null && !lay.getRotate().isEmpty() && !lay.getRotate().equals("0.0")) {
-					code += " rotate: " + lay.getRotate();
+				if (lay.getRotate() != null && !lay.getRotate().isEmpty() && !"0.0".equals(lay.getRotate())) {
+					code.append(" rotate: ").append(lay.getRotate());
 				}
-				if (lay.getAt() != null && !lay.getAt().isEmpty()) {
-					code += " at: " + lay.getAt();
+				if (lay.getAt() != null && !lay.getAt().isEmpty()) { code.append(" at: ").append(lay.getAt()); }
+				if (lay.getDepth() != null && !lay.getDepth().isEmpty() && !"0.0".equals(lay.getDepth())) {
+					code.append(" depth: ").append(lay.getDepth());
 				}
-				if (lay.getDepth() != null && !lay.getDepth().isEmpty() && !lay.getDepth().equals("0.0")) {
-					code += " depth: " + lay.getDepth();
+				if (lay.getTexture() != null && !lay.getTexture().isEmpty() && !"[]".equals(lay.getTexture())) {
+					code.append(" texture: ").append(lay.getTexture());
 				}
-				if (lay.getTexture() != null && !lay.getTexture().isEmpty() && !lay.getTexture().equals("[]")) {
-					code += " texture: " + lay.getTexture();
-				}
-				result += code + ";" + EL;
+				result.append(code.toString()).append(";").append(EL);
 			}
 		}
-		result += EL + sp + "}" + EL;
-		return result;
+		result.append(EL).append(sp).append("}").append(EL);
+		return result.toString();
 	}
 
+	/**
+	 * Define experiment.
+	 *
+	 * @param exp
+	 *            the exp
+	 * @param id
+	 *            the id
+	 * @return the string
+	 */
 	static String defineExperiment(final EExperiment exp, final String id) {
 		String model = "";
-		if (exp == null) {
-			return model;
-		}
+		if (exp == null) return model;
 		if (exp instanceof EBatchExperiment) {
 			model += EL + EL + "experiment \"" + exp.getName() + "\" type:batch ";
 			for (final EFacet facet : exp.getFacets()) {
-				if (facet.getValue().replace(" ", "").isEmpty())
-					continue;
-					model += " " + facet.getName() + ":" + facet.getValue();
+				if (facet.getValue().replace(" ", "").isEmpty()) { continue; }
+				model += " " + facet.getName() + ":" + facet.getValue();
 			}
-					
-			model +=  " {" +EL;
-			for (final EParameter link : exp.getParameters()) {
-				model += defineParameter(link);
-			}
+
+			model += " {" + EL;
+			for (final EParameter link : exp.getParameters()) { model += defineParameter(link); }
 
 			model += EL + "}" + EL;
 
 		} else {
-			model += EL + EL + "experiment \"" + exp.getName() + "\" type:gui " ;
+			model += EL + EL + "experiment \"" + exp.getName() + "\" type:gui ";
 			for (final EFacet facet : exp.getFacets()) {
-				if (facet.getValue().replace(" ", "").isEmpty())
-					continue;
-					model += " " + facet.getName() + ":" + facet.getValue();
-			}
-					
-			model +=  " {" +EL;
-			
-			for (final EParameter link : exp.getParameters()) {
-				model += defineParameter(link);
+				if (facet.getValue().replace(" ", "").isEmpty()) { continue; }
+				model += " " + facet.getName() + ":" + facet.getValue();
 			}
 
+			model += " {" + EL;
+
+			for (final EParameter link : exp.getParameters()) { model += defineParameter(link); }
+
 			model += "\toutput{";
-			for (final EMonitor mon : exp.getMonitors()) {
-				model += defineMonitor(mon);
-			}
+			for (final EMonitor mon : exp.getMonitors()) { model += defineMonitor(mon); }
 			for (final EDisplayLink link : exp.getDisplayLinks()) {
 				final String idA = ModelStructure.getElementId(link.getDisplay());
 				final boolean isId = idA.equals(id);
-				if (isId)
-					model += EL + idA + EL;
+				if (isId) { model += EL + idA + EL; }
 				model += defineDisplay(link);
-				if (isId)
-					model += EL + idA + EL;
+				if (isId) { model += EL + idA + EL; }
 
 			}
 			model += EL + "\t}" + EL + "}" + EL;
@@ -677,180 +727,183 @@ public class ModelGenerator {
 
 	}
 
+	/**
+	 * Define parameter.
+	 *
+	 * @param par
+	 *            the par
+	 * @return the string
+	 */
 	static String defineParameter(final EParameter par) {
-		if (par == null) {
-			return "";
-		}
-		String parStr = "\tparameter";
-		parStr += "\"" + par.getName() + "\"";
-		parStr += " var:" + par.getVariable();
+		if (par == null) return "";
+		StringBuilder parStr = new StringBuilder("\tparameter");
+		parStr.append("\"").append(par.getName()).append("\"");
+		parStr.append(" var:").append(par.getVariable());
 		if (par.getCategory() != null && !par.getCategory().isEmpty()) {
-			parStr += " category: \"" + par.getCategory() + "\"";
+			parStr.append(" category: \"").append(par.getCategory()).append("\"");
 		}
-		if (par.getAmong() != null && !par.getAmong().isEmpty()) {
-			parStr += " among:" + par.getAmong();
-		}
-		if (par.getInit() != null && !par.getInit().isEmpty()) {
-			parStr += " <-" + par.getInit();
-		}
-		if (par.getMin() != null && !par.getMin().isEmpty()) {
-			parStr += " min:" + par.getMin();
-		}
-		if (par.getMax() != null && !par.getMax().isEmpty()) {
-			parStr += " max:" + par.getMax();
-		}
-		if (par.getStep() != null && !par.getStep().isEmpty()) {
-			parStr += " step:" + par.getStep();
-		}
-		parStr += ";" + EL;
-		return parStr;
+		if (par.getAmong() != null && !par.getAmong().isEmpty()) { parStr.append(" among:").append(par.getAmong()); }
+		if (par.getInit() != null && !par.getInit().isEmpty()) { parStr.append(" <-").append(par.getInit()); }
+		if (par.getMin() != null && !par.getMin().isEmpty()) { parStr.append(" min:").append(par.getMin()); }
+		if (par.getMax() != null && !par.getMax().isEmpty()) { parStr.append(" max:").append(par.getMax()); }
+		if (par.getStep() != null && !par.getStep().isEmpty()) { parStr.append(" step:").append(par.getStep()); }
+		parStr.append(";").append(EL);
+		return parStr.toString();
 	}
 
+	/**
+	 * Define monitor.
+	 *
+	 * @param mon
+	 *            the mon
+	 * @return the string
+	 */
 	static String defineMonitor(final EMonitor mon) {
-		if (mon == null) {
-			return "";
-		}
-		String parStr = "\t\tmonitor ";
-		parStr += "\"" + mon.getName() + "\"";
-		if (mon.getValue() != null && !mon.getValue().isEmpty()) {
-			parStr += " value:" + mon.getValue();
-		}
-		parStr += ";" + EL;
-		return parStr;
+		if (mon == null) return "";
+		StringBuilder parStr = new StringBuilder("\t\tmonitor ");
+		parStr.append("\"").append(mon.getName()).append("\"");
+		if (mon.getValue() != null && !mon.getValue().isEmpty()) { parStr.append(" value:").append(mon.getValue()); }
+		parStr.append(";").append(EL);
+		return parStr.toString();
 	}
 
+	/**
+	 * Define display.
+	 *
+	 * @param link
+	 *            the link
+	 * @return the string
+	 */
 	static String defineDisplay(final EDisplayLink link) {
-		if (link == null || link.getDisplay() == null) {
-			return "";
-		}
+		if (link == null || link.getDisplay() == null) return "";
 		final EDisplay disp = link.getDisplay();
-		String model = EL + "\t\t";
-		model += "display " + manageName(disp.getName());
+		StringBuilder model = new StringBuilder().append(EL).append("\t\t");
+		model.append("display ").append(manageName(disp.getName()));
 		for (final EFacet facet : disp.getFacets()) {
-			if (facet.getValue().replace(" ", "").isEmpty())
-				continue;
-			model += " " + facet.getName() + ":" + facet.getValue();
+			if (facet.getValue().replace(" ", "").isEmpty()) { continue; }
+			model.append(" ").append(facet.getName()).append(":").append(facet.getValue());
 
 		}
 
-		model += " {" + EL;
+		model.append(" {").append(EL);
 		if (disp.isDefineGamlCode()) {
 			final String code = disp.getGamlCode();
 			if (code != null && !code.isEmpty()) {
-				/*for (final String line : code.split("\n")) {
-					if (line.replace(" ", "").replace("\t", "").isEmpty()) continue;
-					model += line;
-				}*/
-				model += code;
+				/*
+				 * for (final String line : code.split("\n")) { if (line.replace(" ", "").replace("\t", "").isEmpty())
+				 * continue; model += line; }
+				 */
+				model.append(code);
 			}
 		} else {
 
 			for (final ELayer lay : disp.getLayers()) {
-				if (lay.getType() == null) {
-					continue;
-				}
-				model += "\n\t\t\t";
-				if (lay.getType().equals("species")) {
-					model += lay.getType() + " " + lay.getSpecies()
-							+ (lay.getAspect() == null || lay.getAspect().isEmpty() || lay.getAspect().equals("default")
+				if (lay.getType() == null) { continue; }
+				model.append("\n\t\t\t");
+				if ("species".equals(lay.getType())) {
+					model.append(lay.getType()).append(" ").append(lay.getSpecies()).append(
+							lay.getAspect() == null || lay.getAspect().isEmpty() || "default".equals(lay.getAspect())
 									? "" : " aspect: " + lay.getAspect());
-				} else if (lay.getType().equals("grid")) {
-					model += lay.getType() + " " + lay.getGrid();
+				} else if ("grid".equals(lay.getType())) {
+					model.append(lay.getType()).append(" ").append(lay.getGrid());
 					if (lay.getIsColorCst() == null || lay.getIsColorCst()) {
-						if (lay.getColorRBG().size() == 3) {
-							if (lay.isShowLines()) {
-								model += " lines:rgb(" + lay.getColorRBG().get(0) + "," + lay.getColorRBG().get(1) + ","
-										+ lay.getColorRBG().get(2) + ")";
-							}
+						if (lay.getColorRBG().size() == 3 && lay.isShowLines()) {
+							model.append(" lines:rgb(").append(lay.getColorRBG().get(0)).append(",")
+									.append(lay.getColorRBG().get(1)).append(",").append(lay.getColorRBG().get(2))
+									.append(")");
 						}
-					} else {
-						if (lay.getColor() != null && !lay.getColor().equals("rgb(255,255,255)")
-								&& !lay.getColor().isEmpty()) {
-							model += " lines:" + lay.getColor();
-						}
+					} else if (lay.getColor() != null && !"rgb(255,255,255)".equals(lay.getColor())
+							&& !lay.getColor().isEmpty()) {
+						model.append(" lines:").append(lay.getColor());
 					}
-				} else if (lay.getType().equals("agents")) {
-					model += lay.getType() + " \"" + lay.getName() + "\" value:" + lay.getAgents()
-							+ (lay.getAspect() == null || lay.getAspect().isEmpty() ? ""
+				} else if ("agents".equals(lay.getType())) {
+					model.append(lay.getType()).append(" \"").append(lay.getName()).append("\" value:")
+							.append(lay.getAgents()).append(lay.getAspect() == null || lay.getAspect().isEmpty() ? ""
 									: " aspect: " + lay.getAspect());
-				} else if (lay.getType().equals("image")) {
-					model += lay.getType() + "\"" + lay.getFile() + "\""
-							+ (lay.getSize().isEmpty() ? "" : " size: " + lay.getSize());
+				} else if ("image".equals(lay.getType())) {
+					model.append(lay.getType()).append("\"").append(lay.getFile()).append("\"")
+							.append(lay.getSize().isEmpty() ? "" : " size: " + lay.getSize());
 					if (lay.getIsColorCst() == null || lay.getIsColorCst()) {
-						if (lay.getColorRBG().size() == 3) {
-							if (!lay.getColorRBG().get(0).equals("255") || !lay.getColorRBG().get(1).equals("255")
-									|| !lay.getColorRBG().get(2).equals("255")) {
-								model += " color:rgb(" + lay.getColorRBG().get(0) + "," + lay.getColorRBG().get(1) + ","
-										+ lay.getColorRBG().get(2) + ")";
-							}
+						if (lay.getColorRBG().size() == 3
+								&& (!"255".equals(lay.getColorRBG().get(0)) || !"255".equals(lay.getColorRBG().get(1))
+										|| !"255".equals(lay.getColorRBG().get(2)))) {
+							model.append(" color:rgb(").append(lay.getColorRBG().get(0)).append(",")
+									.append(lay.getColorRBG().get(1)).append(",").append(lay.getColorRBG().get(2))
+									.append(")");
 						}
-					} else {
-						if (lay.getColor() != null && !lay.getColor().equals("rgb(255,255,255)")
-								&& !lay.getColor().isEmpty()) {
-							model += " color:" + lay.getColor();
-						}
+					} else if (lay.getColor() != null && !"rgb(255,255,255)".equals(lay.getColor())
+							&& !lay.getColor().isEmpty()) {
+						model.append(" color:").append(lay.getColor());
 					}
-				} else if (lay.getType().equals("text")) {
-					model += lay.getType() + "\"" + lay.getText() + "\""
-							+ (lay.getSize().isEmpty() ? "" : " size: " + lay.getSize());
+				} else if ("text".equals(lay.getType())) {
+					model.append(lay.getType()).append("\"").append(lay.getText()).append("\"")
+							.append(lay.getSize().isEmpty() ? "" : " size: " + lay.getSize());
 					if (lay.getIsColorCst() == null || lay.getIsColorCst()) {
-						if (lay.getColorRBG().size() == 3) {
-							if (!lay.getColorRBG().get(0).equals("255") || !lay.getColorRBG().get(1).equals("255")
-									|| !lay.getColorRBG().get(2).equals("255")) {
-								model += " color:rgb(" + lay.getColorRBG().get(0) + "," + lay.getColorRBG().get(1) + ","
-										+ lay.getColorRBG().get(2) + ")";
-							}
+						if (lay.getColorRBG().size() == 3
+								&& (!"255".equals(lay.getColorRBG().get(0)) || !"255".equals(lay.getColorRBG().get(1))
+										|| !"255".equals(lay.getColorRBG().get(2)))) {
+							model.append(" color:rgb(").append(lay.getColorRBG().get(0)).append(",")
+									.append(lay.getColorRBG().get(1)).append(",").append(lay.getColorRBG().get(2))
+									.append(")");
 						}
-					} else {
-						if (lay.getColor() != null && !lay.getColor().equals("rgb(255,255,255)")
-								&& !lay.getColor().isEmpty()) {
-							model += " color:" + lay.getColor();
-						}
+					} else if (lay.getColor() != null && !"rgb(255,255,255)".equals(lay.getColor())
+							&& !lay.getColor().isEmpty()) {
+						model.append(" color:").append(lay.getColor());
 					}
-				} else if (lay.getType().equals("chart")) {
+				} else if ("chart".equals(lay.getType())) {
 					String background = "";
 					if (lay.getIsColorCst() == null || lay.getIsColorCst()) {
 						if (lay.getColorRBG().size() == 3
-								&& (!lay.getColorRBG().get(0).equals("255") || !lay.getColorRBG().get(1).equals("255")
-										|| !lay.getColorRBG().get(2).equals("255"))) {
+								&& (!"255".equals(lay.getColorRBG().get(0)) || !"255".equals(lay.getColorRBG().get(1))
+										|| !"255".equals(lay.getColorRBG().get(2)))) {
 							background = " background:rgb(" + lay.getColorRBG().get(0) + "," + lay.getColorRBG().get(1)
 									+ "," + lay.getColorRBG().get(2) + ")";
 						}
-					} else {
-						if (lay.getColor() != null && !lay.getColor().equals("rgb(255,255,255)")
-								&& !lay.getColor().isEmpty()) {
-							background = " background:" + lay.getColor();
-						}
+					} else if (lay.getColor() != null && !"rgb(255,255,255)".equals(lay.getColor())
+							&& !lay.getColor().isEmpty()) {
+						background = " background:" + lay.getColor();
 					}
-					model += lay.getType() + " \"" + lay.getName() + "\" type:" + lay.getChart_type() + background;
+					model.append(lay.getType()).append(" \"").append(lay.getName()).append("\" type:")
+							.append(lay.getChart_type()).append(background);
 				}
 
 				for (final EFacet facet : lay.getFacets()) {
-					if (facet.getValue().replace(" ", "").isEmpty())
-						continue;
-					model += " " + facet.getName() + ":" + facet.getValue();
+					if (facet.getValue().replace(" ", "").isEmpty()) { continue; }
+					model.append(" ").append(facet.getName()).append(":").append(facet.getValue());
 				}
-				if (lay.getType().equals("chart")) {
-					model += "{" + EL;
+				if ("chart".equals(lay.getType())) {
+					model.append("{").append(EL);
 					if (lay.getChartlayers() != null && !lay.getChartlayers().isEmpty()) {
 						for (final EChartLayer cl : lay.getChartlayers()) {
-							model += "\t\t\t\tdata \"" + cl.getName() + "\" style:" + cl.getStyle() + " value:"
-									+ (cl.getValue() == null || cl.getValue().isEmpty() ? "0.0" : cl.getValue())
-									+ (cl.getColor() == null || cl.getColor().isEmpty() ? ""
+							model.append("\t\t\t\tdata \"").append(cl.getName()).append("\" style:")
+									.append(cl.getStyle()).append(" value:")
+									.append(cl.getValue() == null || cl.getValue().isEmpty() ? "0.0" : cl.getValue())
+									.append(cl.getColor() == null || cl.getColor().isEmpty() ? ""
 											: " color:" + cl.getColor())
-									+ ";" + EL;
+									.append(";").append(EL);
 						}
 					}
-					model += EL+"\t\t\t}" + EL;
+					model.append(EL).append("\t\t\t}").append(EL);
 				} else {
-					model += ";" + EL;
+					model.append(";").append(EL);
 				}
 			}
 		}
-		model += "\t\t}";
-		return model;
+		model.append("\t\t}");
+		return model.toString();
 	}
 
+	/**
+	 * Generate model.
+	 *
+	 * @param fp
+	 *            the fp
+	 * @param diagram
+	 *            the diagram
+	 * @param id
+	 *            the id
+	 * @return the string
+	 */
 	public static String generateModel(final IFeatureProvider fp, final Diagram diagram, final String id) {
 		String model = "";
 		final List<Shape> contents = diagram.getChildren();
@@ -864,46 +917,36 @@ public class ModelGenerator {
 
 				}
 			}
-			if (worldAgent == null)
-				return "";
+			if (worldAgent == null) return "";
 			String modelName = diagram.getName();
-			if (!Character.isLetter(modelName.charAt(0))) {
-				modelName = "_" + modelName;
-			}
+			if (!Character.isLetter(modelName.charAt(0))) { modelName = "_" + modelName; }
 			model = "model " + modelName + EL + EL + "global";
 
 			if (worldAgent.getSkills() != null && !worldAgent.getSkills().isEmpty()) {
 				model += " skills:" + worldAgent.getSkills();
 			}
 			for (final EFacet facet : worldAgent.getFacets()) {
-				if (facet.getValue().replace(" ", "").isEmpty())
-					continue;
+				if (facet.getValue().replace(" ", "").isEmpty()) { continue; }
 				model += " " + facet.getName() + ":" + facet.getValue();
 			}
 
 			model += " {" + EL;
 			final int level = 1;
-			for (final EVariable var : worldAgent.getVariables()) {
-				model += defineVariable(var, level);
-			}
+			for (final EVariable var : worldAgent.getVariables()) { model += defineVariable(var, level); }
 
 			for (final EActionLink link : worldAgent.getActionLinks()) {
 				final String idA = ModelStructure.getElementId(link.getAction());
 				final boolean isId = idA.equals(id);
-				if (isId)
-					model += EL + idA + EL;
+				if (isId) { model += EL + idA + EL; }
 				model += defineAction(link, isId ? -1 : level);
-				if (isId)
-					model += EL + idA + EL;
+				if (isId) { model += EL + idA + EL; }
 			}
-			final Map<String, EReflexLink> reflexMap = new Hashtable<String, EReflexLink>();
+			final Map<String, EReflexLink> reflexMap = new Hashtable<>();
 			for (final EReflexLink link : worldAgent.getReflexLinks()) {
-				if (link.getTarget() == null) {
-					continue;
-				}
+				if (link.getTarget() == null) { continue; }
 				reflexMap.put(link.getTarget().getName(), link);
 			}
-			final List<String> reflexes = new ArrayList<String>();
+			final List<String> reflexes = new ArrayList<>();
 			if (worldAgent.getReflexList().isEmpty() && !reflexMap.isEmpty()) {
 				reflexes.addAll(reflexMap.keySet());
 			} else {
@@ -913,87 +956,69 @@ public class ModelGenerator {
 				if (reflexMap.containsKey(reflex)) {
 					final String idT = ModelStructure.getElementId(reflexMap.get(reflex).getReflex());
 					final boolean isId = idT.equals(id);
-					if (isId)
-						model += EL + idT + EL;
+					if (isId) { model += EL + idT + EL; }
 					model += defineGeneric(reflexMap.get(reflex), isId ? -1 : level);
-					if (isId)
-						model += EL + idT + EL;
+					if (isId) { model += EL + idT + EL; }
 				}
 			}
 
 			for (final EStateLink link : worldAgent.getStateLinks()) {
 				final String idT = ModelStructure.getElementId(link.getState());
 				final boolean isId = idT.equals(id);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 				model += defineGeneric(link, isId ? -1 : level);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 
 			}
 			for (final ETaskLink link : worldAgent.getTaskLinks()) {
 				final String idT = ModelStructure.getElementId(link.getTask());
 				final boolean isId = idT.equals(id);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 				model += defineGeneric(link, isId ? -1 : level);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 			}
 			for (final EEquationLink link : worldAgent.getEquationLinks()) {
 				final String idT = ModelStructure.getElementId(link.getEquation());
 				final boolean isId = idT.equals(id);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 				model += defineGeneric(link, isId ? -1 : level);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 			}
 			for (final EPlanLink link : worldAgent.getPlanLinks()) {
 				final String idT = ModelStructure.getElementId(link.getPlan());
 				final boolean isId = idT.equals(id);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 				model += defineGeneric(link, isId ? -1 : level);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 			}
 			for (final ERuleLink link : worldAgent.getRuleLinks()) {
 				final String idT = ModelStructure.getElementId(link.getRule());
 				final boolean isId = idT.equals(id);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 				model += defineGeneric(link, isId ? -1 : level);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 			}
 			for (final EPerceiveLink link : worldAgent.getPerceiveLinks()) {
 				final String idT = ModelStructure.getElementId(link.getPerceive());
 				final boolean isId = idT.equals(id);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 				model += defineGeneric(link, isId ? -1 : level);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 			}
 
 			for (final EAspectLink link : worldAgent.getAspectLinks()) {
 
 				final String idT = ModelStructure.getElementId(link.getAspect());
 				final boolean isId = idT.equals(id);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 				model += defineAspect(link, isId ? -1 : level);
-				if (isId)
-					model += EL + idT + EL;
+				if (isId) { model += EL + idT + EL; }
 			}
 			final String idT = ModelStructure.getElementId(worldAgent);
 			final boolean isId = idT.equals(id);
-			if (isId)
-				model += EL + idT + EL;
+			if (isId) { model += EL + idT + EL; }
 			model += defineInit(worldAgent, isId ? -1 : 1);
-			if (isId)
-				model += EL + idT + EL;
+			if (isId) { model += EL + idT + EL; }
 
 			model += "}";
 			model += EL;

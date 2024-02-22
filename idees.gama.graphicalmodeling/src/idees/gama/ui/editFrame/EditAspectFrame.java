@@ -1,51 +1,92 @@
+/*******************************************************************************************************
+ *
+ * EditAspectFrame.java, in idees.gama.graphicalmodeling, is part of the source code of the GAMA modeling and simulation
+ * platform (v.1.9.3).
+ *
+ * (c) 2007-2024 UMI 209 UMMISCO IRD/SU & Partners (IRIT, MIAT, TLU, CTU)
+ *
+ * Visit https://github.com/gama-platform/gama for license information and contacts.
+ *
+ ********************************************************************************************************/
 package idees.gama.ui.editFrame;
 
-import gama.*;
-import idees.gama.diagram.GamaDiagramEditor;
-import idees.gama.features.ExampleUtil;
-import idees.gama.features.edit.EditFeature;
-import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gama.util.GamaMapFactory;
-
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.transaction.*;
+import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.graphiti.features.IFeatureProvider;
 import org.eclipse.graphiti.mm.pictograms.Diagram;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 
+import gama.EAspect;
+import gama.EDisplay;
+import gama.ELayerAspect;
+import gama.core.util.GamaMapFactory;
+import idees.gama.diagram.GamaDiagramEditor;
+import idees.gama.features.ExampleUtil;
+import idees.gama.features.edit.EditFeature;
+import idees.gama.features.modelgeneration.ModelGenerator;
+
+/**
+ * The Class EditAspectFrame.
+ */
 public class EditAspectFrame extends EditFrame {
 
+	/** The layer viewer. */
 	Table layerViewer;
+
+	/** The frame. */
 	EditAspectFrame frame;
+
+	/** The layers. */
 	List<ELayerAspect> layers;
+
+	/** The diagram. */
 	Diagram diagram;
+
+	/** The layer frames. */
 	final Map<ELayerAspect, EditLayerAspectFrame> layerFrames;
+
+	/** The gp lay. */
 	Group gpLay;
-	Group gpC ;
+
+	/** The gp C. */
+	Group gpC;
 
 	/**
 	 * Create the application window.
 	 */
 	public EditAspectFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature eaf,
-		final EAspect aspect, final String name) {
+			final EAspect aspect, final String name) {
 		super(diagram, fp, eaf, aspect, name == null ? "Aspect definition" : name);
 		layerFrames = GamaMapFactory.create();
 		frame = this;
-		layers = new ArrayList<ELayerAspect>();
+		layers = new ArrayList<>();
 		layers.addAll(aspect.getLayers());
 		this.diagram = diagram;
-		
+
 	}
 
-		/**
+	/**
 	 * Create contents of the application window.
+	 *
 	 * @param parent
 	 */
 	@Override
@@ -59,7 +100,7 @@ public class EditAspectFrame extends EditFrame {
 		// ****** CANVAS LAYERS *********
 		gpLay = groupLayers(container);
 		gpC = groupGamlCode(container, "GAML code");
-		
+
 		EAspect asp = (EAspect) eobject;
 		if (asp.isDefineGamlCode()) {
 			radioGaml.setSelection(true);
@@ -68,29 +109,37 @@ public class EditAspectFrame extends EditFrame {
 			radioEdit.setSelection(true);
 			removeGaml();
 		}
-		
+
 		return container;
 	}
-	public void removeGaml(){
+
+	@Override
+	public void removeGaml() {
 		recursiveSetEnabled(gpLay, true);
 		recursiveSetEnabled(gpC, false);
 		this.layerViewer.setVisible(true);
 		this.editor.getViewer().getControl().setVisible(false);
-		
+
 	}
 
-	public void removeOther(){
+	@Override
+	public void removeOther() {
 		recursiveSetEnabled(gpLay, false);
 		recursiveSetEnabled(gpC, true);
 		this.layerViewer.setVisible(false);
 		this.editor.getViewer().getControl().setVisible(true);
 	}
-	
-	
-	
+
+	/**
+	 * Group layers.
+	 *
+	 * @param container
+	 *            the container
+	 * @return the group
+	 */
 	protected Group groupLayers(final Composite container) {
-		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
-		List<String> vals = new ArrayList<String>();
+		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
+		List<String> vals = new ArrayList<>();
 		diagramEditor.buildLocation(eobject, vals);
 		vals.add("draw");
 		diagramEditor.getIdsEObjects().put(vals, eobject);
@@ -123,19 +172,17 @@ public class EditAspectFrame extends EditFrame {
 		layerViewer.setLayoutData(gridData2);
 
 		final EAspect aspect = (EAspect) eobject;
-		for ( ELayerAspect la : aspect.getLayers() ) {
+		for (ELayerAspect la : aspect.getLayers()) {
 			// layerViewer.add(la.getName());
 			TableItem ti = new TableItem(layerViewer, SWT.NONE);
 			ti.setText(la.getName());
 			// ti.setBackground(new Color(frame.getShell().getDisplay(), 100,255,100));
-			ti.setBackground(hasError(la) ? new Color(frame.getShell().getDisplay(), 255, 100, 100) : new Color(frame
-				.getShell().getDisplay(), 100, 255, 100));
+			ti.setBackground(hasError(la) ? new Color(frame.getShell().getDisplay(), 255, 100, 100)
+					: new Color(frame.getShell().getDisplay(), 100, 255, 100));
 
 		}
 		/*
-		 * for (ELayerAspect lay : layers) {
-		 * layerViewer.add(lay.getName());
-		 * }
+		 * for (ELayerAspect lay : layers) { layerViewer.add(lay.getName()); }
 		 */
 
 		Composite containerButtons = new Composite(group, SWT.NONE);
@@ -154,7 +201,7 @@ public class EditAspectFrame extends EditFrame {
 			public void widgetSelected(final SelectionEvent e) {
 				final ELayerAspect elayer = gama.GamaFactory.eINSTANCE.createELayerAspect();
 				TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eobject);
-				if ( domain != null ) {
+				if (domain != null) {
 					domain.getCommandStack().execute(new RecordingCommand(domain) {
 
 						@Override
@@ -165,7 +212,7 @@ public class EditAspectFrame extends EditFrame {
 							TableItem ti = new TableItem(layerViewer, SWT.NONE);
 							ti.setText(elayer.getName());
 							ti.setBackground(hasError(elayer) ? new Color(frame.getShell().getDisplay(), 255, 100, 100)
-								: new Color(frame.getShell().getDisplay(), 100, 255, 100));
+									: new Color(frame.getShell().getDisplay(), 100, 255, 100));
 							((EAspect) eobject).getLayers().add(elayer);
 
 						}
@@ -184,11 +231,11 @@ public class EditAspectFrame extends EditFrame {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if ( layerViewer.getSelectionCount() == 1 ) {
+				if (layerViewer.getSelectionCount() == 1) {
 					final int index = layerViewer.getSelectionIndex();
 					ELayerAspect layer = ((EAspect) eobject).getLayers().get(index);
 					EditLayerAspectFrame eaf = layerFrames.get(layer);
-					if ( eaf == null || eaf.getShell() == null || eaf.getShell().isDisposed() ) {
+					if (eaf == null || eaf.getShell() == null || eaf.getShell().isDisposed()) {
 						eaf = new EditLayerAspectFrame(layer, frame, true, diagram, fp, ef);
 						eaf.open();
 						layerFrames.put(layer, eaf);
@@ -208,12 +255,12 @@ public class EditAspectFrame extends EditFrame {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if ( layerViewer.getSelectionCount() == 1 ) {
+				if (layerViewer.getSelectionCount() == 1) {
 					final int index = layerViewer.getSelectionIndex();
 					layerViewer.remove(index);
 					final ELayerAspect lay = layers.remove(index);
 					TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eobject);
-					if ( domain != null ) {
+					if (domain != null) {
 						domain.getCommandStack().execute(new RecordingCommand(domain) {
 
 							@Override
@@ -241,16 +288,16 @@ public class EditAspectFrame extends EditFrame {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if ( layerViewer.getSelectionCount() == 1 ) {
+				if (layerViewer.getSelectionCount() == 1) {
 					int index = layerViewer.getSelectionIndex();
-					if ( index > 0 ) {
+					if (index > 0) {
 						((EDisplay) eobject).getLayers().move(index - 1, index);
 						layerViewer.removeAll();
-						for ( ELayerAspect la : ((EAspect) eobject).getLayers() ) {
+						for (ELayerAspect la : ((EAspect) eobject).getLayers()) {
 							TableItem ti = new TableItem(layerViewer, SWT.NONE);
 							ti.setText(la.getName());
 							ti.setBackground(hasError(la) ? new Color(frame.getShell().getDisplay(), 255, 100, 100)
-								: new Color(frame.getShell().getDisplay(), 100, 255, 100));
+									: new Color(frame.getShell().getDisplay(), 100, 255, 100));
 						}
 					}
 				}
@@ -263,16 +310,16 @@ public class EditAspectFrame extends EditFrame {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if ( layerViewer.getSelectionCount() == 1 ) {
+				if (layerViewer.getSelectionCount() == 1) {
 					int index = layerViewer.getSelectionIndex();
-					if ( index < layerViewer.getItemCount() - 1 ) {
+					if (index < layerViewer.getItemCount() - 1) {
 						((EDisplay) eobject).getLayers().move(index + 1, index);
 						layerViewer.removeAll();
-						for ( ELayerAspect la : ((EAspect) eobject).getLayers() ) {
+						for (ELayerAspect la : ((EAspect) eobject).getLayers()) {
 							TableItem ti = new TableItem(layerViewer, SWT.NONE);
 							ti.setText(la.getName());
 							ti.setBackground(hasError(la) ? new Color(frame.getShell().getDisplay(), 255, 100, 100)
-								: new Color(frame.getShell().getDisplay(), 100, 255, 100));
+									: new Color(frame.getShell().getDisplay(), 100, 255, 100));
 						}
 					}
 				}
@@ -285,37 +332,41 @@ public class EditAspectFrame extends EditFrame {
 	 * Return the initial size of the window.
 	 */
 	@Override
-	protected Point getInitialSize() {
-		return new Point(743, 430);
-	}
+	protected Point getInitialSize() { return new Point(743, 430); }
 
-	public List<ELayerAspect> getLayers() {
-		return layers;
-	}
+	/**
+	 * Gets the layers.
+	 *
+	 * @return the layers
+	 */
+	public List<ELayerAspect> getLayers() { return layers; }
 
-	public void setLayers(final List<ELayerAspect> layers) {
-		this.layers = layers;
-	}
+	/**
+	 * Sets the layers.
+	 *
+	 * @param layers
+	 *            the new layers
+	 */
+	public void setLayers(final List<ELayerAspect> layers) { this.layers = layers; }
 
-	public Table getLayerViewer() {
-		return layerViewer;
-	}
+	/**
+	 * Gets the layer viewer.
+	 *
+	 * @return the layer viewer
+	 */
+	public Table getLayerViewer() { return layerViewer; }
 
 	@Override
 	protected void clean() {
 		EAspect aspect = (EAspect) eobject;
-		for ( ELayerAspect lay : layers ) {
-			if ( !aspect.getLayers().contains(lay) ) {
-				EcoreUtil.delete(lay, true);
-			}
-		}
+		for (ELayerAspect lay : layers) { if (!aspect.getLayers().contains(lay)) { EcoreUtil.delete(lay, true); } }
 		layers.clear();
 	}
 
 	@Override
 	protected void save(final String name) {
 		TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(eobject);
-		if ( domain != null ) {
+		if (domain != null) {
 			domain.getCommandStack().execute(new RecordingCommand(domain) {
 
 				@Override
@@ -331,26 +382,35 @@ public class EditAspectFrame extends EditFrame {
 		ModelGenerator.modelValidation(fp, diagram);
 	}
 
+	/**
+	 * Checks for error.
+	 *
+	 * @param elayer
+	 *            the elayer
+	 * @return true, if successful
+	 */
 	public boolean hasError(final ELayerAspect elayer) {
-		final GamaDiagramEditor diagramEditor = ((GamaDiagramEditor)ExampleUtil.getDiagramEditor(fp));
-		List<String> ids = new ArrayList<String>();
+		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
+		List<String> ids = new ArrayList<>();
 		diagramEditor.buildLocation(elayer, ids);
 
-		if ( diagramEditor.getErrorsLoc().isEmpty() && diagramEditor.getSyntaxErrorsLoc().isEmpty() ) { return false; }
+		if (diagramEditor.getErrorsLoc().isEmpty() && diagramEditor.getSyntaxErrorsLoc().isEmpty()) return false;
 
 		return diagramEditor.getErrorsLoc().containsKey(ids) || diagramEditor.getSyntaxErrorsLoc().containsKey(ids);
 	}
 
+	/**
+	 * Update layer.
+	 */
 	public void updateLayer() {
 		layerViewer.removeAll();
-		for ( ELayerAspect elayer : ((EAspect) eobject).getLayers() ) {
+		for (ELayerAspect elayer : ((EAspect) eobject).getLayers()) {
 			TableItem ti = new TableItem(layerViewer, SWT.NONE);
 			ti.setText(elayer.getName());
-			ti.setBackground(hasError(elayer) ? new Color(frame.getShell().getDisplay(), 255, 100, 100) : new Color(
-				frame.getShell().getDisplay(), 100, 255, 100));
+			ti.setBackground(hasError(elayer) ? new Color(frame.getShell().getDisplay(), 255, 100, 100)
+					: new Color(frame.getShell().getDisplay(), 100, 255, 100));
 
 		}
 	}
 
-	
 }

@@ -1,21 +1,13 @@
-/*
- * GAMA - V1.4  http://gama-platform.googlecode.com
- * 
- * (c) 2007-2011 UMI 209 UMMISCO IRD/UPMC & Partners (see below)
- * 
- * Developers :
- * 
- * - Alexis Drogoul, UMI 209 UMMISCO, IRD/UPMC (Kernel, Metamodel, GAML), 2007-2012
- * - Vo Duc An, UMI 209 UMMISCO, IRD/UPMC (SWT, multi-level architecture), 2008-2012
- * - Patrick Taillandier, UMR 6228 IDEES, CNRS/Univ. Rouen  (Batch, GeoTools & JTS), 2009-2012
- * - Beno�t Gaudou, UMR 5505 IRIT, CNRS/Univ. Toulouse 1 (Documentation, Tests), 2010-2012
- * - Phan Huy Cuong, DREAM team, Univ. Can Tho (XText-based GAML), 2012
- * - Pierrick Koch, UMI 209 UMMISCO, IRD/UPMC (XText-based GAML), 2010-2011
- * - Romain Lavaud, UMI 209 UMMISCO, IRD/UPMC (RCP environment), 2010
- * - Francois Sempe, UMI 209 UMMISCO, IRD/UPMC (EMF model, Batch), 2007-2009
- * - Edouard Amouroux, UMI 209 UMMISCO, IRD/UPMC (C++ initial porting), 2007-2008
- * - Chu Thanh Quang, UMI 209 UMMISCO, IRD/UPMC (OpenMap integration), 2007-2008
- */
+/*******************************************************************************************************
+ *
+ * NewFileWizardPage.java, in idees.gama.graphicalmodeling, is part of the source code of the GAMA modeling and
+ * simulation platform (v.1.9.3).
+ *
+ * (c) 2007-2024 UMI 209 UMMISCO IRD/SU & Partners (IRIT, MIAT, TLU, CTU)
+ *
+ * Visit https://github.com/gama-platform/gama for license information and contacts.
+ *
+ ********************************************************************************************************/
 package idees.gama.ui.wizards;
 
 import java.net.InetAddress;
@@ -32,8 +24,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -45,27 +35,49 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
-import ummisco.gama.ui.navigator.contents.WrappedFolder;
-import ummisco.gama.ui.navigator.contents.WrappedProject;
+import gama.ui.navigator.view.contents.WrappedFolder;
+import gama.ui.navigator.view.contents.WrappedProject;
 
 /**
- * The "New" wizard page allows setting the container for the new file as well as the file name. The
- * page will only accept file name without the extension OR with the extension that matches the
- * expected one.
+ * The "New" wizard page allows setting the container for the new file as well as the file name. The page will only
+ * accept file name without the extension OR with the extension that matches the expected one.
  */
 
 public class NewFileWizardPage extends WizardPage {
 
+	/** The container text. */
 	private Text containerText;
+
+	/** The file text. */
 	private Text fileText;
+
+	/** The author text. */
 	private Text authorText;
+
+	/** The description text. */
 	private Text descriptionText;
+
+	/** The title text. */
 	private Text titleText;
+
+	/** The empty model button. */
 	private Button emptyModelButton;
+
+	/** The skeleton model button. */
 	private Button skeletonModelButton;
+
+	/** The type of model. */
 	private String typeOfModel = "empty";
+
+	/** The selection. */
 	private final ISelection selection;
 
+	/**
+	 * Instantiates a new new file wizard page.
+	 *
+	 * @param selection
+	 *            the selection
+	 */
 	public NewFileWizardPage(final ISelection selection) {
 		super("wizardPage");
 		setTitle("Model Diagram");
@@ -73,8 +85,6 @@ public class NewFileWizardPage extends WizardPage {
 		this.selection = selection;
 	}
 
-	
-	
 	@Override
 	public void createControl(final Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
@@ -88,13 +98,7 @@ public class NewFileWizardPage extends WizardPage {
 		containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		containerText.setLayoutData(gd);
-		containerText.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(final ModifyEvent e) {
-				dialogChanged();
-			}
-		});
+		containerText.addModifyListener(e -> dialogChanged());
 
 		Button button = new Button(container, SWT.PUSH);
 		button.setText("Browse...");
@@ -146,26 +150,19 @@ public class NewFileWizardPage extends WizardPage {
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		fileText.setLayoutData(gd);
-		fileText.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(final ModifyEvent e) {
-				Text t = (Text)e.getSource();
-				String fname = t.getText();
-				int i = fname.lastIndexOf(".gadl");
-				if (i>0) {
-					// model title = filename less extension less all non alphanumeric characters
-					titleText.setText(fname.substring(0, i).replaceAll("[^\\p{Alnum}]", ""));
-				}/* else if (fname.length()>0) {
-					int pos = t.getSelection().x;
-					fname = fname.replaceAll("[[^\\p{Alnum}]&&[^_-]&&[^\\x2E]]", "_");
-					t.setText(fname+".gaml");
-					t.setSelection(pos);
-				} else {
-					t.setText("new.gaml");
-				}*/
-				dialogChanged();
-			}
+		fileText.addModifyListener(e -> {
+			Text t = (Text) e.getSource();
+			String fname = t.getText();
+			int i = fname.lastIndexOf(".gadl");
+			if (i > 0) {
+				// model title = filename less extension less all non alphanumeric characters
+				titleText.setText(fname.substring(0, i).replaceAll("[^\\p{Alnum}]", ""));
+			} /*
+				 * else if (fname.length()>0) { int pos = t.getSelection().x; fname =
+				 * fname.replaceAll("[[^\\p{Alnum}]&&[^_-]&&[^\\x2E]]", "_"); t.setText(fname+".gaml");
+				 * t.setSelection(pos); } else { t.setText("new.gaml"); }
+				 */
+			dialogChanged();
 		});
 
 		/* Need to add empty label so the next two controls are pushed to the next line in the grid. */
@@ -179,13 +176,7 @@ public class NewFileWizardPage extends WizardPage {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		authorText.setLayoutData(gd);
 		authorText.setText(getComputerFullName());
-		authorText.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(final ModifyEvent e) {
-				dialogChanged();
-			}
-		});
+		authorText.addModifyListener(e -> dialogChanged());
 
 		/* Need to add empty label so the next two controls are pushed to the next line in the grid. */
 		label = new Label(container, SWT.NULL);
@@ -198,13 +189,7 @@ public class NewFileWizardPage extends WizardPage {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		titleText.setLayoutData(gd);
 		titleText.setText("new");
-		titleText.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(final ModifyEvent e) {
-				dialogChanged();
-			}
-		});
+		titleText.addModifyListener(e -> dialogChanged());
 
 		/* Need to add empty label so the next two controls are pushed to the next line in the grid. */
 		label = new Label(container, SWT.NULL);
@@ -213,19 +198,17 @@ public class NewFileWizardPage extends WizardPage {
 		label = new Label(container, SWT.NULL);
 		label.setText("&Model description:");
 
-		descriptionText =
-			new Text(container, SWT.WRAP | SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		descriptionText = new Text(container, SWT.WRAP | SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		descriptionText.setBounds(0, 0, 250, 100);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 		gd.verticalSpan = 4;
 		descriptionText.setLayoutData(gd);
 
 		/*
-		 * Need to add seven empty labels in order to push next controls after the descriptionText
-		 * box.
+		 * Need to add seven empty labels in order to push next controls after the descriptionText box.
 		 */
 		// TODO Dirty!! Change the way to do this
-		for ( int i = 0; i < 7; i++ ) {
+		for (int i = 0; i < 7; i++) {
 			label = new Label(container, SWT.NULL);
 			label.setText("");
 		}
@@ -238,6 +221,7 @@ public class NewFileWizardPage extends WizardPage {
 
 	/**
 	 * Return the computer full name. <br>
+	 *
 	 * @return the name or <b>null</b> if the name cannot be found
 	 */
 	public static String getComputerFullName() {
@@ -251,8 +235,11 @@ public class NewFileWizardPage extends WizardPage {
 		return uname;
 	}
 
+	/**
+	 * Radio changed.
+	 */
 	private void radioChanged() {
-		if ( emptyModelButton.getSelection() || skeletonModelButton.getSelection() ) {
+		if (emptyModelButton.getSelection() || skeletonModelButton.getSelection()) {
 			descriptionText.setText("");
 			titleText.setText("new");
 			fileText.setText("new.gadl");
@@ -263,122 +250,121 @@ public class NewFileWizardPage extends WizardPage {
 
 	/** Tests if the current workbench selection is a suitable container to use. */
 	private void initialize() {
-		if ( selection != null && selection.isEmpty() == false &&
-			selection instanceof IStructuredSelection ) {
-			IStructuredSelection ssel = (IStructuredSelection) selection;
-			if ( ssel.size() > 1 ) { return; }
+		if (selection != null && !selection.isEmpty() && selection instanceof IStructuredSelection ssel) {
+			if (ssel.size() > 1) return;
 			Object obj = ssel.getFirstElement();
-			if ( obj instanceof WrappedProject ) {
+			if (obj instanceof WrappedProject) {
 				WrappedProject pro = (WrappedProject) obj;
 				IProject container = pro.getResource();
 				if (container != null && container.getFullPath() != null) {
 					String path = container.getFullPath().toString();
-					if (path.equals("") || path.equals("/")) {
+					if ("".equals(path) || "/".equals(path)) {
 						IContainer res = container.getParent();
-						if (res != null && res.getFullPath() != null) { 
+						if (res != null && res.getFullPath() != null) {
 							path = res.getFullPath().toString();
-							while(path.equals("")) {
+							while ("".equals(path)) {
 								res = res.getParent();
-								if (res == null || res.getFullPath() == null) break;
+								if (res == null || res.getFullPath() == null) { break; }
 								path = res.getFullPath().toString();
-							}			
-							
+							}
+
 						}
 					}
 					containerText.setText(path);
 				}
-				
-			} else if ( obj instanceof WrappedFolder ) {
+
+			} else if (obj instanceof WrappedFolder) {
 				WrappedFolder pro = (WrappedFolder) obj;
 				IFolder container = pro.getResource();
 				if (container != null && container.getFullPath() != null) {
 					String path = container.getFullPath().toString();
 					IContainer res = container.getParent();
-					
-						if (res != null && res.getFullPath() != null) { 
+
+					if (res != null && res.getFullPath() != null) {
+						path = res.getFullPath().toString();
+						while ("".equals(path)) {
+							res = res.getParent();
+							if (res == null || res.getFullPath() == null) { break; }
 							path = res.getFullPath().toString();
-							while(path.equals("")) {
-								res = res.getParent();
-								if (res == null || res.getFullPath() == null) break;
-								path = res.getFullPath().toString();
-							}			
-							
 						}
-					
+
+					}
+
 					containerText.setText(path);
 				}
-				
+
 			}
 		}
 		fileText.setText("new.gadl");
 	}
-	
 
 	/**
 	 * Uses the standard container selection dialog to choose the new value for the container field.
 	 */
 	private void handleBrowse() {
-		ContainerSelectionDialog dialog =
-			new ContainerSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(),
-				false, "Select a project as a container");
-		if ( dialog.open() == Window.OK ) {
+		ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(),
+				ResourcesPlugin.getWorkspace().getRoot(), false, "Select a project as a container");
+		if (dialog.open() == Window.OK) {
 			Object[] result = dialog.getResult();
-			if ( result.length == 1 ) {
-				containerText.setText(((Path) result[0]).toString());
-			}
+			if (result.length == 1) { containerText.setText(((Path) result[0]).toString()); }
 		}
 	}
 
 	/** Ensures that controls are correctly set. */
 	private void dialogChanged() {
-		IResource resource =
-			ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(getContainerName()));
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(getContainerName()));
 		IContainer container = (IContainer) resource;
 		String fileName = getFileName();
 		String author = getAuthor();
 		String titleName = getModelName();
 		final IFile modelfile = container.getFile(new Path("diagrams/" + fileName));
-		
-		if ( getContainerName().length() == 0 ) {
+
+		if (getContainerName().length() == 0) {
 			updateStatus("File container must be specified");
 			return;
 		}
-		if ( resource == null || (resource.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0 ) {
+		if (resource == null || (resource.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
 			updateStatus("File container must exist");
 			return;
 		}
-		if ( !resource.isAccessible() ) {
+		if (!resource.isAccessible()) {
 			updateStatus("Project must be writable");
 			return;
 		}
-		if ( fileName.length() == 0 ) {
+		if (fileName.length() == 0) {
 			updateStatus("File name must be specified");
 			return;
 		}
-		if ( fileName.replace('\\', '/').indexOf('/', 1) > 0 ) {
+		if (fileName.replace('\\', '/').indexOf('/', 1) > 0) {
 			updateStatus("File name must be valid");
 			return;
 		}
-		if ( !fileName.endsWith(".gadl") ) {
+		if (!fileName.endsWith(".gadl")) {
 			updateStatus("File extension must be \".gadl\"");
 			return;
 		}
-		if ( author.length() == 0 ) {
+		if (author.length() == 0) {
 			updateStatus("Author name must be specified");
 			return;
 		}
-		if ( modelfile.exists() ) {
+		if (modelfile.exists()) {
 			updateStatus("File already exists");
 			return;
 		}
 
-		if ( titleName.length() == 0 ) {
+		if (titleName.length() == 0) {
 			updateStatus("Diagram name must be specified");
 			return;
 		}
 		updateStatus(null);
 	}
 
+	/**
+	 * Update status.
+	 *
+	 * @param message
+	 *            the message
+	 */
 	private void updateStatus(final String message) {
 		setErrorMessage(message);
 		setPageComplete(message == null);
@@ -391,26 +377,17 @@ public class NewFileWizardPage extends WizardPage {
 	}
 
 	/** Gets the file name of the new file */
-	public String getFileName() {
-		return fileText.getText();
-	}
+	public String getFileName() { return fileText.getText(); }
 
 	/** Gets the author of the new file */
-	public String getAuthor() {
-		return authorText.getText();
-	}
+	public String getAuthor() { return authorText.getText(); }
 
 	/** Gets the model name of the new file */
-	public String getModelName() {
-		return titleText.getText();
-	}
+	public String getModelName() { return titleText.getText(); }
 
 	/** Gets the model name of the new file */
 	@Override
-	public String getDescription() {
-		return descriptionText.getText();
-	}
-
+	public String getDescription() { return descriptionText.getText(); }
 
 	/** Return the type of model (empty, skeleton or example) */
 	public String getTypeOfModel() {

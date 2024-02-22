@@ -1,3 +1,13 @@
+/*******************************************************************************************************
+ *
+ * EditSpeciesFrame.java, in idees.gama.graphicalmodeling, is part of the source code of the GAMA modeling and
+ * simulation platform (v.1.9.3).
+ *
+ * (c) 2007-2024 UMI 209 UMMISCO IRD/SU & Partners (IRIT, MIAT, TLU, CTU)
+ *
+ * Visit https://github.com/gama-platform/gama for license information and contacts.
+ *
+ ********************************************************************************************************/
 package idees.gama.ui.editFrame;
 
 import java.util.ArrayList;
@@ -39,32 +49,50 @@ import gama.EReflexLink;
 import gama.ESpecies;
 import gama.EVariable;
 import gama.EWorldAgent;
+import gama.gaml.compilation.GAML;
+import gama.gaml.compilation.kernel.GamaSkillRegistry;
 import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditSpeciesFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gaml.compilation.GAML;
-import msi.gaml.compilation.kernel.GamaSkillRegistry;
 
+/**
+ * The Class EditSpeciesFrame.
+ */
 public class EditSpeciesFrame extends EditFrame {
 
+	/** The cpt. */
 	// Variables
 	int cpt = 1;
+
+	/** The table vars. */
 	private Table table_vars;
 	// private String[] types_base = {"int", "float", "string", "bool", "rgb",
 	// "pair", "list", "map", "file", "geometry", "path", "graph"};
 	// private String[] types_base = new
+	/** The types. */
 	// String[AbstractGamlAdditions.getAllFields().size()];
-	private final List<String> types = new ArrayList<String>();
+	private final List<String> types = new ArrayList<>();
 
+	/** The reflex viewer. */
 	org.eclipse.swt.widgets.List reflexViewer;
+
+	/** The skills viewer. */
 	org.eclipse.swt.widgets.List skillsViewer;
+
+	/** The reflex strs. */
 	List<String> reflexStrs;
+
+	/** The skills strs. */
 	List<String> skillsStrs;
+
+	/** The title font. */
 	Font titleFont;
 
+	/** The const width. */
 	private final int CONST_WIDTH = 763;
-	
+
+	/** The frame. */
 	final EditFrame frame;
 
 	// topology
@@ -80,7 +108,7 @@ public class EditSpeciesFrame extends EditFrame {
 		super(diagram, fp, esf, species, species instanceof EWorldAgent ? "World definition"
 				: species instanceof EGrid ? "Grid definition" : "Species definition");
 		frame = this;
-		skillsStrs = new ArrayList<String>();
+		skillsStrs = new ArrayList<>();
 		skillsStrs.addAll(GamaSkillRegistry.INSTANCE.getAllSkillNames());
 		skillsStrs.remove("grid");
 		Collections.sort(skillsStrs);
@@ -91,32 +119,28 @@ public class EditSpeciesFrame extends EditFrame {
 		values.add(0, "reflex");
 		comboValues.put("control", values);
 
-		reflexStrs = new ArrayList<String>();
-		final List<String> newReflex = new ArrayList<String>();
+		reflexStrs = new ArrayList<>();
+		final List<String> newReflex = new ArrayList<>();
 		for (final EReflexLink link : species.getReflexLinks()) {
-			if (link.getTarget() == null) {
-				continue;
-			}
+			if (link.getTarget() == null) { continue; }
 			newReflex.add(link.getTarget().getName());
 		}
 		if (species.getReflexList() == null || species.getReflexList().isEmpty()) {
 			reflexStrs.addAll(newReflex);
 		} else {
-			for (final String ref : species.getReflexList()) {
-				if (newReflex.contains(ref)) {
-					reflexStrs.add(ref);
-				}
-			}
-			for (final String ref : newReflex) {
-				if (!reflexStrs.contains(ref)) {
-					reflexStrs.add(ref);
-				}
-			}
+			for (final String ref : species.getReflexList()) { if (newReflex.contains(ref)) { reflexStrs.add(ref); } }
+			for (final String ref : newReflex) { if (!reflexStrs.contains(ref)) { reflexStrs.add(ref); } }
 		}
 		defineTypes(speciesList);
 
 	}
 
+	/**
+	 * Define types.
+	 *
+	 * @param speciesList
+	 *            the species list
+	 */
 	public void defineTypes(final List<ESpecies> speciesList) {
 		types.add("int");
 		types.add("float");
@@ -126,24 +150,19 @@ public class EditSpeciesFrame extends EditFrame {
 		types.add("point");
 		types.add("geometry");
 		for (final String ty : GAML.VARTYPE2KEYWORDS.values()) {
-			if (!types.contains(ty) && !ty.toString().endsWith("_file"))
-				types.add(ty);
+			if (!types.contains(ty) && !ty.toString().endsWith("_file")) { types.add(ty); }
 
 		}
-		for (final ESpecies sp : speciesList) {
-			types.add(sp.getName());
-		}
+		for (final ESpecies sp : speciesList) { types.add(sp.getName()); }
 		types.remove("unknown");
 		types.remove("world");
-		final List<String> tt = new ArrayList<String>(types);
-		for (final String ty : tt) {
-			types.add("list<" + ty + ">");
-		}
+		final List<String> tt = new ArrayList<>(types);
+		for (final String ty : tt) { types.add("list<" + ty + ">"); }
 	}
 
 	/**
 	 * Create contents of the application window.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
@@ -154,24 +173,22 @@ public class EditSpeciesFrame extends EditFrame {
 		container.setLayout(new GridLayout(1, false));
 		titleFont = new Font(this.getShell().getDisplay(), "Arial", 10, SWT.BOLD);
 
-		if (!(eobject instanceof EWorldAgent))
-			groupName(container);
+		if (!(eobject instanceof EWorldAgent)) { groupName(container); }
 		groupSkills(container);
 
-		if (eobject instanceof EWorldAgent)
+		if (eobject instanceof EWorldAgent) {
 			groupFacets(container, "global", 2);
-		else if (eobject instanceof EGrid)
+		} else if (eobject instanceof EGrid) {
 			groupFacets(container, "grid", 2);
-		else
+		} else {
 			groupFacets(container, "species", 2);
+		}
 
 		groupVariables(container);
 
-
 		groupReflex(container);
-		
-		groupGamlCode(container, "Init");
 
+		groupGamlCode(container, "Init");
 
 		/*
 		 * // Set the absolute size of the child child.setSize(400, 400);
@@ -180,34 +197,39 @@ public class EditSpeciesFrame extends EditFrame {
 		sc.setContent(container);
 
 		// Set the minimum size
-		if (eobject instanceof EGrid)
+		if (eobject instanceof EGrid) {
 			sc.setMinSize(container.computeSize(730, 1080));
-		else
+		} else {
 			sc.setMinSize(container.computeSize(730, 800));
+		}
 		// Expand both horizontally and vertically
 		sc.setExpandHorizontal(true);
 		sc.setExpandVertical(true);
 		return container;
 	}
 
+	/**
+	 * Gets the e variable.
+	 *
+	 * @param name
+	 *            the name
+	 * @return the e variable
+	 */
 	private EVariable getEVariable(final String name) {
-		if (((ESpecies) eobject).getVariables() == null || ((ESpecies) eobject).getVariables().isEmpty()) {
-			return null;
-		}
+		if (((ESpecies) eobject).getVariables() == null || ((ESpecies) eobject).getVariables().isEmpty()) return null;
 		for (final EVariable var : ((ESpecies) eobject).getVariables()) {
-			if (var == null) {
-				continue;
-			}
-			if (name.equals(var.getName())) {
-				return var;
-			}
+			if (var == null) { continue; }
+			if (name.equals(var.getName())) return var;
 		}
 		return null;
 	}
 
+	/**
+	 * Modify variables.
+	 */
 	private void modifyVariables() {
 		final ESpecies species = (ESpecies) eobject;
-		final List<EVariable> vars = new ArrayList<EVariable>();
+		final List<EVariable> vars = new ArrayList<>();
 		vars.addAll(species.getVariables());
 		species.getVariables().clear();
 		for (final EVariable var : vars) {
@@ -232,6 +254,9 @@ public class EditSpeciesFrame extends EditFrame {
 		}
 	}
 
+	/**
+	 * Modify reflex order.
+	 */
 	private void modifyReflexOrder() {
 		((ESpecies) eobject).getReflexList().clear();
 		((ESpecies) eobject).getReflexList().addAll(reflexStrs);
@@ -239,7 +264,7 @@ public class EditSpeciesFrame extends EditFrame {
 
 	/**
 	 * Creates the main window's contents
-	 * 
+	 *
 	 * @param shell
 	 *            the main window
 	 */
@@ -294,9 +319,7 @@ public class EditSpeciesFrame extends EditFrame {
 			public void mouseDown(final MouseEvent event) {
 				// Dispose any existing editor
 				final Control old = editor.getEditor();
-				if (old != null) {
-					old.dispose();
-				}
+				if (old != null) { old.dispose(); }
 
 				// Determine where the mouse was clicked
 				final Point pt = new Point(event.x, event.y);
@@ -321,9 +344,7 @@ public class EditSpeciesFrame extends EditFrame {
 						// Create the dropdown and add data to it
 						final CCombo combo = new CCombo(tableVars, SWT.READ_ONLY);
 						combos.add(combo);
-						for (int i = 0, n = types.size(); i < n; i++) {
-							combo.add(types.get(i));
-						}
+						for (String type : types) { combo.add(type); }
 
 						// Select the previously selected item from the cell
 						combo.select(combo.indexOf(item.getText(column)));
@@ -350,30 +371,30 @@ public class EditSpeciesFrame extends EditFrame {
 								save("variables");
 								// They selected an item; end the editing
 								// session
-								//combos.remove(combo);
-								//combo.dispose();
+								// combos.remove(combo);
+								// combo.dispose();
 							}
 						});
-					} else if (column != 1) {
+					} else {
 						// Create the Text object for our editor
 						final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
 						String name = "name";
 						switch (column) {
-						case 2:
-							name = "<-";
-							break;
-						case 3:
-							name = "update:";
-							break;
-						case 4:
-							name = "->";
-							break;
-						case 5:
-							name = "min:";
-							break;
-						case 6:
-							name = "max:";
-							break;
+							case 2:
+								name = "<-";
+								break;
+							case 3:
+								name = "update:";
+								break;
+							case 4:
+								name = "->";
+								break;
+							case 5:
+								name = "min:";
+								break;
+							case 6:
+								name = "max:";
+								break;
 						}
 
 						final ValidateText text = new ValidateText(tableVars, SWT.BORDER, diagram, fp, frame,
@@ -414,26 +435,24 @@ public class EditSpeciesFrame extends EditFrame {
 
 							item.setBackground(col, text.getBackground());
 							for (int i = 2; i < table_vars.getColumnCount(); i++) {
-								if (i == col) {
-									continue;
-								}
+								if (i == col) { continue; }
 								String name1 = "name";
 								switch (i) {
-								case 2:
-									name1 = "<-";
-									break;
-								case 3:
-									name1 = "update:";
-									break;
-								case 4:
-									name1 = "->";
-									break;
-								case 5:
-									name1 = "min:";
-									break;
-								case 6:
-									name1 = "max:";
-									break;
+									case 2:
+										name1 = "<-";
+										break;
+									case 3:
+										name1 = "update:";
+										break;
+									case 4:
+										name1 = "->";
+										break;
+									case 5:
+										name1 = "min:";
+										break;
+									case 6:
+										name1 = "max:";
+										break;
 								}
 								final String error = diagramEditor.containErrors(text.getLoc(), name1, null);
 								// System.out.println("error = " + error);
@@ -455,6 +474,9 @@ public class EditSpeciesFrame extends EditFrame {
 		return tableVars;
 	}
 
+	/**
+	 * Inits the table.
+	 */
 	void initTable() {
 		for (final EVariable var : ((ESpecies) eobject).getVariables()) {
 			final TableItem ti = new TableItem(table_vars, SWT.NONE);
@@ -464,9 +486,15 @@ public class EditSpeciesFrame extends EditFrame {
 		}
 	}
 
+	/**
+	 * Group variables.
+	 *
+	 * @param container
+	 *            the container
+	 */
 	public void groupVariables(final Composite container) {
 		final Group group = new Group(container, SWT.NONE);
-	//	group.setBounds(10, 250, 720, 200);
+		// group.setBounds(10, 250, 720, 200);
 
 		table_vars = createTableEditor(group);
 		table_vars.setBounds(10, 30, 740, 120);
@@ -510,14 +538,20 @@ public class EditSpeciesFrame extends EditFrame {
 		btnDeleteVariable.setText("Delete variable");
 	}
 
+	/**
+	 * Group skills.
+	 *
+	 * @param container
+	 *            the container
+	 */
 	public void groupSkills(final Composite container) {
 		// ****** CANVAS SKILLS *********
 		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
 
 		final Group group = new Group(container, SWT.NONE);
-		
-		//group.setBounds(10, 460, 710, 120);
-		
+
+		// group.setBounds(10, 460, 710, 120);
+
 		final CLabel lblSkills = new CLabel(group, SWT.NONE);
 		lblSkills.setBounds(5, 5, 100, 20);
 		lblSkills.setText("Skills");
@@ -531,12 +565,10 @@ public class EditSpeciesFrame extends EditFrame {
 		lblSelectSkills.setBounds(405, 23, 150, 20);
 		lblSelectSkills.setText("Selected Skills");
 
-		final org.eclipse.swt.widgets.List listAvSkills = new org.eclipse.swt.widgets.List(group,
-				SWT.BORDER | SWT.V_SCROLL);
+		final org.eclipse.swt.widgets.List listAvSkills =
+				new org.eclipse.swt.widgets.List(group, SWT.BORDER | SWT.V_SCROLL);
 		listAvSkills.setBounds(5, 45, 330, 55);
-		for (final String ski : skillsStrs) {
-			listAvSkills.add(ski);
-		}
+		for (final String ski : skillsStrs) { listAvSkills.add(ski); }
 		skillsViewer = new org.eclipse.swt.widgets.List(group, SWT.BORDER | SWT.V_SCROLL);
 		skillsViewer.setBounds(405, 45, 330, 55);
 
@@ -549,9 +581,7 @@ public class EditSpeciesFrame extends EditFrame {
 			public void widgetSelected(final SelectionEvent e) {
 				if (listAvSkills.getSelectionCount() > 0) {
 					final String[] els = listAvSkills.getSelection();
-					for (final String el : els) {
-						skillsViewer.add(el);
-					}
+					for (final String el : els) { skillsViewer.add(el); }
 					listAvSkills.remove(listAvSkills.getSelectionIndices());
 					listAvSkills.redraw();
 					skillsViewer.redraw();
@@ -570,9 +600,7 @@ public class EditSpeciesFrame extends EditFrame {
 			public void widgetSelected(final SelectionEvent e) {
 				if (skillsViewer.getSelectionCount() > 0) {
 					final String[] els = skillsViewer.getSelection();
-					for (final String el : els) {
-						listAvSkills.add(el);
-					}
+					for (final String el : els) { listAvSkills.add(el); }
 					skillsViewer.remove(skillsViewer.getSelectionIndices());
 					listAvSkills.redraw();
 					skillsViewer.redraw();
@@ -595,16 +623,20 @@ public class EditSpeciesFrame extends EditFrame {
 		}
 	}
 
+	/**
+	 * Group reflex.
+	 *
+	 * @param container
+	 *            the container
+	 */
 	public void groupReflex(final Composite container) {
 		// ****** CANVAS REFLEX ORDER *********
 		final Group group = new Group(container, SWT.NONE);
-	//	group.setBounds(10, 460, 720, 110);
+		// group.setBounds(10, 460, 720, 110);
 
 		reflexViewer = new org.eclipse.swt.widgets.List(group, SWT.BORDER | SWT.V_SCROLL);
 
-		for (final String ref : reflexStrs) {
-			reflexViewer.add(ref);
-		}
+		for (final String ref : reflexStrs) { reflexViewer.add(ref); }
 
 		reflexViewer.setBounds(5, 30, 740, 45);
 		final CLabel lblReflexOrder = new CLabel(group, SWT.NONE);
@@ -627,9 +659,7 @@ public class EditSpeciesFrame extends EditFrame {
 						reflexStrs.remove(el);
 						reflexStrs.add(index - 1, el);
 						reflexViewer.removeAll();
-						for (final String ref : reflexStrs) {
-							reflexViewer.add(ref);
-						}
+						for (final String ref : reflexStrs) { reflexViewer.add(ref); }
 					}
 				}
 			}
@@ -649,9 +679,7 @@ public class EditSpeciesFrame extends EditFrame {
 						reflexStrs.remove(el);
 						reflexStrs.add(index + 1, el);
 						reflexViewer.removeAll();
-						for (final String ref : reflexStrs) {
-							reflexViewer.add(ref);
-						}
+						for (final String ref : reflexStrs) { reflexViewer.add(ref); }
 
 					}
 				}
@@ -670,8 +698,7 @@ public class EditSpeciesFrame extends EditFrame {
 				public void doExecute() {
 					// System.out.println("totot name: " + name);
 					if (name == null || "".equals(name)) {
-						if (textName != null)
-							eobject.setName(textName.getText());
+						if (textName != null) { eobject.setName(textName.getText()); }
 						((ESpecies) eobject).setInit(modelXText.getEditablePart());
 						modifyReflexOrder();
 						modifyVariables();
@@ -680,17 +707,17 @@ public class EditSpeciesFrame extends EditFrame {
 						saveFacets();
 						updateEditor();
 
-					} else if (name.equals("name")) {
+					} else if ("name".equals(name)) {
 						eobject.setName(textName.getText());
-					} else if (name.equals("init")) {
+					} else if ("init".equals(name)) {
 						((ESpecies) eobject).setInit(modelXText.getEditablePart());
-					} else if (name.equals("reflex order")) {
+					} else if ("reflex order".equals(name)) {
 						modifyReflexOrder();
 
-					} else if (name.equals("variables")) {
+					} else if ("variables".equals(name)) {
 						modifyVariables();
 						updateEditor();
-					} else if (name.equals("skills")) {
+					} else if ("skills".equals(name)) {
 						species.getSkills().clear();
 						species.getSkills().addAll(Arrays.asList(skillsViewer.getItems()));
 						updateEditor();
@@ -706,37 +733,27 @@ public class EditSpeciesFrame extends EditFrame {
 	}
 
 	@Override
-	protected Point getInitialSize() {
-		return new Point(CONST_WIDTH, 700);
-	}
+	protected Point getInitialSize() { return new Point(CONST_WIDTH, 700); }
 
 	@Override
 	public void create() {
 		setShellStyle(SWT.DIALOG_TRIM | SWT.RESIZE);
 		super.create();
-		/*shell = getShell();
-		shell.addControlListener(new ControlAdapter() {
-
-			@Override
-			public void controlResized(final ControlEvent e) {
-				final Rectangle rect = shell.getBounds();
-				if (rect.width != CONST_WIDTH) {
-					shell.setBounds(rect.x, rect.y, CONST_WIDTH, rect.height);
-				}
-			}
-		});*/
+		/*
+		 * shell = getShell(); shell.addControlListener(new ControlAdapter() {
+		 * 
+		 * @Override public void controlResized(final ControlEvent e) { final Rectangle rect = shell.getBounds(); if
+		 * (rect.width != CONST_WIDTH) { shell.setBounds(rect.x, rect.y, CONST_WIDTH, rect.height); } } });
+		 */
 
 	}
-	
-	
+
 	@Override
 	protected void handleShellCloseEvent() {
 		// create dialog with ok and cancel button and info icon
 		clean_close();
 		close();
-		
-		
-	}
 
+	}
 
 }

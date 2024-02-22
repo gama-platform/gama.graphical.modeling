@@ -1,3 +1,13 @@
+/*******************************************************************************************************
+ *
+ * EditDisplayFrame.java, in idees.gama.graphicalmodeling, is part of the source code of the GAMA modeling and
+ * simulation platform (v.1.9.3).
+ *
+ * (c) 2007-2024 UMI 209 UMMISCO IRD/SU & Partners (IRIT, MIAT, TLU, CTU)
+ *
+ * Visit https://github.com/gama-platform/gama for license information and contacts.
+ *
+ ********************************************************************************************************/
 package idees.gama.ui.editFrame;
 
 import java.util.ArrayList;
@@ -34,27 +44,44 @@ import gama.EGamaObject;
 import gama.EGrid;
 import gama.ELayer;
 import gama.ESpecies;
+import gama.core.util.GamaMapFactory;
 import idees.gama.diagram.GamaDiagramEditor;
 import idees.gama.features.ExampleUtil;
 import idees.gama.features.edit.EditFeature;
 import idees.gama.features.modelgeneration.ModelGenerator;
-import msi.gama.util.GamaMapFactory;
 
+/**
+ * The Class EditDisplayFrame.
+ */
 public class EditDisplayFrame extends EditFrame {
 
+	/** The layer viewer. */
 	Table layerViewer;
+
+	/** The frame. */
 	EditDisplayFrame frame;
 
+	/** The species. */
 	List<ESpecies> species;
+
+	/** The grids. */
 	List<ESpecies> grids;
+
+	/** The gp lay. */
 	Group gpLay;
+
+	/** The gp C. */
 	Group gpC;
 
+	/** The diagram. */
 	Diagram diagram;
+
+	/** The layer frames. */
 	final Map<ELayer, EditLayerFrame> layerFrames;
 
-	private static final Pattern DOUBLE_PATTERN = Pattern
-			.compile("[\\x00-\\x20]*[+-]?(NaN|Infinity|((((\\p{Digit}+)(\\.)?((\\p{Digit}+)?)"
+	/** The Constant DOUBLE_PATTERN. */
+	private static final Pattern DOUBLE_PATTERN =
+			Pattern.compile("[\\x00-\\x20]*[+-]?(NaN|Infinity|((((\\p{Digit}+)(\\.)?((\\p{Digit}+)?)"
 					+ "([eE][+-]?(\\p{Digit}+))?)|(\\.((\\p{Digit}+))([eE][+-]?(\\p{Digit}+))?)|"
 					+ "(((0[xX](\\p{XDigit}+)(\\.)?)|(0[xX](\\p{XDigit}+)?(\\.)(\\p{XDigit}+)))"
 					+ "[pP][+-]?(\\p{Digit}+)))[fFdD]?))[\\x00-\\x20]*");
@@ -65,22 +92,18 @@ public class EditDisplayFrame extends EditFrame {
 	public EditDisplayFrame(final Diagram diagram, final IFeatureProvider fp, final EditFeature eaf,
 			final EGamaObject display, final String name) {
 		super(diagram, fp, eaf, display, name == null ? "Display definition" : name);
-		comboValues = new Hashtable<String, List<String>>();
+		comboValues = new Hashtable<>();
 		comboValues.put("type", Arrays.asList("java2D", "opengl"));
 
 		layerFrames = GamaMapFactory.create();
-		species = new ArrayList<ESpecies>();
-		grids = new ArrayList<ESpecies>();
+		species = new ArrayList<>();
+		grids = new ArrayList<>();
 		this.diagram = diagram;
 		final List<Shape> contents = diagram.getChildren();
 		for (final Shape sh : contents) {
 			final Object obj = fp.getBusinessObjectForPictogramElement(sh);
-			if (obj instanceof EGrid) {
-				grids.add((ESpecies) obj);
-			}
-			if (obj instanceof ESpecies) {
-				species.add((ESpecies) obj);
-			}
+			if (obj instanceof EGrid) { grids.add((ESpecies) obj); }
+			if (obj instanceof ESpecies) { species.add((ESpecies) obj); }
 		}
 		frame = this;
 
@@ -89,6 +112,9 @@ public class EditDisplayFrame extends EditFrame {
 
 	}
 
+	/**
+	 * Load data.
+	 */
 	private void loadData() {
 		final EDisplay display = (EDisplay) eobject;
 		for (final ELayer la : display.getLayers()) {
@@ -106,7 +132,7 @@ public class EditDisplayFrame extends EditFrame {
 
 	/**
 	 * Create contents of the application window.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
@@ -157,6 +183,13 @@ public class EditDisplayFrame extends EditFrame {
 		this.editor.getViewer().getControl().setVisible(true);
 	}
 
+	/**
+	 * Group layers.
+	 *
+	 * @param container
+	 *            the container
+	 * @return the group
+	 */
 	protected Group groupLayers(final Composite container) {
 
 		// ****** CANVAS LAYERS *********
@@ -333,22 +366,23 @@ public class EditDisplayFrame extends EditFrame {
 		return group;
 	}
 
+	/**
+	 * Update layer id.
+	 */
 	public void updateLayerId() {
 		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
-		final List<String> loc = new ArrayList<String>();
+		final List<String> loc = new ArrayList<>();
 		diagramEditor.buildLocation(eobject, loc);
 		final int size = loc.size();
-		final List<List<String>> ids = new ArrayList<List<String>>(diagramEditor.getIdsEObjects().keySet());
+		final List<List<String>> ids = new ArrayList<>(diagramEditor.getIdsEObjects().keySet());
 		for (final List<String> lid : ids) {
 			if (lid.size() > size && lid.get(lid.size() - 2).equals(eobject.getName())) {
 				diagramEditor.getIdsEObjects().remove(lid);
 			}
 		}
 		for (final ELayer layer : ((EDisplay) eobject).getLayers()) {
-			if (layer.getType() == null) {
-				continue;
-			}
-			final List<String> key = new ArrayList<String>(loc);
+			if (layer.getType() == null) { continue; }
+			final List<String> key = new ArrayList<>(loc);
 			key.add(layer.getType());
 			diagramEditor.getIdsEObjects().put(key, eobject);
 		}
@@ -358,14 +392,18 @@ public class EditDisplayFrame extends EditFrame {
 	 * Return the initial size of the window.
 	 */
 	@Override
-	protected Point getInitialSize() {
-		return new Point(1300, 750);
-	}
+	protected Point getInitialSize() { return new Point(1300, 750); }
 
-	public Table getLayerViewer() {
-		return layerViewer;
-	}
+	/**
+	 * Gets the layer viewer.
+	 *
+	 * @return the layer viewer
+	 */
+	public Table getLayerViewer() { return layerViewer; }
 
+	/**
+	 * Modify other properties.
+	 */
 	private void modifyOtherProperties() {
 		final EDisplay display = (EDisplay) eobject;
 		display.setName(textName.getText());
@@ -386,7 +424,7 @@ public class EditDisplayFrame extends EditFrame {
 						final EDisplay asp = (EDisplay) eobject;
 						asp.setGamlCode(modelXText.getEditablePart());
 						asp.setDefineGamlCode(radioGaml.getSelection());
-					} else if (name.equals("name")) {
+					} else if ("name".equals(name)) {
 						eobject.setName(textName.getText());
 					} else {
 						final EDisplay asp = (EDisplay) eobject;
@@ -401,6 +439,9 @@ public class EditDisplayFrame extends EditFrame {
 
 	}
 
+	/**
+	 * Update layer.
+	 */
 	public void updateLayer() {
 		layerViewer.removeAll();
 		for (final ELayer elayer : ((EDisplay) eobject).getLayers()) {
@@ -412,36 +453,56 @@ public class EditDisplayFrame extends EditFrame {
 		}
 	}
 
+	/**
+	 * Test basic ok.
+	 *
+	 * @param lay
+	 *            the lay
+	 * @param speciesStr
+	 *            the species str
+	 * @return true, if successful
+	 */
 	public boolean testBasicOk(final ELayer lay, final List<String> speciesStr) {
-		return (lay.getType() == null || lay.getType().equals("species") && speciesStr.contains(lay.getSpecies()));// &&
+		return lay.getType() == null || "species".equals(lay.getType()) && speciesStr.contains(lay.getSpecies());// &&
 
-//				!ModelGenerator.hasSyntaxError(fp, lay.getName(), true);
+		// !ModelGenerator.hasSyntaxError(fp, lay.getName(), true);
 	}
 
+	/**
+	 * Checks for error.
+	 *
+	 * @param elayer
+	 *            the elayer
+	 * @return true, if successful
+	 */
 	public boolean hasError(final ELayer elayer) {
 		final GamaDiagramEditor diagramEditor = (GamaDiagramEditor) ExampleUtil.getDiagramEditor(fp);
-		final List<String> speciesStr = new ArrayList<String>();
-		for (final ESpecies sp : species) {
-			speciesStr.add(sp.getName());
-		}
-		final List<String> ids = new ArrayList<String>();
+		final List<String> speciesStr = new ArrayList<>();
+		for (final ESpecies sp : species) { speciesStr.add(sp.getName()); }
+		final List<String> ids = new ArrayList<>();
 		final boolean basicOk = testBasicOk(elayer, speciesStr);
-		if (basicOk) {
-			return false;
-		}
+		if (basicOk) return false;
 		diagramEditor.buildLocation(elayer, ids);
 
-		if (diagramEditor.getErrorsLoc().isEmpty() && diagramEditor.getSyntaxErrorsLoc().isEmpty()) {
-			return false;
-		}
+		if (diagramEditor.getErrorsLoc().isEmpty() && diagramEditor.getSyntaxErrorsLoc().isEmpty()) return false;
 
 		return diagramEditor.getErrorsLoc().containsKey(ids) || diagramEditor.getSyntaxErrorsLoc().containsKey(ids);
 	}
 
-	public List<ESpecies> getGrids() {
-		return grids;
-	}
+	/**
+	 * Gets the grids.
+	 *
+	 * @return the grids
+	 */
+	public List<ESpecies> getGrids() { return grids; }
 
+	/**
+	 * Checks if is number.
+	 *
+	 * @param s
+	 *            the s
+	 * @return true, if is number
+	 */
 	public static boolean isNumber(final String s) {
 		return s == null || s.isEmpty() || DOUBLE_PATTERN.matcher(s).matches();
 	}
