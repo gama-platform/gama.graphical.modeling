@@ -2,7 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: GraphicalModeling
 Bundle-SymbolicName: gama.ui.diagram;singleton:=true
-Bundle-Version: 1.9.0.qualifier
+Bundle-Vendor: INRAE-MIAT & IRD-UMMISCO
+Bundle-Version: 0.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.xtext.ui,
