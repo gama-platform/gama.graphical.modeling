@@ -1,24 +1,57 @@
+/*******************************************************************************************************
+ *
+ * AddAspectFeature.java, in gama.ui.diagram, is part of the source code of the GAMA modeling and simulation platform
+ * (v.1.9.3).
+ *
+ * (c) 2007-2024 UMI 209 UMMISCO IRD/SU & Partners (IRIT, MIAT, TLU, CTU)
+ *
+ * Visit https://github.com/gama-platform/gama for license information and contacts.
+ *
+ ********************************************************************************************************/
 package gama.ui.diagram.features.add;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.graphiti.features.IFeatureProvider;
+import org.eclipse.graphiti.features.context.IAddContext;
+import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
+import org.eclipse.graphiti.mm.algorithms.Ellipse;
+import org.eclipse.graphiti.mm.algorithms.Image;
+import org.eclipse.graphiti.mm.algorithms.Text;
+import org.eclipse.graphiti.mm.algorithms.styles.Color;
+import org.eclipse.graphiti.mm.algorithms.styles.Orientation;
+import org.eclipse.graphiti.mm.pictograms.ContainerShape;
+import org.eclipse.graphiti.mm.pictograms.Diagram;
+import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.mm.pictograms.Shape;
+import org.eclipse.graphiti.services.Graphiti;
+import org.eclipse.graphiti.services.IGaService;
+import org.eclipse.graphiti.services.IPeCreateService;
 
 import gama.ui.diagram.metamodel.EAspect;
 import gama.ui.diagram.swt.image.GamaImageProvider;
 
-import java.util.*;
-import org.eclipse.graphiti.features.IFeatureProvider;
-import org.eclipse.graphiti.features.context.IAddContext;
-import org.eclipse.graphiti.features.impl.AbstractAddShapeFeature;
-import org.eclipse.graphiti.mm.algorithms.*;
-import org.eclipse.graphiti.mm.algorithms.styles.*;
-import org.eclipse.graphiti.mm.pictograms.*;
-import org.eclipse.graphiti.services.*;
-
+/**
+ * The Class AddAspectFeature.
+ */
 public class AddAspectFeature extends AbstractAddShapeFeature {
 
+	/** The Constant INIT_WIDTH. */
 	public static final int INIT_WIDTH = 150;
+
+	/** The Constant INIT_HEIGHT. */
 	public static final int INIT_HEIGHT = 50;
 
+	/** The Constant CLASS_BACKGROUND. */
 	private static final List<Integer> CLASS_BACKGROUND = Arrays.asList(152, 251, 152);
 
+	/**
+	 * Instantiates a new adds the aspect feature.
+	 *
+	 * @param fp
+	 *            the fp
+	 */
 	public AddAspectFeature(final IFeatureProvider fp) {
 		super(fp);
 	}
@@ -26,10 +59,9 @@ public class AddAspectFeature extends AbstractAddShapeFeature {
 	@Override
 	public boolean canAdd(final IAddContext context) {
 		// check if user wants to add a EClass
-		if ( context.getNewObject() instanceof EAspect ) {
-			// check if user wants to add to a diagram
-			if ( context.getTargetContainer() instanceof Diagram ) { return true; }
-		}
+		// check if user wants to add to a diagram
+		if ((context.getNewObject() instanceof EAspect) && (context.getTargetContainer() instanceof Diagram))
+			return true;
 		return false;
 	}
 
@@ -46,25 +78,22 @@ public class AddAspectFeature extends AbstractAddShapeFeature {
 		int height = context.getHeight() <= 0 ? INIT_HEIGHT : context.getHeight();
 
 		IGaService gaService = Graphiti.getGaService();
+		gaService.findStyle(targetDiagram, "");
 
 		{
 			// create and set graphics algorithm
 			Ellipse ellipse = gaService.createEllipse(containerShape);
-			ellipse.setForeground(manageColor(error ? ColorDisplay.CLASS_FOREGROUND_ERROR
-				: ColorDisplay.CLASS_FOREGROUND_OK));
-			if ( addedClass.getColorPicto().isEmpty() ) {
-				addedClass.getColorPicto().addAll(CLASS_BACKGROUND);
-			}
+			ellipse.setForeground(
+					manageColor(error ? ColorDisplay.CLASS_FOREGROUND_ERROR : ColorDisplay.CLASS_FOREGROUND_OK));
+			if (addedClass.getColorPicto().isEmpty()) { addedClass.getColorPicto().addAll(CLASS_BACKGROUND); }
 			List<Integer> currentColor = addedClass.getColorPicto();
 			Color color =
-				gaService.manageColor(getDiagram(), currentColor.get(0), currentColor.get(1), currentColor.get(2));
+					gaService.manageColor(getDiagram(), currentColor.get(0), currentColor.get(1), currentColor.get(2));
 			ellipse.setBackground(color);
 			ellipse.setLineWidth(error ? 4 : 2);
 			gaService.setLocationAndSize(ellipse, context.getX(), context.getY(), width, height);
 
-			if ( addedClass.eResource() == null ) {
-				getDiagram().eResource().getContents().add(addedClass);
-			}
+			if (addedClass.eResource() == null) { getDiagram().eResource().getContents().add(addedClass); }
 			// create link and wire it
 			link(containerShape, addedClass);
 		}

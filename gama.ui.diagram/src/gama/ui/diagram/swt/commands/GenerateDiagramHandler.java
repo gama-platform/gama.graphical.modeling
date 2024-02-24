@@ -94,7 +94,7 @@ public class GenerateDiagramHandler extends AbstractHandler {
 
 		FileService.createEmfFileForDiagram(uri, diagram);
 		final DiagramEditorInput editorInput =
-				new DiagramEditorInput(EcoreUtil.getURI(diagram), "gama.ui.diagram.editor.MyGamaDiagramTypeProvider");
+				new DiagramEditorInput(EcoreUtil.getURI(diagram), "gama.ui.diagram.editor.GamaDiagramTypeProvider");
 		Display.getCurrent().asyncExec(() -> {
 			final IWorkbenchPage pag = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			try {

@@ -4,39 +4,39 @@
    <extension
          point="org.eclipse.graphiti.ui.diagramTypes">
       <diagramType
-            id="idees.gama.diagram.MyGamaDiagramType"
-            name="My Graphiti Gama Diagram Type"
+            id="gama.ui.diagram.GamaDiagramType"
+            name="Gama Diagram Type"
             type="gamaDiagram">
       </diagramType>
    </extension>
    <extension
          point="org.eclipse.graphiti.ui.diagramTypeProviders">
       <diagramTypeProvider
-            class="gama.ui.diagram.editor.MyGamaDiagramTypeProvider"
-            id="idees.gama.diagram.MyGamaDiagramTypeProvider"
+            class="gama.ui.diagram.editor.GamaDiagramTypeProvider"
+            id="gama.ui.diagram.GamaDiagramTypeProvider"
             name="Gama Diagram">
          <diagramType
-               id="idees.gama.diagram.MyGamaDiagramType">
+               id="gama.ui.diagram.GamaDiagramType">
          </diagramType>
          <imageProvider
-               id="idees.gama.ui.image.GamaImageProvider">
+               id="gama.ui.diagram.GamaImageProvider">
          </imageProvider>
       </diagramTypeProvider>
    </extension>
-   <extension
+   <extension 
          point="org.eclipse.graphiti.ui.imageProviders">
       <imageProvider
             class="gama.ui.diagram.swt.image.GamaImageProvider"
-            id="idees.gama.ui.image.GamaImageProvider">
+            id="gama.ui.diagram.GamaImageProvider">
       </imageProvider>
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">
       <wizard
-            category="msi.gama.gui.wizards.GAMA"
+            category="gama.wizards"
             class="gama.ui.diagram.swt.wizards.NewFileWizard"
             icon="icons/wizards/diagram.png"
-            id="idees.gama.graphicalmodeling.Newwizard"
+            id="gama.ui.diagram.NewWizard"
             name="Model diagram">
       </wizard>
    </extension>
@@ -48,7 +48,7 @@
                id="graphicalModelingMenu"
                label="Graphical Modeling">
             <command
-                  commandId="idees.gama.application.commands.GenerateDiagram"
+                  commandId="gama.ui.diagram.commands.GenerateDiagram"
                   label="Generate diagram"
                   style="push">
                <visibleWhen
@@ -65,7 +65,7 @@
          point="org.eclipse.ui.commands">
       <command
             defaultHandler="gama.ui.diagram.swt.commands.GenerateDiagramHandler"
-            id="idees.gama.application.commands.GenerateDiagram"
+            id="gama.ui.diagram.commands.GenerateDiagram"
             name="Generate Diagram">
       </command>
    </extension>
@@ -76,7 +76,7 @@
             default="true"
             extensions="gadl"
             icon="icons/wizards/diagram_small.png"
-            id="idees.gama.graphicalmodeling.diagram.gamadiagrameditor"
+            id="gam.ui.diagram.editor"
             matchingStrategy="org.eclipse.graphiti.ui.editor.DiagramEditorMatchingStrategy"
             name="Gama Diagram Editor">
       </editor>

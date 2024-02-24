@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/idees.gama.emf.metamodel/src" modelPluginID="idees.gama.emf.metamodel"
-    modelName="Gama" importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0"
-    copyrightFields="false">
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/metamodel/src" editDirectory="/gama.ui.diagram/src"
+    modelPluginID="gama.ui.diagram" modelName="Gama" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false" editPluginID="gama.ui.diagram" editorPluginID="gama.ui.diagram">
   <foreignModel>gama.ecore</foreignModel>
   <genPackages prefix="Gama" disposableProviderFactory="true" ecorePackage="gama.ecore#/">
     <genClasses ecoreClass="gama.ecore#//EGamaModel">

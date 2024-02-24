@@ -141,7 +141,7 @@ public class NewFileWizard extends Wizard implements INewWizard {
 		
 		
 		FileService.createEmfFileForDiagram(uri, diagram);
-		DiagramEditorInput editorInput = new DiagramEditorInput(EcoreUtil.getURI(diagram), "gama.ui.diagram.editor.MyGamaDiagramTypeProvider");
+		DiagramEditorInput editorInput = new DiagramEditorInput(EcoreUtil.getURI(diagram), "gama.ui.diagram.editor.GamaDiagramTypeProvider");
 		
 		getShell().getDisplay().asyncExec(new Runnable() {
 
