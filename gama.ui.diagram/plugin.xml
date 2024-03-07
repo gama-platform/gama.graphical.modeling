@@ -13,7 +13,7 @@
          point="org.eclipse.graphiti.ui.diagramTypeProviders">
       <diagramTypeProvider
             class="gama.ui.diagram.editor.GamaDiagramTypeProvider"
-            id="gama.ui.diagram.GamaDiagramTypeProvider"
+            id="gama.ui.diagram.editor.GamaDiagramTypeProvider"
             name="Gama Diagram">
          <diagramType
                id="gama.ui.diagram.GamaDiagramType">
@@ -76,7 +76,7 @@
             default="true"
             extensions="gadl"
             icon="icons/wizards/diagram_small.png"
-            id="gam.ui.diagram.editor"
+            id="gama.ui.diagram.editor"
             matchingStrategy="org.eclipse.graphiti.ui.editor.DiagramEditorMatchingStrategy"
             name="Gama Diagram Editor">
       </editor>
@@ -88,6 +88,12 @@
             genModel="model/gama.genmodel"
             uri="http://gama/1.0">
       </package>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="gama.ui.diagram.DiagramStartup">
+      </startup>
    </extension>
 
 </plugin>

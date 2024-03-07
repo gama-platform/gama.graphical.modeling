@@ -1,33 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="idees.gama.feature.graphical_modeling"
-      label="Graphical_modeling"
-      version="1.9.0.qualifier"
-      provider-name="IDEES">
+      id="gama.feature.ui.diagram"
+      label="Diagram Editor for GAMA"
+      version="0.0.0.qualifier"
+      provider-name="INRAE-MIAT + IRD-UMMISCO"
+      plugin="gama.ui.diagram">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description url="https://gama-platform.org">
+      The graphical editor for GAMA, allowing to build and analyse models using diagrams
    </description>
-
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
-   </copyright>
-
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
-   </license>
-
-   <url>
-      <update label="GAMA 1.6.1 Update Site" url="https://gama-platform.googlecode.com/svn/update_site"/>
-   </url>
-
-   <plugin
-         id="org.eclipse.xtext.xbase.lib"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.xtend.lib.macro"
-         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.graphiti"

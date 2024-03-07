@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: GraphicalModeling
+Bundle-Name: GAMA Graphical Modelling
 Bundle-SymbolicName: gama.ui.diagram;singleton:=true
 Bundle-Vendor: INRAE-MIAT & IRD-UMMISCO
 Bundle-Version: 0.0.0.qualifier
@@ -42,3 +42,4 @@ Export-Package: gama.ui.diagram.editor,
  gama.ui.diagram.swt.wizards
 Import-Package: com.google.inject
 Bundle-ActivationPolicy: lazy
+Bundle-Activator: DiagramActivator
