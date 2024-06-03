@@ -35,6 +35,7 @@ import com.google.common.collect.Iterables;
 
 import gama.core.kernel.model.IModel;
 import gama.gaml.compilation.GamlCompilationError;
+import gama.gaml.compilation.GamlCompilationError.GamlCompilationErrorType;
 import gama.gaml.descriptions.ModelDescription;
 import gama.gaml.interfaces.IGamlIssue;
 import gama.ui.diagram.editor.GamaDiagramEditor;
@@ -102,10 +103,9 @@ public class ModelGenerator {
 			// Syntactic errors detected, we cannot build the resource
 			if (r.hasErrors()) {
 				if (errors != null) {
-					errors.add(new GamlCompilationError("Syntax errors ", IGamlIssue.GENERAL, r.getContents().get(0),
-							false, false));
+					errors.add(new GamlCompilationError("Syntax errors ", IGamlIssue.GENERAL, r.getContents().get(0), GamlCompilationErrorType.Error));
 				}
-				return null;
+				return null; 
 			}
 			// We build the description
 			final ModelDescription model = r.buildCompleteDescription();

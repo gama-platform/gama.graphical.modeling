@@ -150,7 +150,7 @@ public class NewFileWizard extends Wizard implements INewWizard {
 				IWorkbenchPage pag = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				try {
 					IEditorPart ep =
-						pag.openEditor(editorInput, "gama.ui.diagram.graphicalmodeling.diagram.gamadiagrameditor");
+						pag.openEditor(editorInput, "gama.ui.diagram.editor");
 					IDiagramTypeProvider dtp = ((GamaDiagramEditor) ep).getDiagramTypeProvider();
 					GamaFeatureProvider gfp = (GamaFeatureProvider) dtp.getFeatureProvider();
 					gfp.setTypeOfModel(page.getTypeOfModel());

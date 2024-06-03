@@ -110,7 +110,7 @@ public class ModelGenerationFeature extends AbstractCustomFeature {
 		} catch (IOException | CoreException e) {
 			e.printStackTrace();
 		}
-		GAMA.getGui().editModel(GAMA.getRuntimeScope(), fileP);
+		GAMA.getGui().editModel(fileP);
 		doFinish(fileP);
 
 	}
