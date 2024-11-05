@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
+Automatic-Module-Name: gama.ui.diagram
 Bundle-Name: GAMA Graphical Modelling
 Bundle-SymbolicName: gama.ui.diagram;singleton:=true
 Bundle-Vendor: INRAE-MIAT & IRD-UMMISCO

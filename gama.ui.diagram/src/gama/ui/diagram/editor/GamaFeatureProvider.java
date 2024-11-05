@@ -1,7 +1,7 @@
 /*******************************************************************************************************
  *
- * GamaFeatureProvider.java, in gama.ui.diagram, is part of the source code of the GAMA modeling and
- * simulation platform (v.1.9.3).
+ * GamaFeatureProvider.java, in gama.ui.diagram, is part of the source code of the GAMA modeling and simulation platform
+ * (v.1.9.3).
  *
  * (c) 2007-2024 UMI 209 UMMISCO IRD/SU & Partners (IRIT, MIAT, TLU, CTU)
  *
@@ -225,9 +225,8 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		if (context.getNewObject() instanceof EActionLink) return new AddActionLinkFeature(this);
 		if (context.getNewObject() instanceof EReflexLink) return new AddReflexLinkFeature(this);
 		if (context.getNewObject() instanceof EEquationLink) return new AddEquationLinkFeature(this);
-		if (context.getNewObject() instanceof EPlanLink)
-			return new AddPlanLinkFeature(this);
-		else if (context.getNewObject() instanceof EStateLink)
+		if (context.getNewObject() instanceof EPlanLink) return new AddPlanLinkFeature(this);
+		if (context.getNewObject() instanceof EStateLink)
 			return new AddStateLinkFeature(this);
 		else if (context.getNewObject() instanceof ETaskLink)
 			return new AddTaskLinkFeature(this);
@@ -577,8 +576,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 				(GamaDiagramEditor) getDiagramTypeProvider().getDiagramBehavior().getDiagramContainer();
 		diagramEditor.addEOject(target);
 		if (!xp.isBatch() && xp.getExperimentOutputs() != null) {
-			for (final IOutput output : ((SimulationOutputManager) xp.getOriginalSimulationOutputs()).getOutputs()
-					.values()) {
+			for (final IOutput output : (SimulationOutputManager) xp.getOriginalSimulationOutputs()) {
 				if (output instanceof LayeredDisplayOutput) {
 					createDisplay((EGUIExperiment) target, targetE, output, diagram);
 				}
