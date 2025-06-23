@@ -57,17 +57,6 @@
 			<url>https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.29.0/</url>
 			<layout>p2</layout>
 		</repository>
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<id>codehaus-snapshots</id>
-			<name>codehaus-snapshots</name>
-			<url>https://oss.sonatype.org/content/repositories/codehaus-snapshots/</url>
-		</repository>
 	</repositories>
 
 
