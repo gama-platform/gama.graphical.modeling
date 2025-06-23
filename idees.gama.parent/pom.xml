@@ -12,7 +12,7 @@
 		<repository>
 			<id>p2Repo</id>
 			<name>p2Repo</name>
-			<url>https://updates.gama-platform.org/1.9.0</url>
+			<url>https://updates.gama-platform.org/2024-06</url>
 			<layout>p2</layout>
 			<snapshots>
 				<enabled>true</enabled>
@@ -26,7 +26,7 @@
 		<repository>
 			<id>gamaRepo</id>
 			<name>p2Repo</name>
-			<url>https://updates.gama-platform.org/1.9.0</url>
+			<url>https://updates.gama-platform.org/2024-06</url>
 			<snapshots>
 				<enabled>true</enabled>
 				<checksumPolicy>ignore</checksumPolicy>
@@ -38,8 +38,8 @@
 		</repository>
 
 		<repository>
-			<id>eclipse-2022-12</id>
-			<url>https://download.eclipse.org/releases/2022-12</url>
+			<id>eclipse-swt</id>
+			<url>https://download.eclipse.org/releases/2025-03</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
@@ -177,9 +177,9 @@
 	</modules>
 
 	<properties>
-		<project.version>1.9.0-SNAPSHOT</project.version>
 		<tycho.version>4.0.11</tycho.version>
 		<jdk.version>21</jdk.version>
+		<project.version>0.0.0-SNAPSHOT</project.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
 	</properties>
