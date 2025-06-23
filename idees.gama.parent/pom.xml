@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>idees.gama</groupId>
+	<groupId>org.gama</groupId>
 	<artifactId>idees.gama.parent</artifactId>
-	<version>1.9.0-SNAPSHOT</version>
+	<version>0.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 
@@ -168,13 +168,14 @@
 
 
 	<modules>
-		<module>../idees.gama.emf.metamodel</module>
+		<!-- <module>../idees.gama.emf.metamodel</module>
 		<module>../idees.gama.graphicalmodeling</module>
-		<module>../idees.gama.feature.graphical_modeling</module>
+		<module>../idees.gama.feature.graphical_modeling</module> -->
+		<module>../gama.ui.diagram</module>
+		<module>../gama.feature.ui.diagram</module>
 		<module>../idees.gama.p2site</module>
-<!-- 
--->
 	</modules>
+
 	<properties>
 		<project.version>1.9.0-SNAPSHOT</project.version>
 		<tycho.version>4.0.11</tycho.version>
