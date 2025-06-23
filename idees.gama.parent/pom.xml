@@ -176,9 +176,9 @@
 -->
 	</modules>
 	<properties>
-		<tycho.version>3.0.3</tycho.version>
-		<jdk.version>17</jdk.version>
 		<project.version>1.9.0-SNAPSHOT</project.version>
+		<tycho.version>4.0.11</tycho.version>
+		<jdk.version>21</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
 	</properties>
