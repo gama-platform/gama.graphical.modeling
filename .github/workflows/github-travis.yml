@@ -14,26 +14,32 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v2 
         with:
           distribution: 'temurin'
           java-version: '21'
           java-package: jdk 
 
-      - name: Build with Maven 
+      - name: Prepare p2 VPS access
         run: |
-            bash decrypt_secret.sh
-            bash $GITHUB_WORKSPACE/travis_build.sh 
+          echo "Publishing p2 repository"
+          sed -i "s/<username>GAMA_PLATFORM/<username>$GAMA_SERVER_USERNAME/g" $GITHUB_WORKSPACE/settings.xml
+          sed -i "s/<password>GAMA_PLATFORM/<password>$GAMA_SERVER_PASSWORD/g" $GITHUB_WORKSPACE/settings.xml
         env:
-          MSG: ${ github.event.head_commit.message } 
-          SSH_USER_PWD: ${{ secrets.USER_PWD }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          GITHUB_TOKEN: ${{ github.token }}
-          SSHPASS: ${{ secrets.USER_PWD }}
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          TRAVIS_COMMIT: ${ GITHUB_SHA }
-          TRAVIS_EVENT_TYPE: ${{ github.event_name }}
+          GAMA_SERVER_USERNAME: ${{ secrets.GAMA_SERVER_USERNAME }}
+          GAMA_SERVER_PASSWORD: ${{ secrets.GAMA_SERVER_PASSWORD }}
+
+      - name: Install SSH key
+        # Consider it's a release and want to update p2 site for it
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.GAMA_SERVER_SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.GAMA_SERVER_SSH_KNOWN_HOSTS }}
+          if_key_exists: replace # replace / ignore / fail; optional (defaults to fail)
+
+      - name: Build with Maven 
+        run: bash $GITHUB_WORKSPACE/travis_build.sh
               
       - name: Publish to GAMA update repo
         shell: bash
