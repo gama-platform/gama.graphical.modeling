@@ -50,92 +50,92 @@
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.annotations</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.processor</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.core</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.dependencies</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.ui.application</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.headless</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.ui.navigator</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.ui.experiment</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.ui.editor</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.ui.shared</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gaml.compiler</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.extension.maths</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.extension.bdi</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.extension.database</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.extension.network</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.extension.serialize</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.extension.physics</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.extension.traffic</artifactId>
-			<version>0.0.0-SNAPSHOT</version>
+			<version>[1.9.3,)</version>
 		</dependency>
 	</dependencies>
 
@@ -148,7 +148,7 @@
 	<properties>
 		<tycho.version>4.0.11</tycho.version>
 		<jdk.version>21</jdk.version>
-		<project.version>0.0.0-SNAPSHOT</project.version>
+		<project.version>[1.9.3,)</project.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -345,7 +345,6 @@
 							<removeAll />
 						</filter>
 					</filters>
-					<resolver>p2</resolver>
 					<pomDependencies>consider</pomDependencies>
 					<environments>
 						<environment>
