@@ -1,12 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.gama</groupId>
 	<artifactId>idees.gama.parent</artifactId>
 	<version>0.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
 
 	<repositories>
 		<repository>
@@ -42,21 +44,9 @@
 			<url>https://download.eclipse.org/releases/2025-03</url>
 			<layout>p2</layout>
 		</repository>
-		<repository>
-			<id>eclipse-Eclipse Layout Kernel </id>
-			<url>https://download.eclipse.org/elk/updates/nightly</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>eclipse-xtext</id>
-			<url>https://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.29.0/</url>
-			<layout>p2</layout>
-		</repository>
 	</repositories>
 
-
-	
-	<dependencies> 
+	<dependencies>
 		<dependency>
 			<groupId>org.gama</groupId>
 			<artifactId>gama.annotations</artifactId>
@@ -69,7 +59,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.gama</groupId>
-			<artifactId>gama.core</artifactId> 
+			<artifactId>gama.core</artifactId>
 			<version>0.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -147,12 +137,9 @@
 			<artifactId>gama.extension.traffic</artifactId>
 			<version>0.0.0-SNAPSHOT</version>
 		</dependency>
-	</dependencies> 
+	</dependencies>
 
 	<modules>
-		<!-- <module>../idees.gama.emf.metamodel</module>
-		<module>../idees.gama.graphicalmodeling</module>
-		<module>../idees.gama.feature.graphical_modeling</module> -->
 		<module>../gama.ui.diagram</module>
 		<module>../gama.feature.ui.diagram</module>
 		<module>../idees.gama.p2site</module>
@@ -163,11 +150,9 @@
 		<jdk.version>21</jdk.version>
 		<project.version>0.0.0-SNAPSHOT</project.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		
 	</properties>
- 
-	<build>
 
+	<build>
 		<extensions>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
@@ -209,23 +194,23 @@
 					<executionEnvironment>JavaSE-${jdk.version}</executionEnvironment>
 				</configuration>
 				<dependencies>
-					<!--dependency containing the annotation processor specified in the 
-						annotationProcessor element <dependency> <groupId>com.github.hqnghi88</groupId> 
-						<artifactId>msi.gama.processor</artifactId> <version>[1.4.0,4.0.0)</version> 
-						</dependency> <dependency> <groupId>com.github.hqnghi88</groupId> <artifactId>msi.gama.ext</artifactId> 
+					<!--dependency containing the annotation processor specified in the
+						annotationProcessor element <dependency> <groupId>com.github.hqnghi88</groupId>
+						<artifactId>msi.gama.processor</artifactId> <version>[1.4.0,4.0.0)</version>
+						</dependency> <dependency> <groupId>com.github.hqnghi88</groupId> <artifactId>msi.gama.ext</artifactId>
 						<version>[0.0.0,4.0.0)</version> </dependency> -->
 				</dependencies>
 			</plugin>
 			<plugin>
-				<!-- You can see the effect of Execution Environnement here : https://wiki.eclipse.org/Tycho/Execution_Environments 
-					: Tycho ensures that package imports may only be matched against the selected 
-					execution environment , b) Tycho hides packages which are not provided by 
+				<!-- You can see the effect of Execution Environnement here : https://wiki.eclipse.org/Tycho/Execution_Environments
+					: Tycho ensures that package imports may only be matched against the selected
+					execution environment , b) Tycho hides packages which are not provided by
 					the configured execution environment. -->
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
-					<!-- <target> <artifact> <groupId>msi.gama</groupId> <artifactId>gama.target.platform</artifactId> 
+					<!-- <target> <artifact> <groupId>msi.gama</groupId> <artifactId>gama.target.platform</artifactId>
 						<version>1.9.0-SNAPSHOT</version> </artifact> </target> -->
 
 					<dependency-resolution>
