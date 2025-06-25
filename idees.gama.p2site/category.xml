@@ -1,11 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <site>
    <description name="Graphical Modeling Update Site">
-      Site containing updates to the GAMA Graphical Modeling tools for GAMA (see http://gama-platform.org)
+      Site containing updates to the GAMA Graphical Modeling tools for GAMA (see https://gama-platform.org)
    </description>
-   <feature url="features/idees.gama.feature.graphical_modeling_0.0.0.jar" id="idees.gama.feature.graphical_modeling" version="0.0.0" >
-   		<category name="gama.core"/>
+   <feature
+        url="features/gama.feature.ui.diagram_0.0.0.jar"
+        id="gama.feature.ui.diagram"
+        version="0.0.0"
+    >
+   		<category name="gama.core" />
    </feature>
 
-	<category-def name="gama.core" label="Core plugins of Graphical Modeling"/>
+	<category-def name="gama.core" label="Core plugins of Graphical Modeling" />
 </site>
