@@ -104,7 +104,8 @@ public class ModelGenerationFeature extends AbstractCustomFeature {
 		IFile fileP = container.getFile(new Path(uri.lastSegment().replace(".gadl", ".gaml")));
 
 		try (StringInputStream source = new StringInputStream(gamlModel)) {
-			container.create(true, true, null);
+			if (!container.exists())
+				container.create(true, true, null);
 			fileP.create(source, true, null);
 			fileP.refreshLocal(1, null);
 		} catch (IOException | CoreException e) {

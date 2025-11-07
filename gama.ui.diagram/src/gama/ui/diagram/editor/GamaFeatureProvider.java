@@ -178,13 +178,9 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 	private final GamaFeatureProvider fp;
 
 	/** The built in species. */
-	private final List<String> built_in_species = Arrays.asList();
-	/** The built in variables. */
-	/*
-	 * "osm_node", "osm_building", "osm_road", "graph_edge", "graph_node", "AgentDB", "Physical3DWorld",
-	 * "cluster_builder", "experimentator", "agent", "multicriteria_analyzer", "base_node", "base_edge", "world",
-	 * "node", "edge");
-	 */
+	private final List<String> built_in_species =  Arrays.asList( "osm_node", "osm_building", "osm_road", "graph_edge", "graph_node", "AgentDB", "Physical3DWorld",
+	  "cluster_builder", "experimentator", "agent", "multicriteria_analyzer", "base_node", "base_edge", "world",
+	  "node", "edge", "platform", "abstract_unity_linker", "abstract_unity_player", "physical_world");
 	private final List<String> built_in_variables = Arrays.asList("name", "peers", "host", "members", "agents",
 			"rng_usage", "starting_date", "current_date", "paused", "rng", "seed", "average_duration", "total_duration",
 			"duration", "time", "cycle", "machine_time");
@@ -444,7 +440,11 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setName(name);
 			facet.setOwner(target);
 			target.getFacets().add(facet);
-			facet.setValue(species.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
+			System.out.println("facet: " + facet);
+
+			System.out.println("species: " + species + " name: " + name + " species.getVarNames():" + species.getVarNames());
+			System.out.println("species.getFacet(name): " + species.getFacet(name));
+			facet.setValue(species.getName().replace("\\/", "/"));
 		}
 
 		for (final IVariable var : species.getVars()) {
