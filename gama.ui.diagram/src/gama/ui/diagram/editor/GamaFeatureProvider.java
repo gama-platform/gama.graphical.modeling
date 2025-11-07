@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.compress.utils.Lists;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -440,10 +441,6 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			facet.setName(name);
 			facet.setOwner(target);
 			target.getFacets().add(facet);
-			System.out.println("facet: " + facet);
-
-			System.out.println("species: " + species + " name: " + name + " species.getVarNames():" + species.getVarNames());
-			System.out.println("species.getFacet(name): " + species.getFacet(name));
 			facet.setValue(species.getName().replace("\\/", "/"));
 		}
 
@@ -500,7 +497,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 							gmlCode.append(st.serializeToGaml(false));
 						}
 					}
-					target.setInit(gmlCode.toString());
+					target.setInit(cleanWhere(gmlCode.toString()));
 				}
 			} else if (stat instanceof FsmStateStatement) {
 				createState(target, targetE, (FsmStateStatement) stat, diagram);
@@ -622,7 +619,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 				gmlCode += st.serializeToGaml(false) + System.lineSeparator();
 			}
 		}
-		gmlCode = gmlCode.replace("\\/", "/");
+		gmlCode = cleanWhere(gmlCode.replace("\\/", "/"));
 		target.setGamlCode(gmlCode);
 		final CreateContext ac = new CreateContext();
 
@@ -712,14 +709,15 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			target.getFacets().add(facet);
 			facet.setValue(display.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
-		String gmlCode = display.serializeToGaml(false);
+		String gmlCode = cleanDelegate(display.serializeToGaml(false));
 		if (gmlCode.contains("{")) {
 			gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
 			gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
+			
 		} else {
 			gmlCode = "";
 		}
-		gmlCode = gmlCode.replace("\\/", "/");
+		gmlCode = cleanWhere(gmlCode.replace("\\/", "/"));
 		target.setGamlCode(gmlCode);
 		return target;
 	}
@@ -782,16 +780,47 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			target.getFacets().add(facet);
 			facet.setValue(aspect.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
-		String gmlCode = aspect.serializeToGaml(false);
+		String gmlCode = cleanDelegate(aspect.serializeToGaml(false));
+		
 		if (gmlCode.contains("{")) {
 			gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
 			gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
 		} else {
 			gmlCode = "";
 		}
-		gmlCode = gmlCode.replace("\\/", "/");
+		gmlCode = cleanWhere(gmlCode.replace("\\/", "/")); 
 		target.setGamlCode(gmlCode);
 		return target;
+	}
+	
+	
+	//next_canals <- where('each',canal,first(each.shape.points) = last(shape.points));
+	
+	private String cleanWhere(String gmlCode) {
+		if (gmlCode.contains("where")) {
+			return gmlCode.replace("where('each',", "where(");
+		}
+		return gmlCode;
+		
+	}
+
+	
+	private String cleanDelegate(String gmlCode) {
+		if (gmlCode.contains("delegate")) {
+			String res = "";
+			List<String> de = List.of(gmlCode.split(" "));
+			int index = -1;
+			for (int i = 0; i < de.size(); i++) {
+				if ("delegate:".equals(de.get(i))) {
+					index = i;
+				}
+				if ((i == index) ||(i == (index +1))) continue;
+				res += de.get(i)+ " ";
+			}
+			return res;
+		}
+		return gmlCode;
+		
 	}
 
 	/**
@@ -850,7 +879,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 			target.getFacets().add(facet);
 			facet.setValue(equation.getFacet(name).serializeToGaml(false).replace("\\/", "/"));
 		}
-		String gmlCode = equation.serializeToGaml(false);
+		String gmlCode = cleanWhere(equation.serializeToGaml(false));
 		if (gmlCode.contains("{")) {
 			gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
 			gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
@@ -926,7 +955,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 				gmlCode += st.serializeToGaml(false);
 			}
 		}
-		gmlCode = gmlCode.replace("\\/", "/");
+		gmlCode = cleanWhere(gmlCode.replace("\\/", "/"));
 		target.setGamlCode(gmlCode);
 		return target;
 	}
@@ -995,7 +1024,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 				gmlCode += st.serializeToGaml(false);
 			}
 		}
-		gmlCode = gmlCode.replace("\\/", "/");
+		gmlCode = cleanWhere(gmlCode.replace("\\/", "/"));
 		target.setGamlCode(gmlCode);
 		return target;
 	}
@@ -1064,7 +1093,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 				gmlCode += st.serializeToGaml(false);
 			}
 		}
-		gmlCode = gmlCode.replace("\\/", "/");
+		gmlCode = cleanWhere(gmlCode.replace("\\/", "/"));
 		target.setGamlCode(gmlCode);
 		return target;
 	}
@@ -1133,7 +1162,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 				gmlCode += st.serializeToGaml(false);
 			}
 		}
-		gmlCode = gmlCode.replace("\\/", "/");
+		gmlCode = cleanWhere(gmlCode.replace("\\/", "/"));
 		target.setGamlCode(gmlCode);
 		return target;
 	}
@@ -1221,7 +1250,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 		final EReflex target = gama.ui.diagram.metamodel.GamaFactory.eINSTANCE.createEReflex();
 		diagram.eResource().getContents().add(target);
 		target.setName(reflex.getName());
-		String gmlCode = reflex.serializeToGaml(false);
+		String gmlCode = cleanWhere(reflex.serializeToGaml(false));
 		if (gmlCode.contains("{")) {
 			gmlCode = gmlCode.substring(gmlCode.indexOf("{") + 1);
 			gmlCode = gmlCode.substring(0, gmlCode.lastIndexOf("}"));
@@ -1327,7 +1356,7 @@ public class GamaFeatureProvider extends DefaultFeatureProvider {
 							gmlCode += st.serializeToGaml(false);
 						}
 					}
-					gmlCode = gmlCode.replace("\\/", "/");
+					gmlCode = cleanWhere(gmlCode.replace("\\/", "/"));
 					eWorld.setInit(gmlCode);
 				}
 			}

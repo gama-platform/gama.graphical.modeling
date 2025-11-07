@@ -253,9 +253,10 @@ public abstract class EditFrame extends ApplicationWindow {
 	 * @return the group
 	 */
 	protected Group groupFacets(final Composite container, final String gamlName, final int nbCol) {
-		final SymbolProto proto = "layer".equals(gamlName) ? DescriptionFactory.getStatementProto("display_population")
+		final SymbolProto proto = "layer".equals(gamlName) ? DescriptionFactory.getStatementProto("species_layer")
 				: DescriptionFactory.getStatementProto(gamlName);
-		if (gamlName == "experiment") { System.out.println("proto: " + proto); }
+		
+		
 		final Group group = new Group(container, SWT.NONE);
 		final GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
