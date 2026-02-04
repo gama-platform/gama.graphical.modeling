@@ -19,13 +19,13 @@
 			<uniqueVersion>true</uniqueVersion>
 			<id>p2Repo</id>
 			<url
-            >scp://152.228.133.219/./var/www/gama_updates/graphical_modeling/2024-06</url>
+            >scp://152.228.133.219/./var/www/gama_updates/graphical_modeling/2025-09</url>
 		</repository>
 		<snapshotRepository>
 			<uniqueVersion>true</uniqueVersion>
 			<id>p2Repo</id>
 			<url
-            >scp://152.228.133.219/./var/www/gama_updates/graphical_modeling/2024-06</url>
+            >scp://152.228.133.219/./var/www/gama_updates/graphical_modeling/2025-09</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -37,7 +37,7 @@
 			<properties>
 				<!-- Properties relative to the distant host where to upload the repo -->
 				<ftp.url>scp://152.228.133.219</ftp.url>
-				<ftp.toDir>/var/www/gama_updates/graphical_modeling/2024-06</ftp.toDir>
+				<ftp.toDir>/var/www/gama_updates/graphical_modeling/2025-09</ftp.toDir>
 				<!-- Relative path to the repo being uploaded -->
 				<repo.path>${project.build.directory}/repository/</repo.path>
 			</properties>
@@ -51,7 +51,7 @@
     						<dependency>
     							<groupId>org.apache.maven.wagon</groupId>
     							<artifactId>wagon-ssh</artifactId>
-    							<version>3.5.1</version>
+    							<version>3.5.3</version>
     						</dependency>
     					</dependencies>
     				</plugin>
@@ -60,6 +60,13 @@
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>wagon-maven-plugin</artifactId>
 						<version>2.0.2</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.maven.wagon</groupId>
+								<artifactId>wagon-ssh</artifactId>
+								<version>3.5.3</version>
+							</dependency>
+						</dependencies>
 						<executions>
 
 							<execution>
@@ -117,12 +124,12 @@
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh-external</artifactId>
-				<version>3.5.1</version>
+				<version>3.5.3</version>
 			</extension>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh</artifactId>
-				<version>3.5.1</version>
+				<version>3.5.3</version>
 			</extension>
 		</extensions>
 	</build>
