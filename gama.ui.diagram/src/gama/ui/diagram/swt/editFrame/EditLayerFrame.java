@@ -273,7 +273,7 @@ public class EditLayerFrame extends EditFrame {
 		this.grids = grids;
 		updateSpeciesAspect();
 		rgb = new int[3];
-		rgb[0] = rgb[1] = rgb[2] = 255;
+		rgb[0] = rgb[1] = rgb[2] = 0;
 
 		// init(elayer, asp, species, grids);
 		this.diagram = diagram;
@@ -836,7 +836,7 @@ public class EditLayerFrame extends EditFrame {
 
 		final CLabel lblSL = new CLabel(gridComp, SWT.NONE);
 		lblSL.setBounds(0, 40, 90, 20);
-		lblSL.setText("Show Lines");
+		lblSL.setText("Show Border");
 		btnShowLines = new Button(gridComp, SWT.CHECK);
 		btnShowLines.setBounds(100, 40, 20, 20);
 		btnShowLines.setSelection(((ELayer) eobject).isShowLines());

@@ -788,13 +788,13 @@ public class ModelGenerator {
 					model.append(lay.getType()).append(" ").append(lay.getGrid());
 					if (lay.getIsColorCst() == null || lay.getIsColorCst()) {
 						if (lay.getColorRBG().size() == 3 && lay.isShowLines()) {
-							model.append(" lines:rgb(").append(lay.getColorRBG().get(0)).append(",")
+							model.append(" border:rgb(").append(lay.getColorRBG().get(0)).append(",")
 									.append(lay.getColorRBG().get(1)).append(",").append(lay.getColorRBG().get(2))
 									.append(")");
 						}
 					} else if (lay.getColor() != null && !"rgb(255,255,255)".equals(lay.getColor())
 							&& !lay.getColor().isEmpty()) {
-						model.append(" lines:").append(lay.getColor());
+						model.append(" border:").append(lay.getColor());
 					}
 				} else if ("agents".equals(lay.getType())) {
 					model.append(lay.getType()).append(" \"").append(lay.getName()).append("\" value:")
